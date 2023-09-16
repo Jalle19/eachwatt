@@ -1,0 +1,27 @@
+{
+  "name": "eachwatt",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Sam Stenvall <neggelandia@gmail.com>",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "build": "rm -rf dist/* && npx tsc",
+    "prettier": "prettier --write src/"
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^16.1.1",
+    "@types/node": "^20.5.9",
+    "@types/yargs": "^17.0.24",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2",
+    "axios": "^1.5.0",
+    "yaml": "^2.3.2",
+    "yargs": "^17.7.2"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "inputs": [
+    {
+      "channel": 0,
+      "Vrms": 236.1196,
+      "Hz": 50.02486,
+      "phase": 1.46
+    },
+    {
+      "channel": 1,
+      "Watts": "458",
+      "Pf": 0.761181,
+      "phase": 1.2,
+      "lastphase": -0.26
+    },
+    {
+      "channel": 2,
+      "Watts": "71",
+      "Pf": 0.794567,
+      "phase": 1.2,
+      "lastphase": -0.26
+    },
+    {
+      "channel": 3,
+      "Watts": "540",
+      "Pf": 0.93067,
+      "phase": 1.2,
+      "lastphase": -0.26
+    },
+    {
+      "channel": 4,
+      "Watts": " 0",
+      "Pf": 0,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 5,
+      "Watts": " 0",
+      "Pf": 0,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 6,
+      "Watts": " 0",
+      "Pf": 0,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 7,
+      "Watts": "42",
+      "Pf": 0.993087,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 8,
+      "Watts": "80",
+      "Pf": 0.627037,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 9,
+      "Watts": " 0",
+      "Pf": 0,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 10,
+      "Watts": " 0",
+      "Pf": 0,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 11,
+      "Watts": " 0",
+      "Pf": 0,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 12,
+      "Watts": "232",
+      "Pf": 0.694148,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 13,
+      "Watts": "242",
+      "Pf": 0.844198,
+      "phase": 2.2,
+      "lastphase": 0.74
+    },
+    {
+      "channel": 14,
+      "Watts": "37",
+      "Pf": 0.800659,
+      "phase": 2.2,
+      "lastphase": 0.74
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Bastu_Total",
+      "units": "Watts",
+      "value": 0
+    },
+    {
+      "name": "Jaspi_Total",
+      "units": "Watts",
+      "value": -48
+    },
+    {
+      "name": "Moon_Total",
+      "units": "Watts",
+      "value": 41.9884
+    },
+    {
+      "name": "Unmetered",
+      "units": "Watts",
+      "value": 435.548
+    }
+  ]
+}

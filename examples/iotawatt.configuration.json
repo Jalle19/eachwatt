@@ -1,0 +1,345 @@
+{
+  "format": 2,
+  "timezone": "2",
+  "update": "MINOR",
+  "device": {
+    "name": "IotaWatt",
+    "version": 3,
+    "channels": "15",
+    "burden": [
+      0,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20
+    ]
+  },
+  "inputs": [
+    {
+      "channel": 0,
+      "name": "Input_0",
+      "type": "VT",
+      "model": "Ideal 77DE-06-09(EU)",
+      "cal": 19.12,
+      "vphase": 0,
+      "vmult": 1
+    },
+    {
+      "channel": 1,
+      "name": "Main_L1",
+      "type": "CT",
+      "model": "ECS16100",
+      "phase": 0.6,
+      "turns": 2000,
+      "cal": 100,
+      "vmult": 1,
+      "vphase": 0
+    },
+    {
+      "channel": 2,
+      "name": "Main_L2",
+      "type": "CT",
+      "model": "ECS16100",
+      "phase": 0.6,
+      "turns": 2000,
+      "cal": 100,
+      "vphase": 120,
+      "vmult": 1
+    },
+    {
+      "channel": 3,
+      "name": "Main_L3",
+      "type": "CT",
+      "model": "ECS16100",
+      "phase": 0.6,
+      "turns": 2000,
+      "cal": 100,
+      "vphase": 240,
+      "vmult": 1
+    },
+    {
+      "channel": 4,
+      "name": "Jaspi_L1",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vmult": 1,
+      "vphase": 0
+    },
+    {
+      "channel": 5,
+      "name": "Bastu_L1",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 0,
+      "vmult": 1
+    },
+    {
+      "channel": 6,
+      "name": "Moon_L1",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 0,
+      "vmult": 1
+    },
+    {
+      "channel": 7,
+      "name": "Moon_L3",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 240,
+      "vmult": 1
+    },
+    {
+      "channel": 8,
+      "name": "Ventilation",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 0,
+      "vmult": 1
+    },
+    {
+      "channel": 9,
+      "name": "Diskmaskin",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 0,
+      "vmult": 1
+    },
+    {
+      "channel": 10,
+      "name": "Tvattmaskin",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 120,
+      "vmult": 1
+    },
+    {
+      "channel": 11,
+      "name": "Mitsu_Ilp",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 120,
+      "vmult": 1
+    },
+    {
+      "channel": 12,
+      "name": "Rack_Server",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 0,
+      "vmult": 1
+    },
+    {
+      "channel": 13,
+      "name": "Vagg_Vardagsrum",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 240,
+      "vmult": 1
+    },
+    {
+      "channel": 14,
+      "name": "Vagg_Kok",
+      "type": "CT",
+      "model": "ECS1050",
+      "phase": 1.6,
+      "turns": 1000,
+      "cal": 50,
+      "vphase": 240,
+      "vmult": 1
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Bastu_Total",
+      "units": "Watts",
+      "script": "@5*#3"
+    },
+    {
+      "name": "Jaspi_Total",
+      "units": "Watts",
+      "script": "(@4*#3)-#48"
+    },
+    {
+      "name": "Moon_Total",
+      "units": "Watts",
+      "script": "(@6*#2)+@7"
+    },
+    {
+      "name": "Unmetered",
+      "units": "Watts",
+      "script": "@1+@2+@3-(@4*#3)-(@5*#3)-(@6*#2)-@7-@8-@9-@10-@11-@12-@13-@14"
+    }
+  ],
+  "dstrule": {
+    "adj": 60,
+    "utc": true,
+    "begin": {
+      "month": 3,
+      "weekday": 1,
+      "instance": -1,
+      "time": 60
+    },
+    "end": {
+      "month": 10,
+      "weekday": 1,
+      "instance": -1,
+      "time": 60
+    }
+  },
+  "derive3ph": true,
+  "influxdb": {
+    "type": "influxdb",
+    "revision": 11,
+    "postInterval": 10,
+    "bulksend": 6,
+    "url": "http://10.110.1.6:8086",
+    "database": "iotawatt",
+    "measurement": "iotawatt",
+    "tagset": [
+      {
+        "key": "device",
+        "value": "$device"
+      },
+      {
+        "key": "ct",
+        "value": "$name"
+      },
+      {
+        "key": "units",
+        "value": "$units"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "Bastu_Total",
+        "units": "Watts",
+        "script": "@5*#3"
+      },
+      {
+        "name": "Diskmaskin",
+        "units": "Watts",
+        "script": "@9"
+      },
+      {
+        "name": "Frequency",
+        "units": "Hz",
+        "script": "@0"
+      },
+      {
+        "name": "Jaspi_Total",
+        "units": "Watts",
+        "script": "@4*#3"
+      },
+      {
+        "name": "Main_L1",
+        "units": "Watts",
+        "script": "@1"
+      },
+      {
+        "name": "Main_L2",
+        "units": "Watts",
+        "script": "@2"
+      },
+      {
+        "name": "Main_L3",
+        "units": "Watts",
+        "script": "@3"
+      },
+      {
+        "name": "Main_Total",
+        "units": "Watts",
+        "script": "@1+@2+@3"
+      },
+      {
+        "name": "Mitsu_Ilp",
+        "units": "Watts",
+        "script": "@11"
+      },
+      {
+        "name": "Moon_Total",
+        "units": "Watts",
+        "script": "(@6*#2)+@7"
+      },
+      {
+        "name": "Rack_Server",
+        "units": "Watts",
+        "script": "@12"
+      },
+      {
+        "name": "Tvattmaskin",
+        "units": "Watts",
+        "script": "@10"
+      },
+      {
+        "name": "Unmetered",
+        "units": "Watts",
+        "script": "@1+@2+@3-(@4*#3)-(@5*#3)-(@6*#2)-@7-@8-@9-@10-@11-@12-@13-@14"
+      },
+      {
+        "name": "Vagg_Kok",
+        "units": "Watts",
+        "script": "@14"
+      },
+      {
+        "name": "Vagg_Vardagsrum",
+        "units": "Watts",
+        "script": "@13"
+      },
+      {
+        "name": "Ventilation",
+        "units": "Watts",
+        "script": "@8"
+      },
+      {
+        "name": "Voltage_L1",
+        "units": "Volts",
+        "script": "@0"
+      }
+    ],
+    "user": "iotawatt",
+    "pwd": "iotawatt",
+    "fieldkey": "$units",
+    "begdate": 1579730400
+  }
+}

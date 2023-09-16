@@ -1,0 +1,277 @@
+circuits:
+  # mains
+  - name: Main total
+    type: main
+    sensor:
+      type: virtual
+  - name: Main L1
+    type: main
+    phase: L1
+    parent: Main total
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Main_L1
+  - name: Main L2
+    type: main
+    phase: L2
+    parent: Main total
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Main_L2
+  - name: Main L3
+    type: main
+    phase: L3
+    parent: Main total
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Main_L3
+  # iotawatt circuits
+  - name: Vägg vardagsrum
+    parent: Main L3
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Vagg_Vardagsrum
+  - name: Vägg kök
+    parent: Main L3
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Vagg_Kok
+    group: Matlagning
+  - name: Luftvärmepump
+    parent: Main L2
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Mitsu_Ilp
+    group: LVI
+  - name: Vägg arbetsrum
+    parent: Main L1
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Vagg_Sovrum1
+  - name: Spis L1
+    parent: Main L1
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Spis_L1
+    group: Matlagning
+  - name: Spis L2
+    parent: Main L2
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Spis_L2
+    group: Matlagning
+  - name: Ugn
+    parent: Main L3
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Ugn
+    group: Matlagning
+  - name: Luft-vattenvärmepump
+    #parent: Main total
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Moon_Total
+    group: LVI
+  - name: Värmepanna
+    #parent: Main total
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Jaspi_Total
+    group: LVI
+  - name: Bastu
+    #parent: Main total
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Bastu_Total
+
+  # shelly
+  - name: Rack
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.61
+        meter: 0
+  - name: "Frys + kylskåp"
+    parent: Main L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.58
+        meter: 0
+  - name: Ventilation
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.60
+        meter: 0
+    group: LVI
+  - name: Tvättmaskin
+    parent: Main L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.63
+        meter: 0
+  - name: Torkskåp
+    parent: Main L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.57
+        meter: 0
+  - name: Diskmaskin
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.62
+        meter: 0
+  - name: Belysning hjälpkök
+    parent: Main L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.59
+        meter: 0
+    group: Belysning
+  - name: Belysning köksbänkar
+    parent: Main L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.44
+        meter: 0
+    group: Belysning
+  - name: Belysning köksfönster
+    parent: Main L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.44
+        meter: 1
+    group: Belysning
+  - name: Belysning bibliotek
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.47
+        meter: 0
+    group: Belysning
+  - name: Belysning bibliotek fönster
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.47
+        meter: 1
+    group: Belysning
+  - name: Belysning Ebbas rum
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.48
+        meter: 0
+    group: Belysning
+  - name: Belysning Ebbas fönster
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.48
+        meter: 1
+    group: Belysning
+  - name: Belysning kontor
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.46
+        meter: 0
+    group: Belysning
+  - name: Belysning kontor fönster
+    parent: Main L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.46
+        meter: 1
+    group: Belysning
+  - name: Belysning sovrum
+    parent: Main L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.45
+        meter: 0
+    group: Belysning
+  - name: Belysning sovrum fönster
+    parent: Main L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.45
+        meter: 1
+    group: Belysning
+  - name: Belysning vardagsrumsbord
+    parent: Main L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.50
+        meter: 0
+    group: Belysning
+  - name: Belysning vardagsrum fönster
+    parent: Main L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.50
+        meter: 1
+    group: Belysning
+  - name: Belysning vardagsrum takkrona
+    parent: Main L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.52
+        meter: 0
+    group: Belysning
+
+publishers:
+  - type: influxdb
+    settings:
+      url: http://10.110.1.6:8086/
+      organizationId: organisation id
+      bucket: eachwatt
+      apiToken: token
+  - type: console
