@@ -1,7 +1,7 @@
 import yargs from 'yargs'
 import fs from 'fs'
 import { Config, parseConfig } from './config'
-import { SensorData, SensorType } from './sensor'
+import { SensorType } from './sensor'
 import { pollCircuits } from './circuit'
 
 const argv = yargs(process.argv.slice(2))
@@ -19,8 +19,10 @@ const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
   const circuits = config.circuits
 
-  // Poll all non-virtual circuits first
-  const nonVirtualCircuits = circuits.filter((c) => c.sensor.type !== SensorType.Virtual)
+  // Poll all normal circuits first
+  const nonVirtualCircuits = circuits.filter(
+    (c) => c.sensor.type !== SensorType.Virtual && c.sensor.type !== SensorType.Unmetered,
+  )
   let sensorData = await pollCircuits(now, nonVirtualCircuits)
 
   // Poll virtual sensors, giving them the opportunity to act on the real sensor data we've gathered so far
