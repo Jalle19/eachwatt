@@ -6,7 +6,11 @@ export enum SensorType {
   Virtual = 'virtual',
 }
 
-export type SensorPollFunction = (timestamp: number, circuit: Circuit) => Promise<SensorData>
+export type SensorPollFunction = (
+  timestamp: number,
+  circuit: Circuit,
+  existingSensorData?: SensorData[],
+) => Promise<SensorData>
 
 export interface Sensor {
   type: SensorType
@@ -33,6 +37,16 @@ export interface IotawattSensor extends Sensor {
   iotawatt: IotawattSensorSettings
 }
 
+interface VirtualSensorSettings {
+  meteredChildren: string[]
+  unmeteredChildren: string[]
+}
+
+export interface VirtualSensor extends Sensor {
+  type: SensorType.Virtual
+  virtual: VirtualSensorSettings
+}
+
 export interface SensorData {
   timestamp: number
   circuit: Circuit
@@ -47,8 +61,4 @@ export const emptySensorData = (timestamp: number, circuit: Circuit): SensorData
     watts: 0,
     unmeteredWatts: 0,
   }
-}
-
-export interface VirtualSensor extends Sensor {
-  type: SensorType.Virtual
 }

@@ -1,7 +1,7 @@
 import yargs from 'yargs'
 import fs from 'fs'
 import { Config, parseConfig } from './config'
-import { SensorData } from './sensor'
+import { SensorData, SensorType } from './sensor'
 import { pollCircuits } from './circuit'
 
 const argv = yargs(process.argv.slice(2))
@@ -19,13 +19,9 @@ const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
   const circuits = config.circuits
 
-  console.log(`Polling at ${now}`)
-  let sensorData = await pollCircuits(now, circuits)
-  const end = Date.now()
-  console.log(`Polling took ${(end - now) / 1000} seconds`)
-
-  // Filter out unresolved data
-  sensorData = sensorData.filter((data) => data !== null)
+  // Poll all non-virtual circuits first
+  const nonVirtualCircuits = circuits.filter((c) => c.sensor.type !== SensorType.Virtual)
+  let sensorData = await pollCircuits(now, nonVirtualCircuits)
 
   // Calculate unmetered portions for each circuit with children
   for (const data of sensorData) {
@@ -43,6 +39,13 @@ const mainPollerFunc = async (config: Config) => {
       data.unmeteredWatts -= childSensorData.watts
     }
   }
+
+  // Poll virtual sensors, giving them the opportunity to act on the real sensor data we've gathered so far
+  const virtualCircuits = circuits.filter((c) => c.sensor.type === SensorType.Virtual)
+  const virtualSensorData = await pollCircuits(now, virtualCircuits, sensorData)
+
+  // Combine real and virtual sensor data
+  sensorData = sensorData.concat(virtualSensorData)
 
   // Round all numbers to one decimal point
   for (const data of sensorData) {

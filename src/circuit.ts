@@ -18,14 +18,18 @@ export interface Main extends Circuit {
   phase: string
 }
 
-export const pollCircuits = async (timestamp: number, circuits: Circuit[]): Promise<SensorData[]> => {
+export const pollCircuits = async (
+  timestamp: number,
+  circuits: Circuit[],
+  existingSensorData?: SensorData[],
+): Promise<SensorData[]> => {
   const promises = []
 
   for (const circuit of circuits) {
     const sensor = circuit.sensor
 
     console.log(`Polling sensor ${sensor.type} of circuit ${circuit.name}`)
-    promises.push(sensor.pollFunc(timestamp, circuit))
+    promises.push(sensor.pollFunc(timestamp, circuit, existingSensorData))
   }
 
   return await Promise.all(promises)
