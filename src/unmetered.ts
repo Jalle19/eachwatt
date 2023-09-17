@@ -19,6 +19,6 @@ export const getSensorData: SensorPollFunction = async (
   return {
     timestamp,
     circuit,
-    watts: parentWatts - unmeteredWatts,
+    watts: Math.max(parentWatts - unmeteredWatts, 0), // Don't allow negative values
   }
 }
