@@ -28,7 +28,6 @@ export const getSensorData: SensorPollFunction = async (timestamp: number, circu
       timestamp: timestamp,
       circuit: circuit,
       watts: data.meters[sensor.shelly.meter].power,
-      unmeteredWatts: 0,
     }
   } catch (e) {
     console.error((e as Error).message)

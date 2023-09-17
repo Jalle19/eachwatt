@@ -23,23 +23,6 @@ const mainPollerFunc = async (config: Config) => {
   const nonVirtualCircuits = circuits.filter((c) => c.sensor.type !== SensorType.Virtual)
   let sensorData = await pollCircuits(now, nonVirtualCircuits)
 
-  // Calculate unmetered portions for each circuit with children
-  for (const data of sensorData) {
-    const circuit = data.circuit
-
-    if (circuit.children.length === 0) {
-      continue
-    }
-
-    data.unmeteredWatts = data.watts
-
-    for (const childCircuit of circuit.children) {
-      // Find the sensor data for the circuit
-      const childSensorData = sensorData.find((s) => s.circuit === childCircuit) as SensorData
-      data.unmeteredWatts -= childSensorData.watts
-    }
-  }
-
   // Poll virtual sensors, giving them the opportunity to act on the real sensor data we've gathered so far
   const virtualCircuits = circuits.filter((c) => c.sensor.type === SensorType.Virtual)
   const virtualSensorData = await pollCircuits(now, virtualCircuits, sensorData)
@@ -53,7 +36,6 @@ const mainPollerFunc = async (config: Config) => {
   // Round all numbers to one decimal point
   for (const data of sensorData) {
     data.watts = Number(data.watts.toFixed(1))
-    data.unmeteredWatts = Number(data.unmeteredWatts.toFixed(1))
   }
 
   // Publish data

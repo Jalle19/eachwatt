@@ -78,7 +78,6 @@ export const getSensorData: SensorPollFunction = async (timestamp: number, circu
       timestamp: timestamp,
       circuit: circuit,
       watts: getSensorValue(sensor, configuration, status),
-      unmeteredWatts: 0,
     }
   } catch (e) {
     console.error((e as Error).message)

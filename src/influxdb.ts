@@ -35,7 +35,6 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
         .tag('circuitType', data.circuit.type)
         .tag('sensorType', data.circuit.sensor.type)
         .floatField('watts', data.watts)
-        .floatField('unmeteredWatts', data.unmeteredWatts)
         .timestamp(data.timestamp)
 
       // Optional tags

@@ -19,6 +19,5 @@ export const getSensorData: SensorPollFunction = async (
     timestamp: timestamp,
     circuit: circuit,
     watts: childrenSensorData.reduce((acc, data) => acc + data.watts, 0),
-    unmeteredWatts: 0,
   }
 }

@@ -61,7 +61,6 @@ export interface SensorData {
   timestamp: number
   circuit: Circuit
   watts: number
-  unmeteredWatts: number // calculated
 }
 
 export const emptySensorData = (timestamp: number, circuit: Circuit): SensorData => {
@@ -69,7 +68,6 @@ export const emptySensorData = (timestamp: number, circuit: Circuit): SensorData
     timestamp,
     circuit,
     watts: 0,
-    unmeteredWatts: 0,
   }
 }
 
