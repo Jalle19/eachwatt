@@ -4,6 +4,7 @@ export enum SensorType {
   Iotawatt = 'iotawatt',
   Shelly = 'shelly',
   Virtual = 'virtual',
+  Unmetered = 'unmetered',
 }
 
 export type SensorPollFunction = (
@@ -38,13 +39,22 @@ export interface IotawattSensor extends Sensor {
 }
 
 interface VirtualSensorSettings {
-  meteredChildren: string[]
-  unmeteredChildren: string[]
+  children: (string | Circuit)[] // resolved to circuit at runtime
 }
 
 export interface VirtualSensor extends Sensor {
   type: SensorType.Virtual
   virtual: VirtualSensorSettings
+}
+
+interface UnmeteredSensorSettings {
+  parent: string | Circuit // resolved to Circuit at runtime
+  children: (string | Circuit)[] // resolved to Circuit at runtime
+}
+
+export interface UnmeteredSensor extends Sensor {
+  type: SensorType.Unmetered
+  unmetered: UnmeteredSensorSettings
 }
 
 export interface SensorData {
@@ -61,4 +71,8 @@ export const emptySensorData = (timestamp: number, circuit: Circuit): SensorData
     watts: 0,
     unmeteredWatts: 0,
   }
+}
+
+export const reduceToWatts = (sensorData: SensorData[]): number => {
+  return sensorData.reduce((acc, data) => acc + data.watts, 0)
 }

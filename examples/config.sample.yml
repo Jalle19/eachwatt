@@ -4,6 +4,48 @@ circuits:
     type: main
     sensor:
       type: virtual
+      virtual:
+        children:
+          - Main L1
+          - Main L2
+          - Main L3
+  - name: Main total unmetered
+    type: main
+    sensor:
+      type: unmetered
+      unmetered:
+        parent: Main total
+        children:
+          - Vägg vardagsrum
+          - Vägg kök
+          - Vägg arbetsrum
+          - Luftvärmepump
+          - Spis L1
+          - Spis L2
+          - Ugn
+          - Luft-vattenvärmepump
+          - Värmepanna
+          - Bastu
+          - Rack
+          - Frys + kylskåp
+          - Ventilation
+          - Tvättmaskin
+          - Torkskåp
+          - Diskmaskin
+          - Belysning hjälpkök
+          - Belysning köksbänkar
+          - Belysning köksfönster
+          - Belysning bibliotek
+          - Belysning bibliotek fönster
+          - Belysning Ebbas rum
+          - Belysning Ebbas fönster
+          - Belysning kontor
+          - Belysning kontor fönster
+          - Belysning sovrum
+          - Belysning sovrum fönster
+          - Belysning vardagsrumsbord
+          - Belysning vardagsrum fönster
+          - Belysning vardagsrum takkrona
   - name: Main L1
     type: main
     phase: L1
@@ -47,6 +89,13 @@ circuits:
         address: 10.112.4.4
         name: Vagg_Kok
     group: Matlagning
+  - name: Vägg arbetsrum
+    parent: Main L1
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Vagg_Sovrum1
   - name: Luftvärmepump
     parent: Main L2
     sensor:
@@ -55,13 +104,6 @@ circuits:
         address: 10.112.4.4
         name: Mitsu_Ilp
     group: LVI
-  - name: Vägg arbetsrum
-    parent: Main L1
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Vagg_Sovrum1
   - name: Spis L1
     parent: Main L1
     sensor:
@@ -118,13 +160,14 @@ circuits:
       shelly:
         address: 10.112.4.61
         meter: 0
-  - name: "Frys + kylskåp"
+  - name: Frys + kylskåp
     parent: Main L3
     sensor:
       type: shelly
       shelly:
         address: 10.112.4.58
         meter: 0
+    group: Matlagning
   - name: Ventilation
     parent: Main L1
     sensor:
@@ -140,6 +183,7 @@ circuits:
       shelly:
         address: 10.112.4.63
         meter: 0
+    group: Tvätt
   - name: Torkskåp
     parent: Main L3
     sensor:
@@ -147,6 +191,7 @@ circuits:
       shelly:
         address: 10.112.4.57
         meter: 0
+    group: Tvätt
   - name: Diskmaskin
     parent: Main L1
     sensor:
@@ -154,6 +199,7 @@ circuits:
       shelly:
         address: 10.112.4.62
         meter: 0
+    group: Tvätt
   - name: Belysning hjälpkök
     parent: Main L3
     sensor:

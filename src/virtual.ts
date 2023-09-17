@@ -13,20 +13,12 @@ export const getSensorData: SensorPollFunction = async (
   const sensor = circuit.sensor as VirtualSensor
 
   // Filter out sensor data not belonging to one of our configured children
-  const meteredChildrenSensorData = existingSensorData.filter((d) =>
-    sensor.virtual.meteredChildren.includes(d.circuit.name),
-  )
-  const unmeteredChildrenSensorData = existingSensorData.filter((d) =>
-    sensor.virtual.unmeteredChildren.includes(d.circuit.name),
-  )
+  const childrenSensorData = existingSensorData.filter((d) => sensor.virtual.children.includes(d.circuit))
 
-  // Compute watts and unmetered watts
-  const wattsTotal = meteredChildrenSensorData.reduce((acc, data) => acc + data.watts, 0)
-  const unmeteredWattsTotal = wattsTotal - unmeteredChildrenSensorData.reduce((acc, data) => acc + data.watts, 0)
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: wattsTotal,
-    unmeteredWatts: unmeteredWattsTotal,
+    watts: childrenSensorData.reduce((acc, data) => acc + data.watts, 0),
+    unmeteredWatts: 0,
   }
 }

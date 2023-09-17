@@ -43,9 +43,12 @@ const mainPollerFunc = async (config: Config) => {
   // Poll virtual sensors, giving them the opportunity to act on the real sensor data we've gathered so far
   const virtualCircuits = circuits.filter((c) => c.sensor.type === SensorType.Virtual)
   const virtualSensorData = await pollCircuits(now, virtualCircuits, sensorData)
-
-  // Combine real and virtual sensor data
   sensorData = sensorData.concat(virtualSensorData)
+
+  // Finally, poll unmetered sensors
+  const unmeteredCircuits = circuits.filter((c) => c.sensor.type === SensorType.Unmetered)
+  const unmeteredSensorData = await pollCircuits(now, unmeteredCircuits, sensorData)
+  sensorData = sensorData.concat(unmeteredSensorData)
 
   // Round all numbers to one decimal point
   for (const data of sensorData) {

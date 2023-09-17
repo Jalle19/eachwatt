@@ -2,7 +2,8 @@ import YAML from 'yaml'
 import { getSensorData as getShellySensorData } from './shelly'
 import { getSensorData as getIotawattSensorData } from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
-import { SensorType, VirtualSensor } from './sensor'
+import { getSensorData as getUnmeteredSensorData } from './unmetered'
+import { SensorType, UnmeteredSensor, VirtualSensor } from './sensor'
 import { Circuit, CircuitType } from './circuit'
 import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './influxdb'
@@ -35,6 +36,31 @@ export const parseConfig = (configFileContents: string): Config => {
     })
   }
 
+  // Resolve virtual sensor children
+  for (const circuit of config.circuits) {
+    if (circuit.sensor.type === SensorType.Virtual) {
+      const virtualSensor = circuit.sensor as VirtualSensor
+
+      virtualSensor.virtual.children = virtualSensor.virtual.children.map((c) => {
+        return config.circuits.find((cc) => cc.name === c)
+      }) as Circuit[]
+    }
+  }
+
+  // Resolve unmetered sensor parent and children
+  for (const circuit of config.circuits) {
+    if (circuit.sensor.type === SensorType.Unmetered) {
+      const unmeteredSensor = circuit.sensor as UnmeteredSensor
+
+      unmeteredSensor.unmetered.parent = config.circuits.find(
+        (c) => c.name === unmeteredSensor.unmetered.parent,
+      ) as Circuit
+      unmeteredSensor.unmetered.children = unmeteredSensor.unmetered.children.map((c) => {
+        return config.circuits.find((cc) => cc.name === c)
+      }) as Circuit[]
+    }
+  }
+
   // Attach poll functions to sensors
   for (const circuit of config.circuits) {
     switch (circuit.sensor.type) {
@@ -47,6 +73,8 @@ export const parseConfig = (configFileContents: string): Config => {
       case SensorType.Virtual:
         circuit.sensor.pollFunc = getVirtualSensorData
         break
+      case SensorType.Unmetered:
+        circuit.sensor.pollFunc = getUnmeteredSensorData
     }
   }
 
