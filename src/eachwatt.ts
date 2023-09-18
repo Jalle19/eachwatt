@@ -2,7 +2,7 @@ import yargs from 'yargs'
 import fs from 'fs'
 import { Config, parseConfig } from './config'
 import { SensorType } from './sensor'
-import { pollCircuits } from './circuit'
+import { pollCharacteristicsSensors, pollCircuits } from './circuit'
 
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
@@ -30,10 +30,13 @@ const mainPollerFunc = async (config: Config) => {
   const virtualSensorData = await pollCircuits(now, virtualCircuits, sensorData)
   sensorData = sensorData.concat(virtualSensorData)
 
-  // Finally, poll unmetered sensors
+  // Poll unmetered sensors
   const unmeteredCircuits = circuits.filter((c) => c.sensor.type === SensorType.Unmetered)
   const unmeteredSensorData = await pollCircuits(now, unmeteredCircuits, sensorData)
   sensorData = sensorData.concat(unmeteredSensorData)
+
+  // Poll characteristics sensors
+  const characteristicsSensorData = await pollCharacteristicsSensors(now, config.characteristics)
 
   // Round all numbers to one decimal point
   for (const data of sensorData) {
@@ -43,7 +46,12 @@ const mainPollerFunc = async (config: Config) => {
   // Publish data
   for (const publisher of config.publishers) {
     try {
-      await publisher.publisherImpl.publishSensorData(sensorData)
+      const publisherImpl = publisher.publisherImpl
+
+      await Promise.all([
+        publisherImpl.publishSensorData(sensorData),
+        publisherImpl.publishCharacteristicsSensorData(characteristicsSensorData),
+      ])
     } catch (e) {
       console.error((e as Error).message)
     }

@@ -1,4 +1,5 @@
 import { Sensor, SensorData } from './sensor'
+import { Characteristics, CharacteristicsSensorData } from './characteristics'
 
 export enum CircuitType {
   Main = 'main',
@@ -30,6 +31,22 @@ export const pollCircuits = async (
 
     console.log(`Polling sensor ${sensor.type} of circuit ${circuit.name}`)
     promises.push(sensor.pollFunc(timestamp, circuit, existingSensorData))
+  }
+
+  return await Promise.all(promises)
+}
+
+export const pollCharacteristicsSensors = async (
+  timestamp: number,
+  characteristics: Characteristics[],
+): Promise<CharacteristicsSensorData[]> => {
+  const promises = []
+
+  for (const c of characteristics) {
+    const sensor = c.sensor
+
+    console.log(`Polling sensor ${sensor.type} of characteristics ${c.name}`)
+    promises.push(sensor.pollFunc(timestamp, c))
   }
 
   return await Promise.all(promises)

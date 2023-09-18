@@ -1,6 +1,18 @@
-import { emptySensorData, IotawattSensor, SensorData, SensorPollFunction } from './sensor'
+import {
+  emptySensorData,
+  IotawattCharacteristicsSensor,
+  IotawattSensor,
+  SensorData,
+  SensorPollFunction,
+} from './sensor'
 import { Circuit } from './circuit'
 import { getDedupedResponse } from './http'
+import {
+  Characteristics,
+  CharacteristicsSensorPollFunction,
+  CharacteristicsSensorData,
+  emptyCharacteristicsSensorData,
+} from './characteristics'
 
 type IotawattConfigurationInput = {
   channel: number
@@ -30,6 +42,8 @@ type IotawattStatus = {
   inputs: IotawattStatusInput[]
   outputs: IotawattStatusOutput[]
 }
+
+type IotawattCharacteristicsQuery = number[][]
 
 const getConfigurationUrl = (sensor: IotawattSensor): string => {
   return `http://${sensor.iotawatt.address}/config.txt`
@@ -82,5 +96,31 @@ export const getSensorData: SensorPollFunction = async (timestamp: number, circu
   } catch (e) {
     console.error((e as Error).message)
     return emptySensorData(timestamp, circuit)
+  }
+}
+
+const getQueryUrl = (sensor: IotawattCharacteristicsSensor): string => {
+  return `http://${sensor.iotawatt.address}/query?select=[${sensor.iotawatt.name}.volts,${sensor.iotawatt.name}.hz]&begin=s-10s&end=s&group=m`
+}
+
+export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = async (
+  timestamp: number,
+  characteristics: Characteristics,
+): Promise<CharacteristicsSensorData> => {
+  const sensor = characteristics.sensor as IotawattCharacteristicsSensor
+
+  try {
+    const queryResult = await getDedupedResponse(timestamp, getQueryUrl(sensor))
+    const query = queryResult.data as IotawattCharacteristicsQuery
+
+    return {
+      timestamp: timestamp,
+      characteristics: characteristics,
+      voltage: query[0][0],
+      frequency: query[0][1],
+    }
+  } catch (e) {
+    console.error((e as Error).message)
+    return emptyCharacteristicsSensorData(timestamp, characteristics)
   }
 }

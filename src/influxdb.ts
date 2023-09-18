@@ -2,6 +2,7 @@ import { Publisher, PublisherImpl, PublisherType } from './publisher'
 import { SensorData } from './sensor'
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client'
 import { Circuit, resolvePhase } from './circuit'
+import { CharacteristicsSensorData } from './characteristics'
 
 export interface InfluxDBPublisherSettings {
   url: string
@@ -52,6 +53,22 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
       }
 
       this.writeApi.writePoint(power)
+    }
+
+    await this.writeApi.flush()
+  }
+
+  async publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): Promise<void> {
+    for (const data of sensorData) {
+      const characteristics = new Point('characteristics')
+        .tag('name', data.characteristics.name)
+        .tag('sensorType', data.characteristics.sensor.type)
+        .tag('phase', data.characteristics.phase)
+        .floatField('voltage', data.voltage)
+        .floatField('frequency', data.frequency)
+        .timestamp(data.timestamp)
+
+      this.writeApi.writePoint(characteristics)
     }
 
     await this.writeApi.flush()

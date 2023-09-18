@@ -1,15 +1,20 @@
 import YAML from 'yaml'
 import { getSensorData as getShellySensorData } from './shelly'
-import { getSensorData as getIotawattSensorData } from './iotawatt'
+import {
+  getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
+  getSensorData as getIotawattSensorData,
+} from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
 import { getSensorData as getUnmeteredSensorData } from './unmetered'
-import { SensorType, UnmeteredSensor, VirtualSensor } from './sensor'
+import { CharacteristicsSensorType, SensorType, UnmeteredSensor, VirtualSensor } from './sensor'
 import { Circuit, CircuitType } from './circuit'
 import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './console'
+import { Characteristics } from './characteristics'
 
 export interface Config {
+  characteristics: Characteristics[]
   circuits: Circuit[]
   publishers: Publisher[]
 }
@@ -61,7 +66,7 @@ export const parseConfig = (configFileContents: string): Config => {
     }
   }
 
-  // Attach poll functions to sensors
+  // Attach poll functions to circuit sensors
   for (const circuit of config.circuits) {
     switch (circuit.sensor.type) {
       case SensorType.Shelly:
@@ -75,6 +80,15 @@ export const parseConfig = (configFileContents: string): Config => {
         break
       case SensorType.Unmetered:
         circuit.sensor.pollFunc = getUnmeteredSensorData
+    }
+  }
+
+  // Attach poll function to characteristics sensors
+  for (const c of config.characteristics) {
+    switch (c.sensor.type) {
+      case CharacteristicsSensorType.Iotawatt:
+        c.sensor.pollFunc = getIotawattCharacteristicsSensorData
+        break
     }
   }
 

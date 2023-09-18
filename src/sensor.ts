@@ -1,10 +1,15 @@
 import { Circuit } from './circuit'
+import { CharacteristicsSensorPollFunction } from './characteristics'
 
 export enum SensorType {
   Iotawatt = 'iotawatt',
   Shelly = 'shelly',
   Virtual = 'virtual',
   Unmetered = 'unmetered',
+}
+
+export enum CharacteristicsSensorType {
+  Iotawatt = 'iotawatt',
 }
 
 export type SensorPollFunction = (
@@ -16,6 +21,16 @@ export type SensorPollFunction = (
 export interface Sensor {
   type: SensorType
   pollFunc: SensorPollFunction
+}
+
+export interface CharacteristicsSensor {
+  type: CharacteristicsSensorType
+  pollFunc: CharacteristicsSensorPollFunction
+}
+
+export interface IotawattCharacteristicsSensor extends CharacteristicsSensor {
+  type: CharacteristicsSensorType.Iotawatt
+  iotawatt: IotawattSensorSettings
 }
 
 interface ShellySensorSettings {
