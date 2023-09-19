@@ -1,0 +1,14 @@
+[Unit]
+Description=Versatile energy monitoring solution for combining multiple types of power meters
+After=network.target
+# Requires=influxd.service
+
+[Service]
+WorkingDirectory=/opt/eachwatt
+ExecStartPre=/usr/bin/npm run build
+ExecStart=/usr/bin/node /opt/eachwatt/dist/eachwatt.js -c /etc/eachwatt/config.yml
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
