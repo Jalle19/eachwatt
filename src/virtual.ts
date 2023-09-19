@@ -1,11 +1,11 @@
-import { emptySensorData, SensorData, SensorPollFunction, VirtualSensor } from './sensor'
+import { emptySensorData, PowerSensorData, PowerSensorPollFunction, VirtualSensor } from './sensor'
 import { Circuit } from './circuit'
 
-export const getSensorData: SensorPollFunction = async (
+export const getSensorData: PowerSensorPollFunction = async (
   timestamp: number,
   circuit: Circuit,
-  existingSensorData?: SensorData[],
-): Promise<SensorData> => {
+  existingSensorData?: PowerSensorData[],
+): Promise<PowerSensorData> => {
   if (!existingSensorData) {
     return emptySensorData(timestamp, circuit)
   }

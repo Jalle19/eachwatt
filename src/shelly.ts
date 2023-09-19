@@ -1,4 +1,4 @@
-import { emptySensorData, SensorData, SensorPollFunction, ShellySensor } from './sensor'
+import { emptySensorData, PowerSensorData, PowerSensorPollFunction, ShellySensor } from './sensor'
 import { Circuit } from './circuit'
 import { getDedupedResponse } from './http'
 
@@ -16,7 +16,10 @@ const getSensorDataUrl = (sensor: ShellySensor): string => {
   return `http://${address}/status`
 }
 
-export const getSensorData: SensorPollFunction = async (timestamp: number, circuit: Circuit): Promise<SensorData> => {
+export const getSensorData: PowerSensorPollFunction = async (
+  timestamp: number,
+  circuit: Circuit,
+): Promise<PowerSensorData> => {
   const sensor = circuit.sensor as ShellySensor
   const url = getSensorDataUrl(sensor)
 

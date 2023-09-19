@@ -1,5 +1,4 @@
-import { SensorData } from './sensor'
-import { CharacteristicsSensorData } from './characteristics'
+import { CharacteristicsSensorData, PowerSensorData } from './sensor'
 
 export enum PublisherType {
   InfluxDB = 'influxdb',
@@ -7,7 +6,7 @@ export enum PublisherType {
 }
 
 export interface PublisherImpl {
-  publishSensorData: (sensorData: SensorData[]) => void
+  publishSensorData: (sensorData: PowerSensorData[]) => void
   publishCharacteristicsSensorData: (sensorData: CharacteristicsSensorData[]) => void
 }
 

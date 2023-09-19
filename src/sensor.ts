@@ -1,5 +1,5 @@
 import { Circuit } from './circuit'
-import { CharacteristicsSensorPollFunction } from './characteristics'
+import { Characteristics } from './characteristics'
 
 export enum SensorType {
   Iotawatt = 'iotawatt',
@@ -12,15 +12,20 @@ export enum CharacteristicsSensorType {
   Iotawatt = 'iotawatt',
 }
 
-export type SensorPollFunction = (
+export type PowerSensorPollFunction = (
   timestamp: number,
   circuit: Circuit,
-  existingSensorData?: SensorData[],
-) => Promise<SensorData>
+  existingSensorData?: PowerSensorData[],
+) => Promise<PowerSensorData>
 
-export interface Sensor {
+export type CharacteristicsSensorPollFunction = (
+  timestamp: number,
+  characteristics: Characteristics,
+) => Promise<CharacteristicsSensorData>
+
+export interface PowerSensor {
   type: SensorType
-  pollFunc: SensorPollFunction
+  pollFunc: PowerSensorPollFunction
 }
 
 export interface CharacteristicsSensor {
@@ -38,7 +43,7 @@ interface ShellySensorSettings {
   meter: number
 }
 
-export interface ShellySensor extends Sensor {
+export interface ShellySensor extends PowerSensor {
   type: SensorType.Shelly
   shelly: ShellySensorSettings
 }
@@ -48,7 +53,7 @@ interface IotawattSensorSettings {
   name: string
 }
 
-export interface IotawattSensor extends Sensor {
+export interface IotawattSensor extends PowerSensor {
   type: SensorType.Iotawatt
   iotawatt: IotawattSensorSettings
 }
@@ -57,7 +62,7 @@ interface VirtualSensorSettings {
   children: (string | Circuit)[] // resolved to circuit at runtime
 }
 
-export interface VirtualSensor extends Sensor {
+export interface VirtualSensor extends PowerSensor {
   type: SensorType.Virtual
   virtual: VirtualSensorSettings
 }
@@ -67,18 +72,25 @@ interface UnmeteredSensorSettings {
   children: (string | Circuit)[] // resolved to Circuit at runtime
 }
 
-export interface UnmeteredSensor extends Sensor {
+export interface UnmeteredSensor extends PowerSensor {
   type: SensorType.Unmetered
   unmetered: UnmeteredSensorSettings
 }
 
-export interface SensorData {
+export interface PowerSensorData {
   timestamp: number
   circuit: Circuit
   watts: number
 }
 
-export const emptySensorData = (timestamp: number, circuit: Circuit): SensorData => {
+export type CharacteristicsSensorData = {
+  timestamp: number
+  characteristics: Characteristics
+  voltage: number
+  frequency: number
+}
+
+export const emptySensorData = (timestamp: number, circuit: Circuit): PowerSensorData => {
   return {
     timestamp,
     circuit,
@@ -86,6 +98,18 @@ export const emptySensorData = (timestamp: number, circuit: Circuit): SensorData
   }
 }
 
-export const reduceToWatts = (sensorData: SensorData[]): number => {
+export const emptyCharacteristicsSensorData = (
+  timestamp: number,
+  characteristics: Characteristics,
+): CharacteristicsSensorData => {
+  return {
+    timestamp: timestamp,
+    characteristics: characteristics,
+    voltage: 0,
+    frequency: 0,
+  }
+}
+
+export const reduceToWatts = (sensorData: PowerSensorData[]): number => {
   return sensorData.reduce((acc, data) => acc + data.watts, 0)
 }

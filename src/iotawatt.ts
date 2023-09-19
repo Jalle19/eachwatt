@@ -1,18 +1,16 @@
 import {
+  CharacteristicsSensorData,
+  CharacteristicsSensorPollFunction,
+  emptyCharacteristicsSensorData,
   emptySensorData,
   IotawattCharacteristicsSensor,
   IotawattSensor,
-  SensorData,
-  SensorPollFunction,
+  PowerSensorData,
+  PowerSensorPollFunction,
 } from './sensor'
 import { Circuit } from './circuit'
 import { getDedupedResponse } from './http'
-import {
-  Characteristics,
-  CharacteristicsSensorPollFunction,
-  CharacteristicsSensorData,
-  emptyCharacteristicsSensorData,
-} from './characteristics'
+import { Characteristics } from './characteristics'
 
 type IotawattConfigurationInput = {
   channel: number
@@ -79,7 +77,10 @@ const getSensorValue = (
   throw new Error(`Failed to find value for sensor ${sensor.iotawatt.name}`)
 }
 
-export const getSensorData: SensorPollFunction = async (timestamp: number, circuit: Circuit): Promise<SensorData> => {
+export const getSensorData: PowerSensorPollFunction = async (
+  timestamp: number,
+  circuit: Circuit,
+): Promise<PowerSensorData> => {
   const sensor = circuit.sensor as IotawattSensor
 
   try {

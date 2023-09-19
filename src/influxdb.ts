@@ -1,8 +1,7 @@
 import { Publisher, PublisherImpl, PublisherType } from './publisher'
-import { SensorData } from './sensor'
+import { CharacteristicsSensorData, PowerSensorData } from './sensor'
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client'
 import { Circuit, resolvePhase } from './circuit'
-import { CharacteristicsSensorData } from './characteristics'
 
 export interface InfluxDBPublisherSettings {
   url: string
@@ -29,7 +28,7 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
     )
   }
 
-  async publishSensorData(sensorData: SensorData[]): Promise<void> {
+  async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
     for (const data of sensorData) {
       const power = new Point('power')
         .tag('circuit', data.circuit.name)

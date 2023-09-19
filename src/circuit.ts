@@ -1,5 +1,5 @@
-import { Sensor, SensorData } from './sensor'
-import { Characteristics, CharacteristicsSensorData } from './characteristics'
+import { CharacteristicsSensorData, PowerSensor, PowerSensorData } from './sensor'
+import { Characteristics } from './characteristics'
 
 export enum CircuitType {
   Main = 'main',
@@ -11,7 +11,7 @@ export interface Circuit {
   type: CircuitType // resolved
   parent: string | Circuit | undefined // resolved to the circuit in question
   children: Circuit[] // resolved from parent
-  sensor: Sensor
+  sensor: PowerSensor
   group?: string
 }
 
@@ -22,8 +22,8 @@ export interface Main extends Circuit {
 export const pollCircuits = async (
   timestamp: number,
   circuits: Circuit[],
-  existingSensorData?: SensorData[],
-): Promise<SensorData[]> => {
+  existingSensorData?: PowerSensorData[],
+): Promise<PowerSensorData[]> => {
   const promises = []
 
   for (const circuit of circuits) {
