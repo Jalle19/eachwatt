@@ -1,5 +1,4 @@
 import { IncomingMessage, RequestListener, ServerResponse } from 'http'
-import fs from 'fs'
 import { promises as fsPromisified } from 'fs'
 
 export const httpRequestHandler: RequestListener = async (req: IncomingMessage, res: ServerResponse) => {
