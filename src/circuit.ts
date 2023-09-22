@@ -29,7 +29,6 @@ export const pollCircuits = async (
   for (const circuit of circuits) {
     const sensor = circuit.sensor
 
-    console.log(`Polling sensor ${sensor.type} of circuit ${circuit.name}`)
     promises.push(sensor.pollFunc(timestamp, circuit, existingSensorData))
   }
 
@@ -45,7 +44,6 @@ export const pollCharacteristicsSensors = async (
   for (const c of characteristics) {
     const sensor = c.sensor
 
-    console.log(`Polling sensor ${sensor.type} of characteristics ${c.name}`)
     promises.push(sensor.pollFunc(timestamp, c))
   }
 
