@@ -3,6 +3,7 @@ import { CharacteristicsSensorData, PowerSensorData } from './sensor'
 export enum PublisherType {
   InfluxDB = 'influxdb',
   Console = 'console',
+  WebSocket = 'websocket',
 }
 
 export interface PublisherImpl {

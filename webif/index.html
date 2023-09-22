@@ -9,5 +9,18 @@
 <p>
     on se semmonen
 </p>
+<script type="text/javascript">
+  const ws = new WebSocket('ws://localhost:8081')
+
+  ws.addEventListener('open', (event) => {
+    console.log('Connected to WebSocket')
+  })
+
+  ws.addEventListener('message', (event) => {
+    const rawMessage = event.data
+
+    console.dir(JSON.parse(rawMessage))
+  })
+</script>
 </body>
 </html>

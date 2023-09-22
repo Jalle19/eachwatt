@@ -113,3 +113,10 @@ export const emptyCharacteristicsSensorData = (
 export const reduceToWatts = (sensorData: PowerSensorData[]): number => {
   return sensorData.reduce((acc, data) => acc + data.watts, 0)
 }
+
+export const untangleCircularDeps = (sensorData: PowerSensorData[]): PowerSensorData[] => {
+  return sensorData.map((d) => {
+    d.circuit.children = []
+    return d
+  })
+}

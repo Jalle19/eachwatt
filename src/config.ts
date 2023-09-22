@@ -12,6 +12,7 @@ import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
+import { WebSocketPublisher, WebSocketPublisherImpl } from './publisher/websocket'
 
 export interface Config {
   characteristics: Characteristics[]
@@ -102,6 +103,10 @@ export const parseConfig = (configFileContents: string): Config => {
       case PublisherType.Console:
         const consolePublisher = publisher as ConsolePublisher
         consolePublisher.publisherImpl = new ConsolePublisherImpl()
+        break
+      case PublisherType.WebSocket:
+        const webSocketPublisher = publisher as WebSocketPublisher
+        webSocketPublisher.publisherImpl = new WebSocketPublisherImpl(webSocketPublisher.settings)
         break
     }
   }
