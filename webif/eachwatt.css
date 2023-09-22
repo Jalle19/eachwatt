@@ -22,7 +22,6 @@ div#container {
     clear: both;
 }
 
-div#container-top,
 div#container-left,
 div#container-right,
 div#mains-power,
@@ -32,7 +31,7 @@ pre#configuration {
     box-sizing: border-box;
 }
 
-h1, h2, p, table, div#mains-power {
+h1, h2, p, table, img#logo, div#mains-power {
     margin-bottom: 1em;
 }
 
@@ -51,12 +50,6 @@ th {
 
 td.cell-right-align {
     text-align: right;
-}
-
-div#container-top img,
-div#container-top p {
-    display: inline-block;
-    vertical-align: middle;
 }
 
 div#container-left {
