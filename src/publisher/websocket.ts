@@ -11,28 +11,39 @@ export interface WebSocketPublisher extends Publisher {
   settings: WebSocketPublisherSettings
 }
 
+type Message = {
+  type: string
+  data: any
+}
+
 export class WebSocketPublisherImpl implements PublisherImpl {
   wss: WebSocketServer
 
-  constructor(settings: WebSocketPublisherSettings) {
+  constructor (settings: WebSocketPublisherSettings) {
     this.wss = new WebSocketServer({ port: settings.port })
   }
 
-  publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): void {
-    this.broadcastAsJson(sensorData)
+  publishCharacteristicsSensorData (sensorData: CharacteristicsSensorData[]): void {
+    this.broadcastAsJson({
+      type: 'characteristicsSensorData',
+      data: sensorData,
+    })
   }
 
-  publishSensorData(sensorData: PowerSensorData[]): void {
+  publishSensorData (sensorData: PowerSensorData[]): void {
     // Remove circular references so we can encode as JSON
     sensorData = untangleCircularDeps(sensorData)
 
-    this.broadcastAsJson(sensorData)
+    this.broadcastAsJson({
+      type: 'powerSensorData',
+      data: sensorData,
+    })
   }
 
-  private broadcastAsJson(data: any): void {
+  private broadcastAsJson (message: Message): void {
     this.wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(data))
+        client.send(JSON.stringify(message))
       }
     })
   }
