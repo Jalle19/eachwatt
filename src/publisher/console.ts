@@ -1,5 +1,5 @@
-import { Publisher, PublisherImpl, PublisherType } from './publisher'
-import { CharacteristicsSensorData, PowerSensorData } from './sensor'
+import { Publisher, PublisherImpl, PublisherType } from '../publisher'
+import { CharacteristicsSensorData, PowerSensorData } from '../sensor'
 
 export interface ConsolePublisher extends Publisher {
   type: PublisherType.Console

@@ -1,7 +1,7 @@
-import { Publisher, PublisherImpl, PublisherType } from './publisher'
-import { CharacteristicsSensorData, PowerSensorData } from './sensor'
+import { Publisher, PublisherImpl, PublisherType } from '../publisher'
+import { CharacteristicsSensorData, PowerSensorData } from '../sensor'
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client'
-import { Circuit, resolvePhase } from './circuit'
+import { Circuit, resolvePhase } from '../circuit'
 
 export interface InfluxDBPublisherSettings {
   url: string

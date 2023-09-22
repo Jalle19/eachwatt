@@ -9,8 +9,8 @@ import { getSensorData as getUnmeteredSensorData } from './unmetered'
 import { CharacteristicsSensorType, SensorType, UnmeteredSensor, VirtualSensor } from './sensor'
 import { Circuit, CircuitType } from './circuit'
 import { Publisher, PublisherType } from './publisher'
-import { InfluxDBPublisher, InfluxDBPublisherImpl } from './influxdb'
-import { ConsolePublisher, ConsolePublisherImpl } from './console'
+import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
+import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
 
 export interface Config {
