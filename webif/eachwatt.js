@@ -4,8 +4,8 @@ const updateCharacteristicsSensorDataTable = (sensorData) => {
   let tableData = `
         <th>Name</th>
         <th>Phase</th>
-        <th>Voltage</th>
-        <th>Frequency</th>
+        <th class="cell-right-align">Voltage</th>
+        <th class="cell-right-align">Frequency</th>
     `
 
   tableData += sensorData.map((data) => {
@@ -45,9 +45,10 @@ const updatePowerSensorDataTable = (sensorData) => {
   let tableData = `
         <tr>
             <th>Circuit</th>
+            <th>Group</th>
             <th>Circuit type</th>
             <th>Sensor type</th>
-            <th>Power</th>
+            <th class="cell-right-align">Power</th>
         </tr>
     `
 

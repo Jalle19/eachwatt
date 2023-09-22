@@ -48,7 +48,7 @@ th {
     border-bottom: 1px solid #000;
 }
 
-td.cell-right-align {
+.cell-right-align {
     text-align: right;
 }
 
@@ -64,6 +64,7 @@ div#container-right {
 
 pre#configuration {
     background-color: #DDD;
+    overflow: hidden;
 }
 
 div#mains-power {
