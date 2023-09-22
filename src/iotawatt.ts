@@ -9,7 +9,7 @@ import {
   PowerSensorPollFunction,
 } from './sensor'
 import { Circuit } from './circuit'
-import { getDedupedResponse } from './http'
+import { getDedupedResponse } from './http/client'
 import { Characteristics } from './characteristics'
 
 type IotawattConfigurationInput = {

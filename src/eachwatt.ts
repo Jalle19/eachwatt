@@ -1,8 +1,10 @@
+import http from 'http'
 import yargs from 'yargs'
 import fs from 'fs'
 import { Config, parseConfig } from './config'
 import { SensorType } from './sensor'
 import { pollCharacteristicsSensors, pollCircuits } from './circuit'
+import { httpRequestHandler } from './http/server'
 
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
@@ -14,6 +16,8 @@ const argv = yargs(process.argv.slice(2))
     },
   })
   .parseSync()
+
+const httpServer = http.createServer(httpRequestHandler)
 
 const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
@@ -68,6 +72,12 @@ const mainPollerFunc = async (config: Config) => {
   const configFileContents = fs.readFileSync(configFile, 'utf8')
   const config = parseConfig(configFileContents)
 
+  // Start HTTP server
+  await httpServer.listen(8080, '0.0.0.0', () => {
+    console.log('Started HTTP server')
+  })
+
+  // Start polling sensors
   await mainPollerFunc(config)
   setInterval(mainPollerFunc, 5000, config)
 })()

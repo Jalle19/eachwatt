@@ -1,6 +1,6 @@
 import { emptySensorData, PowerSensorData, PowerSensorPollFunction, ShellySensor } from './sensor'
 import { Circuit } from './circuit'
-import { getDedupedResponse } from './http'
+import { getDedupedResponse } from './http/client'
 
 type MeterResult = {
   power: number
