@@ -106,7 +106,7 @@ export const parseConfig = (configFileContents: string): Config => {
         break
       case PublisherType.WebSocket:
         const webSocketPublisher = publisher as WebSocketPublisher
-        webSocketPublisher.publisherImpl = new WebSocketPublisherImpl(webSocketPublisher.settings)
+        webSocketPublisher.publisherImpl = new WebSocketPublisherImpl(config, webSocketPublisher.settings)
         break
     }
   }
