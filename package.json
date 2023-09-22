@@ -6,7 +6,9 @@
   "license": "GPL-3.0-or-later",
   "scripts": {
     "build": "rm -rf dist/* && npx tsc",
-    "prettier": "prettier --write src/"
+    "prettier": "prettier --write src/",
+    "prettier-check": "prettier --check src/",
+    "lint": "eslint 'src/**/*.ts'"
   },
   "engines": {
     "node": ">= 16"
@@ -16,6 +18,9 @@
     "@types/node": "^20.5.9",
     "@types/ws": "^8.5.5",
     "@types/yargs": "^17.0.24",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.49.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },

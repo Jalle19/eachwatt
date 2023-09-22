@@ -1,8 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import http from 'http'
 
-// not sure why it's complaining, it compiles and works
-// @ts-ignore
 const httpClient = axios.create({
   // We keep polling the same hosts over and over so keep-alive is essential
   httpAgent: new http.Agent({ keepAlive: true }),

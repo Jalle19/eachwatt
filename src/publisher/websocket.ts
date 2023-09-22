@@ -13,7 +13,7 @@ export interface WebSocketPublisher extends Publisher {
 
 type Message = {
   type: 'configuration' | 'characteristicsSensorData' | 'powerSensorData'
-  data: any
+  data: unknown
 }
 
 type LastPublishedSensorData = {

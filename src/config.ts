@@ -96,19 +96,22 @@ export const parseConfig = (configFileContents: string): Config => {
   // Create publishers
   for (const publisher of config.publishers) {
     switch (publisher.type) {
-      case PublisherType.InfluxDB:
+      case PublisherType.InfluxDB: {
         const influxDbPublisher = publisher as InfluxDBPublisher
         influxDbPublisher.publisherImpl = new InfluxDBPublisherImpl(influxDbPublisher.settings)
         break
-      case PublisherType.Console:
+      }
+      case PublisherType.Console: {
         const consolePublisher = publisher as ConsolePublisher
         consolePublisher.publisherImpl = new ConsolePublisherImpl()
         break
-      case PublisherType.WebSocket:
+      }
+      case PublisherType.WebSocket: {
         const webSocketPublisher = publisher as WebSocketPublisher
         // Pass the raw configuration to it
         webSocketPublisher.publisherImpl = new WebSocketPublisherImpl(configFileContents, webSocketPublisher.settings)
         break
+      }
     }
   }
 
