@@ -55,6 +55,7 @@ const updatePowerSensorDataTable = (sensorData) => {
     return `
         <tr>
             <td>${data.circuit.name}</td>
+            <td>${data.circuit.group ?? ''}</td>
             <td>${data.circuit.type}</td>
             <td>${data.circuit.sensor.type}</td>
             <td class="cell-right-align">${data.watts}W</td>
