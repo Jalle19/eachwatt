@@ -1,7 +1,6 @@
 import { Publisher, PublisherImpl, PublisherType } from '../publisher'
 import { CharacteristicsSensorData, PowerSensorData, untangleCircularDeps } from '../sensor'
 import { WebSocket, WebSocketServer } from 'ws'
-import { Config } from '../config'
 
 export interface WebSocketPublisherSettings {
   port: number
@@ -20,7 +19,7 @@ type Message = {
 export class WebSocketPublisherImpl implements PublisherImpl {
   wss: WebSocketServer
 
-  constructor(config: Config, settings: WebSocketPublisherSettings) {
+  constructor(config: string, settings: WebSocketPublisherSettings) {
     this.wss = new WebSocketServer({ port: settings.port })
 
     this.wss.on('connection', (ws) => {
