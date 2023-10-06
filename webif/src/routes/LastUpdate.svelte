@@ -1,6 +1,7 @@
 <script>
-    export let lastUpdateTimestamp, webSocketUrl;
+  export let lastUpdateTimestamp, webSocketUrl
 </script>
+
 <p>
-    Last update: {lastUpdateTimestamp?.toISOString()}, connected to {webSocketUrl}
+  Last update: {lastUpdateTimestamp?.toISOString()}, connected to {webSocketUrl}
 </p>
