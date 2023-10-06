@@ -56,9 +56,7 @@
             return d.circuit.type === 'main' && d.circuit.sensor.type !== 'unmetered'
           })
 
-          circuitSensorData = message.data.filter((d) => {
-            return d.circuit.type === 'circuit'
-          })
+          circuitSensorData = message.data
           break
         case 'configuration':
           configuration = message.data
