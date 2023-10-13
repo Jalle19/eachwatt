@@ -3,7 +3,7 @@
 </script>
 
 <h2>All circuits</h2>
-<table>
+<table class="pure-table pure-table-striped">
   <thead>
     <tr>
       <th>Circuit</th>
