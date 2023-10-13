@@ -1,0 +1,21 @@
+{
+  "id": 0,
+  "source": "init",
+  "output": true,
+  "apower": 105.7,
+  "voltage": 230.7,
+  "current": 0.457,
+  "aenergy": {
+    "total": 259.123,
+    "by_minute": [
+      1332.355,
+      1727.674,
+      2199.292
+    ],
+    "minute_ts": 1697128725
+  },
+  "temperature": {
+    "tC": 25.0,
+    "tF": 77.0
+  }
+}
