@@ -6,7 +6,14 @@ import {
 } from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
 import { getSensorData as getUnmeteredSensorData } from './unmetered'
-import { CharacteristicsSensorType, SensorType, UnmeteredSensor, VirtualSensor } from './sensor'
+import {
+  CharacteristicsSensorType,
+  SensorType,
+  ShellySensor,
+  ShellyType,
+  UnmeteredSensor,
+  VirtualSensor,
+} from './sensor'
 import { Circuit, CircuitType } from './circuit'
 import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
@@ -28,6 +35,14 @@ export const parseConfig = (configFileContents: string): Config => {
     // Use Circuit as default circuit type
     if (circuit.type === undefined) {
       circuit.type = CircuitType.Circuit
+    }
+
+    if (circuit.sensor.type === SensorType.Shelly) {
+      // Use Gen1 as default Shelly type
+      const shellySensor = circuit.sensor as ShellySensor
+      if (shellySensor.shelly.type === undefined) {
+        shellySensor.shelly.type = ShellyType.Gen1
+      }
     }
   }
 

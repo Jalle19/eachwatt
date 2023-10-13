@@ -8,6 +8,11 @@ export enum SensorType {
   Unmetered = 'unmetered',
 }
 
+export enum ShellyType {
+  Gen1 = 'gen1',
+  Gen2PM = 'gen2-pm',
+}
+
 export enum CharacteristicsSensorType {
   Iotawatt = 'iotawatt',
 }
@@ -40,6 +45,7 @@ export interface IotawattCharacteristicsSensor extends CharacteristicsSensor {
 
 interface ShellySensorSettings {
   address: string
+  type: undefined | ShellyType
   meter: number
 }
 
