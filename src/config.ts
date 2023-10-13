@@ -23,9 +23,10 @@ export interface Config {
 export const parseConfig = (configFileContents: string): Config => {
   const config = YAML.parse(configFileContents) as Config
 
-  // Set type for circuits that don't have it defined
+  // Set various defaults
   for (const circuit of config.circuits) {
-    if (circuit.type !== CircuitType.Main) {
+    // Use Circuit as default circuit type
+    if (circuit.type === undefined) {
       circuit.type = CircuitType.Circuit
     }
   }
