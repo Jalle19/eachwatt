@@ -1,7 +1,18 @@
-import { emptySensorData, PowerSensorData, PowerSensorPollFunction, ShellySensor, ShellyType } from './sensor'
+import {
+  CharacteristicsSensorData,
+  CharacteristicsSensorPollFunction,
+  emptyCharacteristicsSensorData,
+  emptySensorData,
+  PowerSensorData,
+  PowerSensorPollFunction,
+  ShellyCharacteristicsSensor,
+  ShellySensor,
+  ShellyType,
+} from './sensor'
 import { Circuit } from './circuit'
 import { getDedupedResponse } from './http/client'
 import { AxiosResponse } from 'axios'
+import { Characteristics } from './characteristics'
 
 type Gen1MeterResult = {
   power: number
@@ -17,11 +28,17 @@ type Gen2SwitchGetStatusResult = {
 
 type Gen2EMGetStatusResult = {
   a_act_power: number
+  a_voltage: number
+  a_freq: number
   b_act_power: number
+  b_voltage: number
+  b_freq: number
   c_act_power: number
+  c_voltage: number
+  c_freq: number
 }
 
-const getSensorDataUrl = (sensor: ShellySensor): string => {
+const getSensorDataUrl = (sensor: ShellySensor | ShellyCharacteristicsSensor): string => {
   const address = sensor.shelly.address
   const meter = sensor.shelly.meter
 
@@ -103,5 +120,50 @@ export const getSensorData: PowerSensorPollFunction = async (
   } catch (e) {
     console.error((e as Error).message)
     return emptySensorData(timestamp, circuit)
+  }
+}
+
+export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = async (
+  timestamp: number,
+  characteristics: Characteristics,
+): Promise<CharacteristicsSensorData> => {
+  const sensor = characteristics.sensor as ShellyCharacteristicsSensor
+  const url = getSensorDataUrl(sensor)
+
+  // Only support gen2-em sensors
+  if (sensor.shelly.type !== ShellyType.Gen2EM) {
+    throw new Error(`Shelly sensor type ${sensor.shelly.type} not supported as characteristics sensor`)
+  }
+
+  try {
+    const httpResponse = await getDedupedResponse(timestamp, url)
+    const data = httpResponse.data as Gen2EMGetStatusResult
+
+    let voltage = 0
+    let frequency = 0
+    switch (sensor.shelly.phase) {
+      case 'a':
+        voltage = data.a_voltage
+        frequency = data.a_freq
+        break
+      case 'b':
+        voltage = data.b_voltage
+        frequency = data.b_freq
+        break
+      case 'c':
+        voltage = data.c_voltage
+        frequency = data.c_freq
+        break
+    }
+
+    return {
+      timestamp: timestamp,
+      characteristics: characteristics,
+      voltage: voltage,
+      frequency: frequency,
+    }
+  } catch (e) {
+    console.error((e as Error).message)
+    return emptyCharacteristicsSensorData(timestamp, characteristics)
   }
 }

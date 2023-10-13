@@ -16,6 +16,7 @@ export enum ShellyType {
 
 export enum CharacteristicsSensorType {
   Iotawatt = 'iotawatt',
+  Shelly = 'shelly',
 }
 
 export type PowerSensorPollFunction = (
@@ -55,6 +56,11 @@ interface ShellySensorSettings {
 
 export interface ShellySensor extends PowerSensor {
   type: SensorType.Shelly
+  shelly: ShellySensorSettings
+}
+
+export interface ShellyCharacteristicsSensor extends CharacteristicsSensor {
+  type: CharacteristicsSensorType.Shelly
   shelly: ShellySensorSettings
 }
 

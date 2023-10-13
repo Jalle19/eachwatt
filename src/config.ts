@@ -1,5 +1,8 @@
 import YAML from 'yaml'
-import { getSensorData as getShellySensorData } from './shelly'
+import {
+  getCharacteristicsSensorData as getShellyCharacteristicsSensorData,
+  getSensorData as getShellySensorData,
+} from './shelly'
 import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
@@ -105,6 +108,9 @@ export const parseConfig = (configFileContents: string): Config => {
     switch (c.sensor.type) {
       case CharacteristicsSensorType.Iotawatt:
         c.sensor.pollFunc = getIotawattCharacteristicsSensorData
+        break
+      case CharacteristicsSensorType.Shelly:
+        c.sensor.pollFunc = getShellyCharacteristicsSensorData
         break
     }
   }
