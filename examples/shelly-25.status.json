@@ -1,0 +1,107 @@
+{
+  "wifi_sta": {
+    "connected": true,
+    "ssid": "Neggelandia-iot",
+    "ip": "10.112.4.44",
+    "rssi": -74
+  },
+  "cloud": {
+    "enabled": false,
+    "connected": false
+  },
+  "mqtt": {
+    "connected": true
+  },
+  "time": "09:48",
+  "unixtime": 1697179737,
+  "serial": 18,
+  "has_update": false,
+  "mac": "3C6105E4B51B",
+  "cfg_changed_cnt": 0,
+  "actions_stats": {
+    "skipped": 0
+  },
+  "relays": [
+    {
+      "ison": true,
+      "has_timer": false,
+      "timer_started": 0,
+      "timer_duration": 0,
+      "timer_remaining": 0,
+      "overpower": false,
+      "overtemperature": false,
+      "is_valid": true,
+      "source": "http"
+    },
+    {
+      "ison": false,
+      "has_timer": false,
+      "timer_started": 0,
+      "timer_duration": 0,
+      "timer_remaining": 0,
+      "overpower": false,
+      "overtemperature": false,
+      "is_valid": true,
+      "source": "input"
+    }
+  ],
+  "meters": [
+    {
+      "power": 39.11,
+      "overpower": 0.00,
+      "is_valid": true,
+      "timestamp": 1697190537,
+      "counters": [
+        39.142,
+        39.142,
+        39.140
+      ],
+      "total": 7622
+    },
+    {
+      "power": 0.00,
+      "overpower": 0.00,
+      "is_valid": true,
+      "timestamp": 1697190537,
+      "counters": [
+        0.000,
+        0.000,
+        0.000
+      ],
+      "total": 0
+    }
+  ],
+  "inputs": [
+    {
+      "input": 0,
+      "event": "",
+      "event_cnt": 0
+    },
+    {
+      "input": 0,
+      "event": "",
+      "event_cnt": 0
+    }
+  ],
+  "temperature": 59.87,
+  "overtemperature": false,
+  "tmp": {
+    "tC": 59.87,
+    "tF": 139.77,
+    "is_valid": true
+  },
+  "temperature_status": "Normal",
+  "update": {
+    "status": "unknown",
+    "has_update": false,
+    "new_version": "",
+    "old_version": "20210429-100559/v1.10.4-g3f94cd7"
+  },
+  "ram_total": 49272,
+  "ram_free": 35192,
+  "fs_size": 233681,
+  "fs_free": 140811,
+  "voltage": 237.19,
+  "ping_check": true,
+  "uptime": 64638
+}
