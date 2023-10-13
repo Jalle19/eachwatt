@@ -8,8 +8,15 @@ export enum SensorType {
   Unmetered = 'unmetered',
 }
 
+export enum ShellyType {
+  Gen1 = 'gen1',
+  Gen2PM = 'gen2-pm',
+  Gen2EM = 'gen2-em',
+}
+
 export enum CharacteristicsSensorType {
   Iotawatt = 'iotawatt',
+  Shelly = 'shelly',
 }
 
 export type PowerSensorPollFunction = (
@@ -40,11 +47,20 @@ export interface IotawattCharacteristicsSensor extends CharacteristicsSensor {
 
 interface ShellySensorSettings {
   address: string
+  type: undefined | ShellyType
+  // For Gen1 devices and Gen2 devices implementing the "Switch" component
   meter: number
+  // For devices implementing the "EM" component
+  phase: string | undefined
 }
 
 export interface ShellySensor extends PowerSensor {
   type: SensorType.Shelly
+  shelly: ShellySensorSettings
+}
+
+export interface ShellyCharacteristicsSensor extends CharacteristicsSensor {
+  type: CharacteristicsSensorType.Shelly
   shelly: ShellySensorSettings
 }
 

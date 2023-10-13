@@ -3,9 +3,7 @@
 </script>
 
 <h2>Configuration</h2>
-<pre id="configuration">
-    {configuration}
-</pre>
+<pre id="configuration">{configuration}</pre>
 
 <style>
   pre {

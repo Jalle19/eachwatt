@@ -17,7 +17,7 @@
   const determineWebSocketUrl = () => {
     const urlParams = new URLSearchParams(window.location.search)
 
-    return urlParams.get('ws')
+    return urlParams.get('ws') || undefined
   }
 
   const parseTimestamp = (sensorData) => {
@@ -71,10 +71,14 @@
   <Configuration {configuration} />
 </div>
 <div class="container-right">
-  <LastUpdate {lastUpdateTimestamp} {webSocketUrl} />
-  <Characteristics sensorData={characteristicsSensorData} />
-  <MainsPower sensorData={mainsSensorData} />
-  <Circuits sensorData={circuitSensorData} />
+  {#if webSocketUrl === undefined}
+    <p>Please add ?ws=ws://x.x.x.x:yyyy to your URL to connect to a server</p>
+  {:else}
+    <LastUpdate {lastUpdateTimestamp} {webSocketUrl} />
+    <Characteristics sensorData={characteristicsSensorData} />
+    <MainsPower sensorData={mainsSensorData} />
+    <Circuits sensorData={circuitSensorData} />
+  {/if}
 </div>
 
 <style>

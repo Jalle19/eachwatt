@@ -1,12 +1,22 @@
 import YAML from 'yaml'
-import { getSensorData as getShellySensorData } from './shelly'
+import {
+  getCharacteristicsSensorData as getShellyCharacteristicsSensorData,
+  getSensorData as getShellySensorData,
+} from './shelly'
 import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
 } from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
 import { getSensorData as getUnmeteredSensorData } from './unmetered'
-import { CharacteristicsSensorType, SensorType, UnmeteredSensor, VirtualSensor } from './sensor'
+import {
+  CharacteristicsSensorType,
+  SensorType,
+  ShellySensor,
+  ShellyType,
+  UnmeteredSensor,
+  VirtualSensor,
+} from './sensor'
 import { Circuit, CircuitType } from './circuit'
 import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
@@ -23,10 +33,19 @@ export interface Config {
 export const parseConfig = (configFileContents: string): Config => {
   const config = YAML.parse(configFileContents) as Config
 
-  // Set type for circuits that don't have it defined
+  // Set various defaults
   for (const circuit of config.circuits) {
-    if (circuit.type !== CircuitType.Main) {
+    // Use Circuit as default circuit type
+    if (circuit.type === undefined) {
       circuit.type = CircuitType.Circuit
+    }
+
+    if (circuit.sensor.type === SensorType.Shelly) {
+      // Use Gen1 as default Shelly type
+      const shellySensor = circuit.sensor as ShellySensor
+      if (shellySensor.shelly.type === undefined) {
+        shellySensor.shelly.type = ShellyType.Gen1
+      }
     }
   }
 
@@ -89,6 +108,9 @@ export const parseConfig = (configFileContents: string): Config => {
     switch (c.sensor.type) {
       case CharacteristicsSensorType.Iotawatt:
         c.sensor.pollFunc = getIotawattCharacteristicsSensorData
+        break
+      case CharacteristicsSensorType.Shelly:
+        c.sensor.pollFunc = getShellyCharacteristicsSensorData
         break
     }
   }
