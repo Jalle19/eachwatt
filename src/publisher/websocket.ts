@@ -1,6 +1,7 @@
 import { Publisher, PublisherImpl, PublisherType } from '../publisher'
 import { CharacteristicsSensorData, PowerSensorData, untangleCircularDeps } from '../sensor'
 import { WebSocket, WebSocketServer } from 'ws'
+import { Server } from 'http'
 
 export interface WebSocketPublisherSettings {
   port: number
@@ -25,8 +26,9 @@ export class WebSocketPublisherImpl implements PublisherImpl {
   wss: WebSocketServer
   lastPublishedSensorData: LastPublishedSensorData
 
-  constructor(config: string, settings: WebSocketPublisherSettings) {
-    this.wss = new WebSocketServer({ port: settings.port })
+  constructor(config: string, httpServer: Server) {
+    // Reuse the HTTP server given to us
+    this.wss = new WebSocketServer({ server: httpServer })
 
     // Keep track of the last published sensor data so we can deliver it immediately (if available) to newly connected
     // clients

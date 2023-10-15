@@ -22,7 +22,6 @@ import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
-import { WebSocketPublisher, WebSocketPublisherImpl } from './publisher/websocket'
 
 export interface Config {
   characteristics: Characteristics[]
@@ -115,7 +114,8 @@ export const parseConfig = (configFileContents: string): Config => {
     }
   }
 
-  // Create publishers
+  // Create publishers. Ignore any manually defined WebSocket publishers, we only support
+  // one right now and it's added separately during application startup.
   for (const publisher of config.publishers) {
     switch (publisher.type) {
       case PublisherType.InfluxDB: {
@@ -126,12 +126,6 @@ export const parseConfig = (configFileContents: string): Config => {
       case PublisherType.Console: {
         const consolePublisher = publisher as ConsolePublisher
         consolePublisher.publisherImpl = new ConsolePublisherImpl()
-        break
-      }
-      case PublisherType.WebSocket: {
-        const webSocketPublisher = publisher as WebSocketPublisher
-        // Pass the raw configuration to it
-        webSocketPublisher.publisherImpl = new WebSocketPublisherImpl(configFileContents, webSocketPublisher.settings)
         break
       }
     }

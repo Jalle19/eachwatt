@@ -5,6 +5,8 @@ import { Config, parseConfig } from './config'
 import { SensorType } from './sensor'
 import { pollCharacteristicsSensors, pollCircuits } from './circuit'
 import { httpRequestHandler } from './http/server'
+import { WebSocketPublisherImpl } from './publisher/websocket'
+import { PublisherType } from './publisher'
 
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
@@ -16,8 +18,6 @@ const argv = yargs(process.argv.slice(2))
     },
   })
   .parseSync()
-
-const httpServer = http.createServer(httpRequestHandler)
 
 const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
@@ -72,9 +72,17 @@ const mainPollerFunc = async (config: Config) => {
   const configFileContents = fs.readFileSync(configFile, 'utf8')
   const config = parseConfig(configFileContents)
 
-  // Start HTTP server
+  // Create and start HTTP server
+  const httpServer = http.createServer(httpRequestHandler)
   await httpServer.listen(8080, '0.0.0.0', () => {
     console.log('Started HTTP server')
+  })
+
+  // Create a WebSocket server and register it as a publisher too
+  const webSocketServer = new WebSocketPublisherImpl(configFileContents, httpServer)
+  config.publishers.push({
+    type: PublisherType.WebSocket,
+    publisherImpl: webSocketServer,
   })
 
   // Start polling sensors

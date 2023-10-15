@@ -321,7 +321,3 @@ publishers:
       bucket: eachwatt
       apiToken: token
   - type: console
-  # Needed for the web interface
-  - type: websocket
-    settings:
-      port: 8081
