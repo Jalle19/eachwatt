@@ -8,6 +8,7 @@
   import Characteristics from './Characteristics.svelte'
   import MainsPower from './MainsPower.svelte'
   import Circuits from './Circuits.svelte'
+  import Loader from './Loader.svelte'
 
   let configuration
   let webSocketUrl
@@ -62,8 +63,10 @@
   })
 </script>
 
-{#if webSocketUrl === undefined}
-  <p>Please add ?ws=ws://x.x.x.x:yyyy to your URL to connect to a server</p>
+{#if lastUpdateTimestamp === undefined}
+  <div class="pure-u-1-1 l-box">
+    <Loader />
+  </div>
 {:else}
   <div class="pure-u-1-1 l-box">
     <LastUpdate {lastUpdateTimestamp} {webSocketUrl} />
