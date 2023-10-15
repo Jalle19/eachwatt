@@ -3,10 +3,11 @@ import yargs from 'yargs'
 import fs from 'fs'
 import { Config, parseConfig } from './config'
 import { SensorType } from './sensor'
-import { pollCharacteristicsSensors, pollCircuits } from './circuit'
+import { pollPowerSensors } from './circuit'
 import { httpRequestHandler } from './http/server'
 import { WebSocketPublisherImpl } from './publisher/websocket'
 import { PublisherType } from './publisher'
+import { pollCharacteristicsSensors } from './characteristics'
 
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
@@ -27,16 +28,16 @@ const mainPollerFunc = async (config: Config) => {
   const nonVirtualCircuits = circuits.filter(
     (c) => c.sensor.type !== SensorType.Virtual && c.sensor.type !== SensorType.Unmetered,
   )
-  let sensorData = await pollCircuits(now, nonVirtualCircuits)
+  let sensorData = await pollPowerSensors(now, nonVirtualCircuits)
 
   // Poll virtual sensors, giving them the opportunity to act on the real sensor data we've gathered so far
   const virtualCircuits = circuits.filter((c) => c.sensor.type === SensorType.Virtual)
-  const virtualSensorData = await pollCircuits(now, virtualCircuits, sensorData)
+  const virtualSensorData = await pollPowerSensors(now, virtualCircuits, sensorData)
   sensorData = sensorData.concat(virtualSensorData)
 
   // Poll unmetered sensors
   const unmeteredCircuits = circuits.filter((c) => c.sensor.type === SensorType.Unmetered)
-  const unmeteredSensorData = await pollCircuits(now, unmeteredCircuits, sensorData)
+  const unmeteredSensorData = await pollPowerSensors(now, unmeteredCircuits, sensorData)
   sensorData = sensorData.concat(unmeteredSensorData)
 
   // Poll characteristics sensors
