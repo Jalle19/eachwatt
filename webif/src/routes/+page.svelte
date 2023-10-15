@@ -1,5 +1,7 @@
 <script>
   import { onMount } from 'svelte'
+  import { determineWebSocketUrl } from '$lib/websocket'
+
   import Logo from './Logo.svelte'
   import Configuration from './Configuration.svelte'
   import LastUpdate from './LastUpdate.svelte'
@@ -13,12 +15,6 @@
   let characteristicsSensorData
   let mainsSensorData
   let circuitSensorData
-
-  const determineWebSocketUrl = () => {
-    const urlParams = new URLSearchParams(window.location.search)
-
-    return urlParams.get('ws') || undefined
-  }
 
   const parseTimestamp = (sensorData) => {
     return new Date(sensorData[0].timestamp)
