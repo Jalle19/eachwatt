@@ -1,11 +1,14 @@
 <script>
   import { onMount } from 'svelte'
+  import { determineWebSocketUrl } from '$lib/websocket'
+
   import Logo from './Logo.svelte'
   import Configuration from './Configuration.svelte'
   import LastUpdate from './LastUpdate.svelte'
   import Characteristics from './Characteristics.svelte'
   import MainsPower from './MainsPower.svelte'
   import Circuits from './Circuits.svelte'
+  import Loader from './Loader.svelte'
 
   let configuration
   let webSocketUrl
@@ -13,12 +16,6 @@
   let characteristicsSensorData
   let mainsSensorData
   let circuitSensorData
-
-  const determineWebSocketUrl = () => {
-    const urlParams = new URLSearchParams(window.location.search)
-
-    return urlParams.get('ws') || undefined
-  }
 
   const parseTimestamp = (sensorData) => {
     return new Date(sensorData[0].timestamp)
@@ -66,8 +63,10 @@
   })
 </script>
 
-{#if webSocketUrl === undefined}
-  <p>Please add ?ws=ws://x.x.x.x:yyyy to your URL to connect to a server</p>
+{#if lastUpdateTimestamp === undefined}
+  <div class="pure-u-1-1 l-box">
+    <Loader />
+  </div>
 {:else}
   <div class="pure-u-1-1 l-box">
     <LastUpdate {lastUpdateTimestamp} {webSocketUrl} />
