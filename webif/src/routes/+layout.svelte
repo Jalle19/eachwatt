@@ -1,57 +1,34 @@
+<script>
+    import 'purecss/build/pure.css'
+</script>
 <svelte:head>
   <title>EachWatt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </svelte:head>
-<div class="container">
+<div class="pure-g container">
   <slot />
 </div>
 
 <style>
-  :global(*),
-  :global(html) {
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        clear: both;
+    }
 
-  :global(html) {
-    width: 100%;
-    height: 100%;
-  }
+    :global(table) {
+        width: 100%;
+    }
 
-  :global(body) {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
+    :global(.cell-right-align) {
+        text-align: right;
+    }
 
-  :global(h1),
-  :global(h2),
-  :global(p),
-  :global(table) {
-    margin-bottom: 1em;
-  }
+    :global(.pure-g > div) {
+        box-sizing: border-box;
+    }
 
-  :global(table) {
-    width: 100%;
-  }
-
-  :global(th),
-  :global(td) {
-    text-align: left;
-    padding: 0 0.4em 0.4em 0;
-  }
-
-  :global(th) {
-    border-bottom: 1px solid #000;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    clear: both;
-  }
-
-  :global(.cell-right-align) {
-    text-align: right;
-  }
+    :global(.l-box) {
+        padding: 1em;
+    }
 </style>

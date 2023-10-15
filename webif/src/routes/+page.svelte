@@ -66,33 +66,25 @@
   })
 </script>
 
-<div class="container-left">
-  <Logo />
-  <Configuration {configuration} />
-</div>
-<div class="container-right">
-  {#if webSocketUrl === undefined}
-    <p>Please add ?ws=ws://x.x.x.x:yyyy to your URL to connect to a server</p>
-  {:else}
+{#if webSocketUrl === undefined}
+  <p>Please add ?ws=ws://x.x.x.x:yyyy to your URL to connect to a server</p>
+{:else}
+  <div class="pure-u-1-1 l-box">
     <LastUpdate {lastUpdateTimestamp} {webSocketUrl} />
-    <Characteristics sensorData={characteristicsSensorData} />
-    <MainsPower sensorData={mainsSensorData} />
-    <Circuits sensorData={circuitSensorData} />
-  {/if}
-</div>
-
-<style>
-  .container-left {
-    width: 30%;
-    float: left;
-    padding: 0.8em;
-    box-sizing: border-box;
-  }
-
-  .container-right {
-    width: 70%;
-    float: right;
-    padding: 0.8em;
-    box-sizing: border-box;
-  }
-</style>
+  </div>
+  <div class="pure-u-1-4 l-box">
+    <Logo />
+    <Configuration {configuration} />
+  </div>
+  <div class="pure-u-3-4">
+    <div class="pure-u-1-1 l-box">
+      <Characteristics sensorData={characteristicsSensorData} />
+    </div>
+    <div class="pure-u-1-1 l-box">
+      <MainsPower sensorData={mainsSensorData} />
+    </div>
+    <div class="pure-u-1-1 l-box">
+      <Circuits sensorData={circuitSensorData} />
+    </div>
+  </div>
+{/if}
