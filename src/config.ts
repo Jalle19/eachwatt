@@ -30,8 +30,10 @@ export interface Config {
 }
 
 export const parseConfig = (configFileContents: string): Config => {
-  const config = YAML.parse(configFileContents) as Config
+  return YAML.parse(configFileContents) as Config
+}
 
+export const resolveAndValidateConfig = (config: Config): Config => {
   // Set various defaults
   for (const circuit of config.circuits) {
     // Use Circuit as default circuit type
