@@ -7,8 +7,8 @@ export enum CircuitType {
 
 export interface Circuit {
   name: string
-  type: undefined | CircuitType // resolved
-  parent: string | Circuit | undefined // resolved to the circuit in question
+  type?: CircuitType // resolved during parsing
+  parent?: string | Circuit // resolved to the circuit in question
   children: Circuit[] // resolved from parent
   sensor: PowerSensor
   group?: string

@@ -47,11 +47,11 @@ export interface IotawattCharacteristicsSensor extends CharacteristicsSensor {
 
 interface ShellySensorSettings {
   address: string
-  type: undefined | ShellyType
+  type?: ShellyType
   // For Gen1 devices and Gen2 devices implementing the "Switch" component
   meter: number
   // For devices implementing the "EM" component
-  phase: string | undefined
+  phase?: string
 }
 
 export interface ShellySensor extends PowerSensor {
