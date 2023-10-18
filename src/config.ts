@@ -35,6 +35,14 @@ export const parseConfig = (configFileContents: string): Config => {
 
 export const resolveAndValidateConfig = (config: Config): Config => {
   // Set various defaults
+  if (!config.characteristics) {
+    config.characteristics = []
+  }
+
+  if (!config.publishers) {
+    config.publishers = []
+  }
+
   for (const circuit of config.circuits) {
     // Use Circuit as default circuit type
     if (circuit.type === undefined) {
