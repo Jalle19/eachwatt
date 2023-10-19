@@ -2,8 +2,9 @@ import { connectAsync, MqttClient } from 'mqtt'
 import { Publisher, PublisherImpl, PublisherType } from '../publisher'
 import { CharacteristicsSensorData, PowerSensorData } from '../sensor'
 import { Config } from '../config'
+import { createCharacteristicsSensorTopicName, createPowerSensorTopicName } from './mqtt/util'
 
-const TOPIC_PREFIX = 'eachwatt'
+export const TOPIC_PREFIX = 'eachwatt'
 
 export type MqttPublisherSettings = {
   brokerUrl: string
@@ -39,8 +40,8 @@ export class MqttPublisherImpl implements PublisherImpl {
     for (const data of sensorData) {
       const topicValueMap: TopicValueMap = new Map(
         Object.entries({
-          [`${TOPIC_PREFIX}/characteristic/${data.characteristics.name}/voltage`]: data.voltage,
-          [`${TOPIC_PREFIX}/characteristic/${data.characteristics.name}/frequency`]: data.frequency,
+          [createCharacteristicsSensorTopicName(data.characteristics, 'voltage')]: data.voltage,
+          [createCharacteristicsSensorTopicName(data.characteristics, 'frequency')]: data.frequency,
         }),
       )
 
@@ -52,7 +53,7 @@ export class MqttPublisherImpl implements PublisherImpl {
     for (const data of sensorData) {
       const topicValueMap: TopicValueMap = new Map(
         Object.entries({
-          [`${TOPIC_PREFIX}/circuit/${data.circuit.name}/power`]: data.watts,
+          [createPowerSensorTopicName(data.circuit, 'power')]: data.watts,
         }),
       )
 
