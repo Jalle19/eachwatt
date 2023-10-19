@@ -62,11 +62,7 @@ export const resolveAndValidateConfig = (config: Config): Config => {
   // Resolve parent relationships
   for (const circuit of config.circuits) {
     if (circuit.parent) {
-      const resolvedParent = config.circuits.find((c) => c.name === circuit.parent)
-      if (!resolvedParent) {
-        throw new Error(`Failed to resolve parent for circuit ${circuit.name}, parent is ${circuit.parent}`)
-      }
-      circuit.parent = resolvedParent
+      circuit.parent = tryResolveCircuit(circuit.parent as string, config.circuits)
     }
   }
 
@@ -82,7 +78,10 @@ export const resolveAndValidateConfig = (config: Config): Config => {
     if (circuit.sensor.type === SensorType.Virtual) {
       const virtualSensor = circuit.sensor as VirtualSensor
 
-      virtualSensor.virtual.children = resolveChildCircuits(virtualSensor.virtual.children as string[], config.circuits)
+      virtualSensor.virtual.children = tryResolveChildCircuits(
+        virtualSensor.virtual.children as string[],
+        config.circuits,
+      )
     }
   }
 
@@ -91,13 +90,8 @@ export const resolveAndValidateConfig = (config: Config): Config => {
     if (circuit.sensor.type === SensorType.Unmetered) {
       const unmeteredSensor = circuit.sensor as UnmeteredSensor
 
-      const parentCircuit = config.circuits.find((c) => c.name === unmeteredSensor.unmetered.parent)
-      if (!parentCircuit) {
-        throw new Error(`Failed to resolve unmetered sensor parent ${unmeteredSensor.unmetered.parent}`)
-      }
-
-      unmeteredSensor.unmetered.parent = parentCircuit
-      unmeteredSensor.unmetered.children = resolveChildCircuits(
+      unmeteredSensor.unmetered.parent = tryResolveCircuit(unmeteredSensor.unmetered.parent as string, config.circuits)
+      unmeteredSensor.unmetered.children = tryResolveChildCircuits(
         unmeteredSensor.unmetered.children as string[],
         config.circuits,
       )
@@ -159,12 +153,16 @@ export const resolveAndValidateConfig = (config: Config): Config => {
   return config
 }
 
-const resolveChildCircuits = (children: string[], circuits: Circuit[]): Circuit[] => {
+const tryResolveCircuit = (name: string, circuits: Circuit[]) => {
+  const circuit = circuits.find((c) => c.name === name)
+  if (!circuit) {
+    throw new Error(`Failed to resolve circuit with name "${name}"`)
+  }
+  return circuit
+}
+
+const tryResolveChildCircuits = (children: string[], circuits: Circuit[]): Circuit[] => {
   return children.map((c) => {
-    const resolvedCircuit = circuits.find((cc) => cc.name === c)
-    if (!resolvedCircuit) {
-      throw new Error(`Failed to resolve child circuit "${c}`)
-    }
-    return resolvedCircuit
+    return tryResolveCircuit(c, circuits)
   })
 }
