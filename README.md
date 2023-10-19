@@ -1,5 +1,7 @@
 # eachwatt
 
+[![CI](https://github.com/Jalle19/eachwatt/actions/workflows/ci.yml/badge.svg)](https://github.com/Jalle19/eachwatt/actions/workflows/ci.yml)
+
 ## Development
 
 Install dependencies:
