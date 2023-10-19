@@ -9,6 +9,7 @@ import {
 } from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
 import { getSensorData as getUnmeteredSensorData } from './unmetered'
+import { getSensorData as getDummySensorData } from './dummy'
 import {
   CharacteristicsSensorType,
   SensorType,
@@ -30,9 +31,19 @@ export interface Config {
 }
 
 export const parseConfig = (configFileContents: string): Config => {
-  const config = YAML.parse(configFileContents) as Config
+  return YAML.parse(configFileContents) as Config
+}
 
+export const resolveAndValidateConfig = (config: Config): Config => {
   // Set various defaults
+  if (!config.characteristics) {
+    config.characteristics = []
+  }
+
+  if (!config.publishers) {
+    config.publishers = []
+  }
+
   for (const circuit of config.circuits) {
     // Use Circuit as default circuit type
     if (circuit.type === undefined) {
@@ -50,7 +61,9 @@ export const parseConfig = (configFileContents: string): Config => {
 
   // Resolve parent relationships
   for (const circuit of config.circuits) {
-    circuit.parent = config.circuits.find((c) => c.name === circuit.parent)
+    if (circuit.parent) {
+      circuit.parent = tryResolveCircuit(circuit.parent as string, config.circuits)
+    }
   }
 
   // Resolve child relationships
@@ -65,9 +78,10 @@ export const parseConfig = (configFileContents: string): Config => {
     if (circuit.sensor.type === SensorType.Virtual) {
       const virtualSensor = circuit.sensor as VirtualSensor
 
-      virtualSensor.virtual.children = virtualSensor.virtual.children.map((c) => {
-        return config.circuits.find((cc) => cc.name === c)
-      }) as Circuit[]
+      virtualSensor.virtual.children = tryResolveChildCircuits(
+        virtualSensor.virtual.children as string[],
+        config.circuits,
+      )
     }
   }
 
@@ -76,12 +90,11 @@ export const parseConfig = (configFileContents: string): Config => {
     if (circuit.sensor.type === SensorType.Unmetered) {
       const unmeteredSensor = circuit.sensor as UnmeteredSensor
 
-      unmeteredSensor.unmetered.parent = config.circuits.find(
-        (c) => c.name === unmeteredSensor.unmetered.parent,
-      ) as Circuit
-      unmeteredSensor.unmetered.children = unmeteredSensor.unmetered.children.map((c) => {
-        return config.circuits.find((cc) => cc.name === c)
-      }) as Circuit[]
+      unmeteredSensor.unmetered.parent = tryResolveCircuit(unmeteredSensor.unmetered.parent as string, config.circuits)
+      unmeteredSensor.unmetered.children = tryResolveChildCircuits(
+        unmeteredSensor.unmetered.children as string[],
+        config.circuits,
+      )
     }
   }
 
@@ -99,6 +112,12 @@ export const parseConfig = (configFileContents: string): Config => {
         break
       case SensorType.Unmetered:
         circuit.sensor.pollFunc = getUnmeteredSensorData
+        break
+      case SensorType.Dummy:
+        circuit.sensor.pollFunc = getDummySensorData
+        break
+      default:
+        throw new Error(`Unrecognized sensor type ${circuit.sensor.type}`)
     }
   }
 
@@ -132,4 +151,18 @@ export const parseConfig = (configFileContents: string): Config => {
   }
 
   return config
+}
+
+const tryResolveCircuit = (name: string, circuits: Circuit[]) => {
+  const circuit = circuits.find((c) => c.name === name)
+  if (!circuit) {
+    throw new Error(`Failed to resolve circuit with name "${name}"`)
+  }
+  return circuit
+}
+
+const tryResolveChildCircuits = (children: string[], circuits: Circuit[]): Circuit[] => {
+  return children.map((c) => {
+    return tryResolveCircuit(c, circuits)
+  })
 }

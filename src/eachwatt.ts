@@ -1,7 +1,7 @@
 import http from 'http'
 import yargs from 'yargs'
 import fs from 'fs'
-import { Config, parseConfig } from './config'
+import { Config, parseConfig, resolveAndValidateConfig } from './config'
 import { SensorType } from './sensor'
 import { pollPowerSensors } from './circuit'
 import { httpRequestHandler } from './http/server'
@@ -71,7 +71,8 @@ const mainPollerFunc = async (config: Config) => {
   }
 
   const configFileContents = fs.readFileSync(configFile, 'utf8')
-  const config = parseConfig(configFileContents)
+  const rawConfig = parseConfig(configFileContents)
+  const config = resolveAndValidateConfig(rawConfig)
 
   // Create and start HTTP server
   const httpServer = http.createServer(httpRequestHandler)

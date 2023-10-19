@@ -1,5 +1,7 @@
 # eachwatt
 
+[![CI](https://github.com/Jalle19/eachwatt/actions/workflows/ci.yml/badge.svg)](https://github.com/Jalle19/eachwatt/actions/workflows/ci.yml)
+
 ## Development
 
 Install dependencies:
@@ -32,4 +34,10 @@ development server. Override the WebSocket URL using the `ws` query parameter, l
 
 ```
 http://localhost:5173/?ws=ws://localhost:8080
+```
+
+To run the test suite, use:
+
+```
+npm run test
 ```
