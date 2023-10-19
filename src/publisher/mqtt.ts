@@ -12,6 +12,7 @@ export type MqttPublisherSettings = {
   brokerUrl: string
   homeAssistant?: {
     autoDiscovery: boolean
+    deviceIdentifier: string
   }
 }
 
@@ -39,7 +40,7 @@ export class MqttPublisherImpl implements PublisherImpl {
 
         // Publish Home Assistant MQTT discovery messages
         if (this.settings.homeAssistant?.autoDiscovery) {
-          configureMqttDiscovery(this.config, this.client)
+          configureMqttDiscovery(this.config, this.settings.homeAssistant.deviceIdentifier, this.client)
             .then(() => {
               console.log(`Configured Home Assistant MQTT discovery`)
             })

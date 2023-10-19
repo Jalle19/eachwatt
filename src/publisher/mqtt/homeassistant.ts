@@ -4,10 +4,22 @@ import { Config } from '../../config'
 import { TOPIC_NAME_STATUS } from '../mqtt'
 import { createPowerSensorTopicName } from './util'
 
-export const configureMqttDiscovery = async (config: Config, mqttClient: MqttClient): Promise<void> => {
+export const configureMqttDiscovery = async (
+  config: Config,
+  deviceIdentifier: string,
+  mqttClient: MqttClient,
+): Promise<void> => {
+  // The "device" object that is part of each sensor's configuration payload
+  const mqttDeviceInformation = {
+    'name': deviceIdentifier,
+    'model': 'Eachwatt',
+    'identifiers': deviceIdentifier,
+  }
+
   const configurationBase = {
     'platform': 'mqtt',
     'availability_topic': TOPIC_NAME_STATUS,
+    'device': mqttDeviceInformation,
   }
 
   for (const circuit of config.circuits) {
@@ -26,7 +38,6 @@ export const configureMqttDiscovery = async (config: Config, mqttClient: MqttCli
     }
 
     // "retain" is used so that the entities will be available immediately after a Home Assistant restart
-    console.log(`Publishing Home Assistant auto-discovery configuration for power sensor "${entityName}"...`)
     const configurationTopicName = `homeassistant/sensor/eachwatt/${entityName}/config`
     await mqttClient.publishAsync(configurationTopicName, JSON.stringify(configuration), {
       retain: true,
