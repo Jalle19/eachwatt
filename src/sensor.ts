@@ -6,6 +6,7 @@ export enum SensorType {
   Shelly = 'shelly',
   Virtual = 'virtual',
   Unmetered = 'unmetered',
+  Dummy = 'dummy',
 }
 
 export enum ShellyType {
