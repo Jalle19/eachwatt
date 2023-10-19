@@ -6,8 +6,7 @@ import { Config } from '../config'
 const TOPIC_PREFIX = 'eachwatt'
 
 export type MqttPublisherSettings = {
-  host: string
-  port: number
+  brokerUrl: string
 }
 
 export interface MqttPublisher extends Publisher {
@@ -26,22 +25,14 @@ export class MqttPublisherImpl implements PublisherImpl {
     this.config = config
     this.settings = settings
 
-    const brokerUrl = this.getBrokerUrl()
-    connectAsync(brokerUrl)
+    connectAsync(this.settings.brokerUrl)
       .then((client) => {
         this.client = client
-        console.log(`Connected to MQTT broker at ${brokerUrl}`)
+        console.log(`Connected to MQTT broker at ${this.settings.brokerUrl}`)
       })
       .catch((e) => {
         throw new Error(`Failed to connect to MQTT broker: ${e}`)
       })
-  }
-
-  private getBrokerUrl(): string {
-    const host = this.settings.host
-    const port = this.settings.port ?? 1883
-
-    return `mqtt://${host}:${port}`
   }
 
   async publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): Promise<void> {
