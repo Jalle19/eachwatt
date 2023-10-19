@@ -6,6 +6,7 @@ import { createCharacteristicsSensorTopicName, createPowerSensorTopicName } from
 import { configureMqttDiscovery } from './mqtt/homeassistant'
 
 export const TOPIC_PREFIX = 'eachwatt'
+export const TOPIC_NAME_STATUS = `${TOPIC_PREFIX}/status`
 
 export type MqttPublisherSettings = {
   brokerUrl: string
@@ -63,6 +64,8 @@ export class MqttPublisherImpl implements PublisherImpl {
 
       await this.publishTopicValues(topicValueMap)
     }
+
+    await this.publishStatus()
   }
 
   async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
@@ -75,6 +78,8 @@ export class MqttPublisherImpl implements PublisherImpl {
 
       await this.publishTopicValues(topicValueMap)
     }
+
+    await this.publishStatus()
   }
 
   private async publishTopicValues(topicValueMap: TopicValueMap): Promise<void> {
@@ -88,5 +93,10 @@ export class MqttPublisherImpl implements PublisherImpl {
     }
 
     await Promise.all(promises)
+  }
+
+  private async publishStatus(): Promise<void> {
+    // noinspection TypeScriptValidateTypes
+    await this.client?.publishAsync(TOPIC_NAME_STATUS, 'online')
   }
 }
