@@ -26,7 +26,7 @@ type TopicValueMap = Map<string, string | number>
 export class MqttPublisherImpl implements PublisherImpl {
   config: Config
   settings: MqttPublisherSettings
-  client?: MqttClient
+  mqttClient?: MqttClient
 
   constructor(config: Config, settings: MqttPublisherSettings) {
     this.config = config
@@ -35,12 +35,12 @@ export class MqttPublisherImpl implements PublisherImpl {
     // Connect to the broker
     connectAsync(this.settings.brokerUrl)
       .then((client) => {
-        this.client = client
+        this.mqttClient = client
         console.log(`Connected to MQTT broker at ${this.settings.brokerUrl}`)
 
         // Publish Home Assistant MQTT discovery messages
         if (this.settings.homeAssistant?.autoDiscovery) {
-          configureMqttDiscovery(this.config, this.settings.homeAssistant.deviceIdentifier, this.client)
+          configureMqttDiscovery(this.config, this.settings.homeAssistant.deviceIdentifier, this.mqttClient)
             .then(() => {
               console.log(`Configured Home Assistant MQTT discovery`)
             })
@@ -90,7 +90,7 @@ export class MqttPublisherImpl implements PublisherImpl {
       const message = String(value)
 
       // noinspection TypeScriptValidateTypes
-      promises.push(this.client?.publishAsync(topic, message))
+      promises.push(this.mqttClient?.publishAsync(topic, message))
     }
 
     await Promise.all(promises)
@@ -98,6 +98,6 @@ export class MqttPublisherImpl implements PublisherImpl {
 
   private async publishStatus(): Promise<void> {
     // noinspection TypeScriptValidateTypes
-    await this.client?.publishAsync(TOPIC_NAME_STATUS, 'online')
+    await this.mqttClient?.publishAsync(TOPIC_NAME_STATUS, 'online')
   }
 }
