@@ -4,16 +4,12 @@ import { TOPIC_NAME_STATUS } from '../mqtt'
 import { createPowerSensorTopicName, slugifyName } from './util'
 import { supportsApparentPower, supportsPowerFactor } from '../../sensor'
 
-export const configureMqttDiscovery = async (
-  config: Config,
-  deviceIdentifier: string,
-  mqttClient: MqttClient,
-): Promise<void> => {
+export const configureMqttDiscovery = async (config: Config, mqttClient: MqttClient): Promise<void> => {
   // The "device" object that is part of each sensor's configuration payload
   const mqttDeviceInformation = {
-    'name': deviceIdentifier,
+    'name': 'eachwatt',
     'model': 'Eachwatt',
-    'identifiers': deviceIdentifier,
+    'identifiers': 'eachwatt',
   }
 
   const configurationBase = {
@@ -29,7 +25,7 @@ export const configureMqttDiscovery = async (
     const entityName = slugifyName(circuit.name)
 
     // Add power sensors
-    const uniqueId = `${deviceIdentifier}_${entityName}_power`
+    const uniqueId = `eachwatt_${entityName}_power`
     const configurationTopicName = `homeassistant/sensor/${uniqueId}/config`
     const configuration = {
       ...configurationBase,
@@ -50,7 +46,7 @@ export const configureMqttDiscovery = async (
 
     // Add apparent power sensors
     if (supportsApparentPower(circuit.sensor)) {
-      const uniqueId = `${deviceIdentifier}_${entityName}_apparentPower`
+      const uniqueId = `eachwatt_${entityName}_apparentPower`
       const configurationTopicName = `homeassistant/sensor/${uniqueId}/config`
       const configuration = {
         ...configurationBase,
@@ -72,7 +68,7 @@ export const configureMqttDiscovery = async (
 
     // Add power factor sensors
     if (supportsPowerFactor(circuit.sensor)) {
-      const uniqueId = `${deviceIdentifier}_${entityName}_powerFactor`
+      const uniqueId = `eachwatt_${entityName}_powerFactor`
       const configurationTopicName = `homeassistant/sensor/${uniqueId}/config`
       const configuration = {
         ...configurationBase,
