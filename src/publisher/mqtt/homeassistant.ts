@@ -21,6 +21,8 @@ export const configureMqttDiscovery = async (
     'device': mqttDeviceInformation,
   }
 
+  const promises = []
+
   for (const circuit of config.circuits) {
     // Add power sensors
     const entityName = slugifyName(circuit.name)
@@ -39,8 +41,12 @@ export const configureMqttDiscovery = async (
 
     // "retain" is used so that the entities will be available immediately after a Home Assistant restart
     const configurationTopicName = `homeassistant/sensor/eachwatt/${entityName}/config`
-    await mqttClient.publishAsync(configurationTopicName, JSON.stringify(configuration), {
-      retain: true,
-    })
+    promises.push(
+      mqttClient.publishAsync(configurationTopicName, JSON.stringify(configuration), {
+        retain: true,
+      }),
+    )
   }
+
+  await Promise.all(promises)
 }
