@@ -321,3 +321,9 @@ publishers:
       bucket: eachwatt
       apiToken: token
   - type: console
+  - type: mqtt
+    settings:
+      brokerUrl: mqtt://10.110.1.3:1883
+      homeAssistant:
+        autoDiscovery: true
+        deviceIdentifier: eachwatt-dev
