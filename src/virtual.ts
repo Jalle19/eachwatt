@@ -18,6 +18,6 @@ export const getSensorData: PowerSensorPollFunction = async (
   return {
     timestamp: timestamp,
     circuit: circuit,
-    power: childrenSensorData.reduce((acc, data) => acc + data.power, 0),
+    power: childrenSensorData.reduce((acc, data) => acc + (data.power ?? 0), 0),
   }
 }

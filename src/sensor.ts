@@ -98,8 +98,8 @@ export interface UnmeteredSensor extends PowerSensor {
 export interface PowerSensorData {
   timestamp: number
   circuit: Circuit
-  // Mandatory data
-  power: number
+  // Mandatory data. Undefined means the data was not available.
+  power?: number
   // Optional data, not all sensor types support them
   apparentPower?: number
   powerFactor?: number
@@ -108,15 +108,15 @@ export interface PowerSensorData {
 export type CharacteristicsSensorData = {
   timestamp: number
   characteristics: Characteristics
-  voltage: number
-  frequency: number
+  // Mandatory data. Undefined means the data was not available.
+  voltage?: number
+  frequency?: number
 }
 
 export const emptySensorData = (timestamp: number, circuit: Circuit): PowerSensorData => {
   return {
     timestamp,
     circuit,
-    power: 0,
   }
 }
 
@@ -127,13 +127,11 @@ export const emptyCharacteristicsSensorData = (
   return {
     timestamp: timestamp,
     characteristics: characteristics,
-    voltage: 0,
-    frequency: 0,
   }
 }
 
 export const reduceToWatts = (sensorData: PowerSensorData[]): number => {
-  return sensorData.reduce((acc, data) => acc + data.power, 0)
+  return sensorData.reduce((acc, data) => acc + (data.power ?? 0), 0)
 }
 
 export const untangleCircularDeps = (sensorData: PowerSensorData[]): PowerSensorData[] => {

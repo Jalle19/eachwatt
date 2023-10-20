@@ -55,12 +55,15 @@ export class MqttPublisherImpl implements PublisherImpl {
 
   async publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): Promise<void> {
     for (const data of sensorData) {
-      const topicValueMap: TopicValueMap = new Map(
-        Object.entries({
-          [createCharacteristicsSensorTopicName(data.characteristics, 'voltage')]: data.voltage,
-          [createCharacteristicsSensorTopicName(data.characteristics, 'frequency')]: data.frequency,
-        }),
-      )
+      const topicValueMap: TopicValueMap = new Map()
+
+      // Only publish when we have data
+      if (data.voltage !== undefined) {
+        topicValueMap.set(createCharacteristicsSensorTopicName(data.characteristics, 'voltage'), data.voltage)
+      }
+      if (data.frequency !== undefined) {
+        topicValueMap.set(createCharacteristicsSensorTopicName(data.characteristics, 'frequency'), data.frequency)
+      }
 
       await this.publishTopicValues(topicValueMap)
     }
@@ -70,17 +73,16 @@ export class MqttPublisherImpl implements PublisherImpl {
 
   async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
     for (const data of sensorData) {
-      const topicValueMap: TopicValueMap = new Map(
-        Object.entries({
-          [createPowerSensorTopicName(data.circuit, 'power')]: data.power,
-        }),
-      )
+      const topicValueMap: TopicValueMap = new Map()
 
-      // Publish optional sensor values too when present
-      if (data.apparentPower) {
+      // Only publish when we have data
+      if (data.power !== undefined) {
+        topicValueMap.set(createPowerSensorTopicName(data.circuit, 'power'), data.power)
+      }
+      if (data.apparentPower !== undefined) {
         topicValueMap.set(createPowerSensorTopicName(data.circuit, 'apparentPower'), data.apparentPower)
       }
-      if (data.powerFactor) {
+      if (data.powerFactor !== undefined) {
         topicValueMap.set(createPowerSensorTopicName(data.circuit, 'powerFactor'), data.powerFactor)
       }
 

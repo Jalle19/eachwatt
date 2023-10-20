@@ -30,6 +30,11 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
 
   async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
     for (const data of sensorData) {
+      // Skip completely if sensor data is missing
+      if (data.power === undefined) {
+        continue
+      }
+
       const power = new Point('power')
         .tag('circuit', data.circuit.name)
         .tag('circuitType', data.circuit.type as CircuitType)
