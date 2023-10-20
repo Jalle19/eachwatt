@@ -20,7 +20,7 @@
         <td>{data.circuit.group ?? ''}</td>
         <td>{data.circuit.type}</td>
         <td>{data.circuit.sensor.type}</td>
-        <td class="cell-right-align">{data.watts}W</td>
+        <td class="cell-right-align">{data.power}W</td>
       </tr>
     {/each}
   </tbody>

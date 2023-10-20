@@ -60,7 +60,7 @@ const parseGen1Response = (timestamp: number, circuit: Circuit, httpResponse: Ax
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: data.meters[sensor.shelly.meter].power,
+    power: data.meters[sensor.shelly.meter].power,
   }
 }
 
@@ -70,7 +70,7 @@ const parseGen2PMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: data.apower,
+    power: data.apower,
   }
 }
 
@@ -78,23 +78,23 @@ const parseGen2EMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
   const sensor = circuit.sensor as ShellySensor
   const data = httpResponse.data as Gen2EMGetStatusResult
 
-  let watts = 0
+  let power = 0
   switch (sensor.shelly.phase) {
     case 'a':
-      watts = data.a_act_power
+      power = data.a_act_power
       break
     case 'b':
-      watts = data.b_act_power
+      power = data.b_act_power
       break
     case 'c':
-      watts = data.c_act_power
+      power = data.c_act_power
       break
   }
 
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: watts,
+    power: power,
   }
 }
 

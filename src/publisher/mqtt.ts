@@ -73,7 +73,7 @@ export class MqttPublisherImpl implements PublisherImpl {
     for (const data of sensorData) {
       const topicValueMap: TopicValueMap = new Map(
         Object.entries({
-          [createPowerSensorTopicName(data.circuit, 'power')]: data.watts,
+          [createPowerSensorTopicName(data.circuit, 'power')]: data.power,
         }),
       )
 

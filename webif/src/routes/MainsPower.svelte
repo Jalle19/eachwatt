@@ -6,7 +6,7 @@
   {#each sensorData as data}
     <div class="mains-power-card">
       {data.circuit.name}
-      <span>{data.watts}W</span>
+      <span>{data.power}W</span>
     </div>
   {/each}
   <div style="clear: both;" />

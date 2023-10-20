@@ -92,7 +92,7 @@ export const getSensorData: PowerSensorPollFunction = async (
     return {
       timestamp: timestamp,
       circuit: circuit,
-      watts: getSensorValue(sensor, configuration, status),
+      power: getSensorValue(sensor, configuration, status),
     }
   } catch (e) {
     console.error((e as Error).message)
