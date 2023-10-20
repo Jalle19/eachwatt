@@ -45,7 +45,9 @@ const mainPollerFunc = async (config: Config) => {
 
   // Round all numbers to one decimal point
   for (const data of sensorData) {
-    data.watts = Number(data.watts.toFixed(1))
+    if (data.power !== undefined) {
+      data.power = Number(data.power.toFixed(1))
+    }
   }
 
   // Publish data

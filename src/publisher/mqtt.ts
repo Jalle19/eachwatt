@@ -12,7 +12,6 @@ export type MqttPublisherSettings = {
   brokerUrl: string
   homeAssistant?: {
     autoDiscovery: boolean
-    deviceIdentifier?: string
   }
 }
 
@@ -40,7 +39,7 @@ export class MqttPublisherImpl implements PublisherImpl {
 
         // Publish Home Assistant MQTT discovery messages
         if (this.settings.homeAssistant?.autoDiscovery) {
-          configureMqttDiscovery(this.config, this.getHomeAssistantDeviceIdentifier(), this.mqttClient)
+          configureMqttDiscovery(this.config, this.mqttClient)
             .then(() => {
               console.log(`Configured Home Assistant MQTT discovery`)
             })
@@ -56,12 +55,15 @@ export class MqttPublisherImpl implements PublisherImpl {
 
   async publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): Promise<void> {
     for (const data of sensorData) {
-      const topicValueMap: TopicValueMap = new Map(
-        Object.entries({
-          [createCharacteristicsSensorTopicName(data.characteristics, 'voltage')]: data.voltage,
-          [createCharacteristicsSensorTopicName(data.characteristics, 'frequency')]: data.frequency,
-        }),
-      )
+      const topicValueMap: TopicValueMap = new Map()
+
+      // Only publish when we have data
+      if (data.voltage !== undefined) {
+        topicValueMap.set(createCharacteristicsSensorTopicName(data.characteristics, 'voltage'), data.voltage)
+      }
+      if (data.frequency !== undefined) {
+        topicValueMap.set(createCharacteristicsSensorTopicName(data.characteristics, 'frequency'), data.frequency)
+      }
 
       await this.publishTopicValues(topicValueMap)
     }
@@ -71,11 +73,18 @@ export class MqttPublisherImpl implements PublisherImpl {
 
   async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
     for (const data of sensorData) {
-      const topicValueMap: TopicValueMap = new Map(
-        Object.entries({
-          [createPowerSensorTopicName(data.circuit, 'power')]: data.watts,
-        }),
-      )
+      const topicValueMap: TopicValueMap = new Map()
+
+      // Only publish when we have data
+      if (data.power !== undefined) {
+        topicValueMap.set(createPowerSensorTopicName(data.circuit, 'power'), data.power)
+      }
+      if (data.apparentPower !== undefined) {
+        topicValueMap.set(createPowerSensorTopicName(data.circuit, 'apparentPower'), data.apparentPower)
+      }
+      if (data.powerFactor !== undefined) {
+        topicValueMap.set(createPowerSensorTopicName(data.circuit, 'powerFactor'), data.powerFactor)
+      }
 
       await this.publishTopicValues(topicValueMap)
     }
@@ -99,9 +108,5 @@ export class MqttPublisherImpl implements PublisherImpl {
   private async publishStatus(): Promise<void> {
     // noinspection TypeScriptValidateTypes
     await this.mqttClient?.publishAsync(TOPIC_NAME_STATUS, 'online')
-  }
-
-  private getHomeAssistantDeviceIdentifier = (): string => {
-    return this.settings.homeAssistant?.deviceIdentifier ?? 'eachwatt'
   }
 }

@@ -28,12 +28,18 @@ type Gen2SwitchGetStatusResult = {
 
 type Gen2EMGetStatusResult = {
   a_act_power: number
+  a_aprt_power: number
+  a_pf: number
   a_voltage: number
   a_freq: number
   b_act_power: number
+  b_aprt_power: number
+  b_pf: number
   b_voltage: number
   b_freq: number
   c_act_power: number
+  c_aprt_power: number
+  c_pf: number
   c_voltage: number
   c_freq: number
 }
@@ -60,7 +66,7 @@ const parseGen1Response = (timestamp: number, circuit: Circuit, httpResponse: Ax
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: data.meters[sensor.shelly.meter].power,
+    power: data.meters[sensor.shelly.meter].power,
   }
 }
 
@@ -70,7 +76,7 @@ const parseGen2PMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: data.apower,
+    power: data.apower,
   }
 }
 
@@ -78,23 +84,33 @@ const parseGen2EMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
   const sensor = circuit.sensor as ShellySensor
   const data = httpResponse.data as Gen2EMGetStatusResult
 
-  let watts = 0
+  let power = 0
+  let apparentPower = 0
+  let powerFactor = 0
   switch (sensor.shelly.phase) {
     case 'a':
-      watts = data.a_act_power
+      power = data.a_act_power
+      apparentPower = data.a_aprt_power
+      powerFactor = data.a_pf
       break
     case 'b':
-      watts = data.b_act_power
+      power = data.b_act_power
+      apparentPower = data.b_aprt_power
+      powerFactor = data.b_pf
       break
     case 'c':
-      watts = data.c_act_power
+      power = data.c_act_power
+      apparentPower = data.b_aprt_power
+      powerFactor = data.b_pf
       break
   }
 
   return {
     timestamp: timestamp,
     circuit: circuit,
-    watts: watts,
+    power: power,
+    apparentPower: apparentPower,
+    powerFactor: powerFactor,
   }
 }
 

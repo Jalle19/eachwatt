@@ -8,7 +8,7 @@ export interface ConsolePublisher extends Publisher {
 export class ConsolePublisherImpl implements PublisherImpl {
   publishSensorData(sensorData: PowerSensorData[]): void {
     for (const data of sensorData) {
-      console.log(`${data.timestamp}: ${data.circuit.name}: ${data.watts}W`)
+      console.log(`${data.timestamp}: ${data.circuit.name}: ${data.power}W`)
     }
   }
 

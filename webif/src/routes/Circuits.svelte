@@ -1,4 +1,6 @@
 <script>
+  import { formatPf } from '../lib/format'
+
   export let sensorData = []
 </script>
 
@@ -11,6 +13,8 @@
       <th>Circuit type</th>
       <th>Sensor type</th>
       <th class="cell-right-align">Power</th>
+      <th class="cell-right-align">Apparent power</th>
+      <th class="cell-right-align">Power factor</th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +24,17 @@
         <td>{data.circuit.group ?? ''}</td>
         <td>{data.circuit.type}</td>
         <td>{data.circuit.sensor.type}</td>
-        <td class="cell-right-align">{data.watts}W</td>
+        <td class="cell-right-align">{data.power}W</td>
+        <td class="cell-right-align">
+          {#if data.apparentPower }
+            {data.apparentPower}VA
+          {/if}
+        </td>
+        <td class="cell-right-align">
+          {#if data.powerFactor }
+            {formatPf(data.powerFactor)}
+          {/if}
+        </td>
       </tr>
     {/each}
   </tbody>

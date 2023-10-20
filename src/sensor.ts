@@ -98,21 +98,25 @@ export interface UnmeteredSensor extends PowerSensor {
 export interface PowerSensorData {
   timestamp: number
   circuit: Circuit
-  watts: number
+  // Mandatory data. Undefined means the data was not available.
+  power?: number
+  // Optional data, not all sensor types support them
+  apparentPower?: number
+  powerFactor?: number
 }
 
 export type CharacteristicsSensorData = {
   timestamp: number
   characteristics: Characteristics
-  voltage: number
-  frequency: number
+  // Mandatory data. Undefined means the data was not available.
+  voltage?: number
+  frequency?: number
 }
 
 export const emptySensorData = (timestamp: number, circuit: Circuit): PowerSensorData => {
   return {
     timestamp,
     circuit,
-    watts: 0,
   }
 }
 
@@ -123,13 +127,11 @@ export const emptyCharacteristicsSensorData = (
   return {
     timestamp: timestamp,
     characteristics: characteristics,
-    voltage: 0,
-    frequency: 0,
   }
 }
 
 export const reduceToWatts = (sensorData: PowerSensorData[]): number => {
-  return sensorData.reduce((acc, data) => acc + data.watts, 0)
+  return sensorData.reduce((acc, data) => acc + (data.power ?? 0), 0)
 }
 
 export const untangleCircularDeps = (sensorData: PowerSensorData[]): PowerSensorData[] => {
@@ -137,4 +139,18 @@ export const untangleCircularDeps = (sensorData: PowerSensorData[]): PowerSensor
     d.circuit.children = []
     return d
   })
+}
+
+const isShellyGen2EMSensor = (sensor: PowerSensor): boolean => {
+  return sensor.type === SensorType.Shelly && (sensor as ShellySensor).shelly.type === ShellyType.Gen2EM
+}
+
+export const supportsApparentPower = (sensor: PowerSensor): boolean => {
+  // Only EM devices supports this
+  return isShellyGen2EMSensor(sensor)
+}
+
+export const supportsPowerFactor = (sensor: PowerSensor): boolean => {
+  // IotaWatt sensors support power factor too, but only for inputs, not outputs
+  return isShellyGen2EMSensor(sensor)
 }
