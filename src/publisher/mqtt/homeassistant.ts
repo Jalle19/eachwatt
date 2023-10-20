@@ -1,8 +1,7 @@
 import { MqttClient } from 'mqtt'
-import slugify from 'slugify'
 import { Config } from '../../config'
 import { TOPIC_NAME_STATUS } from '../mqtt'
-import { createPowerSensorTopicName } from './util'
+import { createPowerSensorTopicName, slugifyName } from './util'
 
 export const configureMqttDiscovery = async (
   config: Config,
@@ -24,7 +23,8 @@ export const configureMqttDiscovery = async (
 
   for (const circuit of config.circuits) {
     // Add power sensors
-    const entityName = slugify(circuit.name)
+    const entityName = slugifyName(circuit.name)
+    const uniqueId = `${deviceIdentifier}_${entityName}_power`
 
     const configuration = {
       ...configurationBase,
@@ -32,8 +32,8 @@ export const configureMqttDiscovery = async (
       'device_class': 'power',
       'unit_of_measurement': 'W',
       'name': `${circuit.name} power`,
-      'unique_id': `eachwatt_${entityName}_power`,
-      'object_id': `eachwatt_${entityName}_power`,
+      'unique_id': uniqueId,
+      'object_id': uniqueId,
       'state_topic': createPowerSensorTopicName(circuit, 'power'),
     }
 

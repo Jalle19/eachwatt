@@ -3,7 +3,7 @@ import { Circuit } from '../../circuit'
 import { TOPIC_PREFIX } from '../mqtt'
 import slugify from 'slugify'
 
-const slugifyName = (name: string): string => {
+export const slugifyName = (name: string): string => {
   return slugify(name, {
     // We can't have "+" in MQTT topic names
     remove: /[+]/,
