@@ -2,6 +2,7 @@ import { MqttClient } from 'mqtt'
 import { Config } from '../../config'
 import { TOPIC_NAME_STATUS } from '../mqtt'
 import { createPowerSensorTopicName, slugifyName } from './util'
+import { supportsApparentPower, supportsPowerFactor } from '../../sensor'
 
 export const configureMqttDiscovery = async (
   config: Config,
@@ -19,18 +20,19 @@ export const configureMqttDiscovery = async (
     'platform': 'mqtt',
     'availability_topic': TOPIC_NAME_STATUS,
     'device': mqttDeviceInformation,
+    'state_class': 'measurement',
   }
 
   const promises = []
 
   for (const circuit of config.circuits) {
-    // Add power sensors
     const entityName = slugifyName(circuit.name)
-    const uniqueId = `${deviceIdentifier}_${entityName}_power`
 
+    // Add power sensors
+    const uniqueId = `${deviceIdentifier}_${entityName}_power`
+    const configurationTopicName = `homeassistant/sensor/${uniqueId}/config`
     const configuration = {
       ...configurationBase,
-      'state_class': 'measurement',
       'device_class': 'power',
       'unit_of_measurement': 'W',
       'name': `${circuit.name} power`,
@@ -40,12 +42,54 @@ export const configureMqttDiscovery = async (
     }
 
     // "retain" is used so that the entities will be available immediately after a Home Assistant restart
-    const configurationTopicName = `homeassistant/sensor/eachwatt/${entityName}/config`
     promises.push(
       mqttClient.publishAsync(configurationTopicName, JSON.stringify(configuration), {
         retain: true,
       }),
     )
+
+    // Add apparent power sensors
+    if (supportsApparentPower(circuit.sensor)) {
+      const uniqueId = `${deviceIdentifier}_${entityName}_apparentPower`
+      const configurationTopicName = `homeassistant/sensor/${uniqueId}/config`
+      const configuration = {
+        ...configurationBase,
+        'device_class': 'apparent_power',
+        'unit_of_measurement': 'VA',
+        'name': `${circuit.name} apparent power`,
+        'unique_id': uniqueId,
+        'object_id': uniqueId,
+        'state_topic': createPowerSensorTopicName(circuit, 'apparentPower'),
+      }
+
+      // "retain" is used so that the entities will be available immediately after a Home Assistant restart
+      promises.push(
+        mqttClient.publishAsync(configurationTopicName, JSON.stringify(configuration), {
+          retain: true,
+        }),
+      )
+    }
+
+    // Add power factor sensors
+    if (supportsPowerFactor(circuit.sensor)) {
+      const uniqueId = `${deviceIdentifier}_${entityName}_powerFactor`
+      const configurationTopicName = `homeassistant/sensor/${uniqueId}/config`
+      const configuration = {
+        ...configurationBase,
+        'device_class': 'power_factor',
+        'name': `${circuit.name} power factor`,
+        'unique_id': uniqueId,
+        'object_id': uniqueId,
+        'state_topic': createPowerSensorTopicName(circuit, 'powerFactor'),
+      }
+
+      // "retain" is used so that the entities will be available immediately after a Home Assistant restart
+      promises.push(
+        mqttClient.publishAsync(configurationTopicName, JSON.stringify(configuration), {
+          retain: true,
+        }),
+      )
+    }
   }
 
   await Promise.all(promises)

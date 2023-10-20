@@ -142,3 +142,17 @@ export const untangleCircularDeps = (sensorData: PowerSensorData[]): PowerSensor
     return d
   })
 }
+
+const isShellyGen2EMSensor = (sensor: PowerSensor): boolean => {
+  return sensor.type === SensorType.Shelly && (sensor as ShellySensor).shelly.type === ShellyType.Gen2EM
+}
+
+export const supportsApparentPower = (sensor: PowerSensor): boolean => {
+  // Only EM devices supports this
+  return isShellyGen2EMSensor(sensor)
+}
+
+export const supportsPowerFactor = (sensor: PowerSensor): boolean => {
+  // IotaWatt sensors support power factor too, but only for inputs, not outputs
+  return isShellyGen2EMSensor(sensor)
+}
