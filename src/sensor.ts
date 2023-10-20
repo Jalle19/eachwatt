@@ -18,6 +18,7 @@ export enum ShellyType {
 export enum CharacteristicsSensorType {
   Iotawatt = 'iotawatt',
   Shelly = 'shelly',
+  Dummy = 'dummy',
 }
 
 export type PowerSensorPollFunction = (

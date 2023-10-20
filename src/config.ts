@@ -9,7 +9,10 @@ import {
 } from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
 import { getSensorData as getUnmeteredSensorData } from './unmetered'
-import { getSensorData as getDummySensorData } from './dummy'
+import {
+  getCharacteristicsSensorData as getDummyCharacteristicsSensorData,
+  getSensorData as getDummySensorData,
+} from './dummy'
 import {
   CharacteristicsSensorType,
   SensorType,
@@ -130,6 +133,9 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         break
       case CharacteristicsSensorType.Shelly:
         c.sensor.pollFunc = getShellyCharacteristicsSensorData
+        break
+      case CharacteristicsSensorType.Dummy:
+        c.sensor.pollFunc = getDummyCharacteristicsSensorData
         break
     }
   }
