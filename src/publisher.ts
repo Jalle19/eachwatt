@@ -4,6 +4,7 @@ export enum PublisherType {
   InfluxDB = 'influxdb',
   Console = 'console',
   WebSocket = 'websocket',
+  MQTT = 'mqtt',
 }
 
 export interface PublisherImpl {

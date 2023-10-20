@@ -9,7 +9,10 @@ import {
 } from './iotawatt'
 import { getSensorData as getVirtualSensorData } from './virtual'
 import { getSensorData as getUnmeteredSensorData } from './unmetered'
-import { getSensorData as getDummySensorData } from './dummy'
+import {
+  getCharacteristicsSensorData as getDummyCharacteristicsSensorData,
+  getSensorData as getDummySensorData,
+} from './dummy'
 import {
   CharacteristicsSensorType,
   SensorType,
@@ -23,6 +26,7 @@ import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
+import { MqttPublisher, MqttPublisherImpl } from './publisher/mqtt'
 
 export interface Config {
   characteristics: Characteristics[]
@@ -130,11 +134,14 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       case CharacteristicsSensorType.Shelly:
         c.sensor.pollFunc = getShellyCharacteristicsSensorData
         break
+      case CharacteristicsSensorType.Dummy:
+        c.sensor.pollFunc = getDummyCharacteristicsSensorData
+        break
     }
   }
 
   // Create publishers. Ignore any manually defined WebSocket publishers, we only support
-  // one right now and it's added separately during application startup.
+  // one right now, and it's added separately during application startup.
   for (const publisher of config.publishers) {
     switch (publisher.type) {
       case PublisherType.InfluxDB: {
@@ -145,6 +152,11 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       case PublisherType.Console: {
         const consolePublisher = publisher as ConsolePublisher
         consolePublisher.publisherImpl = new ConsolePublisherImpl()
+        break
+      }
+      case PublisherType.MQTT: {
+        const mqttPublisher = publisher as MqttPublisher
+        mqttPublisher.publisherImpl = new MqttPublisherImpl(config, mqttPublisher.settings)
         break
       }
     }
