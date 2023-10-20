@@ -98,7 +98,11 @@ export interface UnmeteredSensor extends PowerSensor {
 export interface PowerSensorData {
   timestamp: number
   circuit: Circuit
+  // Mandatory data
   power: number
+  // Optional data, not all sensor types support them
+  apparentPower?: number
+  powerFactor?: number
 }
 
 export type CharacteristicsSensorData = {

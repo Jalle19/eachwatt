@@ -29,6 +29,7 @@ type IotawattConfiguration = {
 type IotawattStatusInput = {
   channel: number
   Watts: string
+  Pf?: number
 }
 
 type IotawattStatusOutput = {
@@ -51,7 +52,12 @@ const getStatusUrl = (sensor: IotawattSensor): string => {
   return `http://${sensor.iotawatt.address}/status?state=&inputs=&outputs=`
 }
 
-const getSensorValue = (
+const parseInputWattValue = (watts: string): number => {
+  // Can be " 0" or "423"...
+  return parseInt(watts.trim(), 10)
+}
+
+const getSensorPowerValue = (
   sensor: IotawattSensor,
   configuration: IotawattConfiguration,
   status: IotawattStatus,
@@ -62,8 +68,7 @@ const getSensorValue = (
     if (input.name === sensor.iotawatt.name) {
       const watts = status.inputs[i].Watts
 
-      // Can be " 0" or "423"...
-      return parseInt(watts.trim(), 10)
+      return parseInputWattValue(watts)
     }
   }
 
@@ -74,7 +79,29 @@ const getSensorValue = (
     }
   }
 
-  throw new Error(`Failed to find value for sensor ${sensor.iotawatt.name}`)
+  throw new Error(`Failed to find power value for sensor ${sensor.iotawatt.name}`)
+}
+
+const getSensorPowerFactorValue = (
+  sensor: IotawattSensor,
+  configuration: IotawattConfiguration,
+  status: IotawattStatus,
+): number | undefined => {
+  // Power factor is only available for inputs
+  for (let i = 0; i < configuration.inputs.length; i++) {
+    const input = configuration.inputs[i]
+    if (input.name === sensor.iotawatt.name) {
+      // The power factor value cannot be trusted for small loads, and apparently this is done client-side on the
+      // IotaWatt web interface. Emulate the same logic here.
+      const watts = parseInputWattValue(status.inputs[i].Watts)
+
+      return watts >= 50 ? status.inputs[i].Pf : undefined
+    }
+  }
+
+  // Return undefined if the sensor doesn't have a corresponding input, we don't
+  // want to fail hard since the value is optional
+  return undefined
 }
 
 export const getSensorData: PowerSensorPollFunction = async (
@@ -92,7 +119,8 @@ export const getSensorData: PowerSensorPollFunction = async (
     return {
       timestamp: timestamp,
       circuit: circuit,
-      power: getSensorValue(sensor, configuration, status),
+      power: getSensorPowerValue(sensor, configuration, status),
+      powerFactor: getSensorPowerFactorValue(sensor, configuration, status),
     }
   } catch (e) {
     console.error((e as Error).message)

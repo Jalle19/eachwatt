@@ -28,12 +28,18 @@ type Gen2SwitchGetStatusResult = {
 
 type Gen2EMGetStatusResult = {
   a_act_power: number
+  a_aprt_power: number
+  a_pf: number
   a_voltage: number
   a_freq: number
   b_act_power: number
+  b_aprt_power: number
+  b_pf: number
   b_voltage: number
   b_freq: number
   c_act_power: number
+  c_aprt_power: number
+  c_pf: number
   c_voltage: number
   c_freq: number
 }
@@ -79,15 +85,23 @@ const parseGen2EMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
   const data = httpResponse.data as Gen2EMGetStatusResult
 
   let power = 0
+  let apparentPower = 0
+  let powerFactor = 0
   switch (sensor.shelly.phase) {
     case 'a':
       power = data.a_act_power
+      apparentPower = data.a_aprt_power
+      powerFactor = data.a_pf
       break
     case 'b':
       power = data.b_act_power
+      apparentPower = data.b_aprt_power
+      powerFactor = data.b_pf
       break
     case 'c':
       power = data.c_act_power
+      apparentPower = data.b_aprt_power
+      powerFactor = data.b_pf
       break
   }
 
@@ -95,6 +109,8 @@ const parseGen2EMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
     timestamp: timestamp,
     circuit: circuit,
     power: power,
+    apparentPower: apparentPower,
+    powerFactor: powerFactor,
   }
 }
 

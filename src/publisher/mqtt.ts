@@ -77,6 +77,14 @@ export class MqttPublisherImpl implements PublisherImpl {
         }),
       )
 
+      // Publish optional sensor values too when present
+      if (data.apparentPower) {
+        topicValueMap.set(createPowerSensorTopicName(data.circuit, 'apparentPower'), data.apparentPower)
+      }
+      if (data.powerFactor) {
+        topicValueMap.set(createPowerSensorTopicName(data.circuit, 'powerFactor'), data.powerFactor)
+      }
+
       await this.publishTopicValues(topicValueMap)
     }
 
