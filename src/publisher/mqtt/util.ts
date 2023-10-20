@@ -5,8 +5,8 @@ import slugify from 'slugify'
 
 export const slugifyName = (name: string): string => {
   return slugify(name, {
-    // We can't have "+" in MQTT topic names
-    remove: /[+]/,
+    // We can't have "+" and "/" in MQTT topic names
+    remove: /[+/]/,
     // Since the rest of the topic name is lower-case, just lower-case everything
     lower: true,
   })
