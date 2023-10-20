@@ -12,7 +12,7 @@ export type MqttPublisherSettings = {
   brokerUrl: string
   homeAssistant?: {
     autoDiscovery: boolean
-    deviceIdentifier: string
+    deviceIdentifier?: string
   }
 }
 
@@ -40,7 +40,7 @@ export class MqttPublisherImpl implements PublisherImpl {
 
         // Publish Home Assistant MQTT discovery messages
         if (this.settings.homeAssistant?.autoDiscovery) {
-          configureMqttDiscovery(this.config, this.settings.homeAssistant.deviceIdentifier, this.mqttClient)
+          configureMqttDiscovery(this.config, this.getHomeAssistantDeviceIdentifier(), this.mqttClient)
             .then(() => {
               console.log(`Configured Home Assistant MQTT discovery`)
             })
@@ -99,5 +99,9 @@ export class MqttPublisherImpl implements PublisherImpl {
   private async publishStatus(): Promise<void> {
     // noinspection TypeScriptValidateTypes
     await this.mqttClient?.publishAsync(TOPIC_NAME_STATUS, 'online')
+  }
+
+  private getHomeAssistantDeviceIdentifier = (): string => {
+    return this.settings.homeAssistant?.deviceIdentifier ?? 'eachwatt'
   }
 }
