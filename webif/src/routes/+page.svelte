@@ -60,9 +60,18 @@
   })
 </script>
 
+<style>
+  p.connecting {
+      font-style: italic;
+  }
+</style>
+
 {#if lastUpdateTimestamp === undefined}
-  <div class="pure-u-1-1 l-box">
+  <div class="pure-u-1-8 l-box">
     <Loader />
+  </div>
+  <div class="pure-u-7-8 l-box">
+    <p class="connecting">Connecting to {webSocketUrl}</p>
   </div>
 {:else}
   <div class="pure-u-1-1 l-box">
