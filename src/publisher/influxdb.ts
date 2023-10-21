@@ -1,7 +1,7 @@
 import { Publisher, PublisherImpl, PublisherType } from '../publisher'
 import { CharacteristicsSensorData, PowerSensorData } from '../sensor'
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client'
-import { Circuit, CircuitType, resolvePhase } from '../circuit'
+import { Circuit, CircuitType } from '../circuit'
 
 export interface InfluxDBPublisherSettings {
   url: string
@@ -53,9 +53,8 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
         power.tag('parent', (data.circuit.parent as Circuit).name)
       }
 
-      const phase = resolvePhase(data.circuit)
-      if (phase !== null) {
-        power.tag('phase', phase)
+      if (data.circuit.phase) {
+        power.tag('phase', data.circuit.phase)
       }
 
       this.writeApi.writePoint(power)

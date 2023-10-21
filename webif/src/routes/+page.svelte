@@ -2,15 +2,12 @@
   import { onMount } from 'svelte'
   import { determineWebSocketUrl } from '$lib/websocket'
 
-  import Logo from './Logo.svelte'
-  import Configuration from './Configuration.svelte'
   import LastUpdate from './LastUpdate.svelte'
   import Characteristics from './Characteristics.svelte'
   import MainsPower from './MainsPower.svelte'
   import Circuits from './Circuits.svelte'
   import Loader from './Loader.svelte'
 
-  let configuration
   let webSocketUrl
   let lastUpdateTimestamp
   let characteristicsSensorData
@@ -56,34 +53,37 @@
           circuitSensorData = message.data
           break
         case 'configuration':
-          configuration = message.data
+          // configuration = message.data
           break
       }
     })
   })
 </script>
 
+<style>
+  p.connecting {
+      font-style: italic;
+  }
+</style>
+
 {#if lastUpdateTimestamp === undefined}
-  <div class="pure-u-1-1 l-box">
+  <div class="pure-u-1-8 l-box">
     <Loader />
+  </div>
+  <div class="pure-u-7-8 l-box">
+    <p class="connecting">Connecting to {webSocketUrl}</p>
   </div>
 {:else}
   <div class="pure-u-1-1 l-box">
     <LastUpdate {lastUpdateTimestamp} {webSocketUrl} />
   </div>
-  <div class="pure-u-1-4 l-box">
-    <Logo />
-    <Configuration {configuration} />
+  <div class="pure-u-1-1 l-box">
+    <Characteristics sensorData={characteristicsSensorData} />
   </div>
-  <div class="pure-u-3-4">
-    <div class="pure-u-1-1 l-box">
-      <Characteristics sensorData={characteristicsSensorData} />
-    </div>
-    <div class="pure-u-1-1 l-box">
-      <MainsPower sensorData={mainsSensorData} />
-    </div>
-    <div class="pure-u-1-1 l-box">
-      <Circuits sensorData={circuitSensorData} />
-    </div>
+  <div class="pure-u-1-1 l-box">
+    <MainsPower sensorData={mainsSensorData} />
+  </div>
+  <div class="pure-u-1-1 l-box">
+    <Circuits sensorData={circuitSensorData} />
   </div>
 {/if}
