@@ -5,7 +5,9 @@
   "author": "Sam Stenvall <neggelandia@gmail.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
+    "postinstall": "cd webif/ && npm install",
     "build": "rm -rf dist/* && npx tsc",
+    "build-all": "npm run build && cd webif/ && npm run build",
     "prettier": "prettier --write src/ tests/",
     "prettier-check": "prettier --check src/ tests/",
     "lint": "eslint 'src/**/*.ts'",
