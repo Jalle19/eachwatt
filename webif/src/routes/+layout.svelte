@@ -62,6 +62,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </svelte:head>
 <div class="pure-g container">
+  <div class="pure-u-1-1 l-box">
+    <nav class="pure-menu pure-menu-horizontal">
+      <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+          <a href="/" class="pure-menu-link">Dashboard</a>
+        </li>
+        <li class="pure-menu-item">
+          <a href="/configuration" class="pure-menu-link">Configuration</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
   <slot />
 </div>
 
@@ -69,7 +82,7 @@
     :root {
         --background: #fff;
         --color: #222;
-        --table-background: #e0e0e0;
+        --component-background: #e0e0e0;
         --highlight-color: #ff3d00;
     }
 
@@ -77,8 +90,12 @@
         :root {
             --background: #272727;
             --color: #aaa;
-            --table-background: #3b3b3b;
+            --component-background: #3b3b3b;
             --highlight-color: #ff3d00;
+        }
+
+        nav {
+            background-color: var(--component-background);
         }
 
         /* pure-table overrides */
@@ -86,7 +103,7 @@
             border: 2px solid #424242;
         }
         :global(.pure-table thead) {
-            background-color: var(--table-background);
+            background-color: var(--component-background);
             color: var(--color);
         }
 
@@ -133,4 +150,15 @@
     :global(.l-box) {
         padding: 1em;
     }
+
+    /* pure-menu tweaks */
+    :global(.pure-menu-link) {
+      border-bottom: 2px solid var(--component-background);
+    }
+
+    :global(.pure-menu-link:hover) {
+        border-bottom: 2px solid var(--highlight-color);
+        background: inherit !important;
+    }
+    /* end pure-menu tweaks */
 </style>

@@ -22,7 +22,7 @@
   .mains-power-cards {
     padding: 0.8em;
     box-sizing: border-box;
-    background-color: var(--table-background);
+    background-color: var(--component-background);
     margin-bottom: 1em;
   }
 
