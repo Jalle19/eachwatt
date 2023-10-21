@@ -4,6 +4,7 @@ import { IncomingMessage, RequestListener, ServerResponse } from 'http'
 import { promises as fsPromisified } from 'fs'
 
 const basePath = __dirname + '/../../webif/build'
+const webRoutes = ['/', '/configuration']
 
 const mimeTypes = new Map<string, string>([
   ['.html', 'text/html'],
@@ -36,9 +37,9 @@ const resolveFilePath = (reqUrl: string | undefined): string => {
     reqUrl = reqUrl?.substring(0, reqUrl?.indexOf('?'))
   }
 
-  // "Convert" to file path
+  // "Convert" routes to file path
   let filePath
-  if (!reqUrl || reqUrl === '/') {
+  if (!reqUrl || webRoutes.includes(reqUrl)) {
     filePath = '/index.html'
   } else {
     filePath = reqUrl
