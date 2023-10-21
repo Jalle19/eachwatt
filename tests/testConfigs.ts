@@ -1,11 +1,14 @@
 import { SensorType } from '../src/sensor'
 import { Config } from '../src/config'
+import { CircuitType } from '../src/circuit'
 
 export const createParentChildConfig = (): Config => {
   return {
     circuits: [
       {
         name: 'The parent',
+        type: CircuitType.Main,
+        phase: 'L1',
         sensor: {
           type: SensorType.Dummy,
         },

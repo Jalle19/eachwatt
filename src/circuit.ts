@@ -10,6 +10,7 @@ export interface Circuit {
   type?: CircuitType // resolved during parsing
   parent?: string | Circuit // resolved to the circuit in question
   children: Circuit[] // resolved from parent
+  phase?: string // resolved from parent
   sensor: PowerSensor
   group?: string
 }
@@ -32,14 +33,4 @@ export const pollPowerSensors = async (
   }
 
   return await Promise.all(promises)
-}
-
-export const resolvePhase = (circuit: Circuit): string | null => {
-  if (circuit.type === CircuitType.Main) {
-    return (circuit as Main).phase
-  } else if (typeof circuit.parent === 'object') {
-    return resolvePhase(circuit.parent)
-  } else {
-    return null
-  }
 }

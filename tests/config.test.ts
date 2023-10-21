@@ -40,6 +40,13 @@ test('throws error when parent circuit cannot be resolved', () => {
   expect(() => resolveAndValidateConfig(rawConfig)).toThrow('Failed to resolve circuit')
 })
 
+test('circuit phase is resolved', () => {
+  const config = resolveAndValidateConfig(createParentChildConfig())
+
+  expect(config.circuits[1].phase).toEqual(config.circuits[0].phase)
+  expect(config.circuits[1].phase).toEqual('L1')
+})
+
 test('virtual sensor children are resolved', () => {
   const config = resolveAndValidateConfig(createVirtualSensorConfig())
 

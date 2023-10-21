@@ -21,7 +21,7 @@ import {
   UnmeteredSensor,
   VirtualSensor,
 } from './sensor'
-import { Circuit, CircuitType } from './circuit'
+import { Circuit, CircuitType, Main } from './circuit'
 import { Publisher, PublisherType } from './publisher'
 import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
@@ -75,6 +75,11 @@ export const resolveAndValidateConfig = (config: Config): Config => {
     circuit.children = config.circuits.filter((c) => {
       return c.parent !== undefined && (c.parent as Circuit).name === circuit.name
     })
+  }
+
+  // Resolve phase for all circuits
+  for (const circuit of config.circuits) {
+    circuit.phase = resolvePhase(circuit)
   }
 
   // Resolve virtual sensor children
@@ -177,4 +182,14 @@ const tryResolveChildCircuits = (children: string[], circuits: Circuit[]): Circu
   return children.map((c) => {
     return tryResolveCircuit(c, circuits)
   })
+}
+
+const resolvePhase = (circuit: Circuit): string | undefined => {
+  if (circuit.type === CircuitType.Main) {
+    return (circuit as Main).phase
+  } else if (typeof circuit.parent === 'object') {
+    return resolvePhase(circuit.parent)
+  } else {
+    return undefined
+  }
 }
