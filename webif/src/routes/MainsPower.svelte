@@ -5,7 +5,7 @@
 <div class="mains-power-cards">
   {#each sensorData as data}
     <div class="mains-power-card">
-      <b>{data.circuit.name}</b>
+      <h4>{data.circuit.name}</h4>
       <span>{data.power}W</span>
       {#if data.apparentPower }
         <span>{data.apparentPower}VA</span>
@@ -22,16 +22,15 @@
   .mains-power-cards {
     padding: 0.8em;
     box-sizing: border-box;
-    background-color: #ddd;
+    background-color: var(--table-background);
     margin-bottom: 1em;
   }
 
   .mains-power-card {
-    padding: 0.8em;
     box-sizing: border-box;
     float: left;
     width: 25%;
-    padding: 2em;
+    padding: 1em;
     text-align: center;
   }
 
