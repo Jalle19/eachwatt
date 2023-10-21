@@ -1,5 +1,6 @@
 <script>
   import { mainSensorDataStore} from '../lib/stores'
+  import { formatPf } from '../lib/format'
 </script>
 
 <div class="mains-power-cards">
@@ -11,7 +12,7 @@
         <span>{data.apparentPower}VA</span>
       {/if}
       {#if data.powerFactor }
-        <span>pf {data.powerFactor}</span>
+        <span>pf {formatPf(data.powerFactor)}</span>
       {/if}
     </div>
   {/each}
