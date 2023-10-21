@@ -1,11 +1,80 @@
 <script>
     import 'purecss/build/pure.css'
+
+    import {
+      configurationStore,
+      characteristicsStore,
+      mainSensorDataStore,
+      circuitSensorDataStore,
+      lastUpdateTimestampStore,
+      webSocketUrlStore
+    } from '../lib/stores'
+    import { onMount } from 'svelte'
+    import { determineWebSocketUrl } from '../lib/websocket'
+
+    const parseTimestamp = (sensorData) => {
+      return new Date(sensorData[0].timestamp)
+    }
+
+    onMount(() => {
+      // Determine WebSocket URL from URL parameters
+      $webSocketUrlStore = determineWebSocketUrl()
+      const ws = new WebSocket($webSocketUrlStore)
+
+      ws.addEventListener('open', () => {
+        console.log(`Connected to WebSocket at ${$webSocketUrlStore}`)
+      })
+
+      ws.addEventListener('message', (event) => {
+        const data = event.data
+        const message = JSON.parse(data)
+
+        // Parse last update timestamp from sensor data messages
+        switch (message.type) {
+          case 'characteristicsSensorData':
+          case 'powerSensorData':
+            $lastUpdateTimestampStore = parseTimestamp(message.data)
+            break
+        }
+
+        // Handle each message type
+        switch (message.type) {
+          case 'characteristicsSensorData':
+            $characteristicsStore = message.data
+            break
+          case 'powerSensorData':
+            $mainSensorDataStore = message.data.filter((d) => {
+              // Filter out unmetered
+              return d.circuit.type === 'main' && d.circuit.sensor.type !== 'unmetered'
+            })
+
+            $circuitSensorDataStore = message.data
+            break
+          case 'configuration':
+            $configurationStore = message.data
+            break
+        }
+      })
+    })
 </script>
 <svelte:head>
   <title>EachWatt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </svelte:head>
 <div class="pure-g container">
+  <div class="pure-u-1-1 l-box">
+    <nav class="pure-menu pure-menu-horizontal">
+      <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+          <a href="/" class="pure-menu-link">Dashboard</a>
+        </li>
+        <li class="pure-menu-item">
+          <a href="/configuration" class="pure-menu-link">Configuration</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
   <slot />
 </div>
 
@@ -13,7 +82,7 @@
     :root {
         --background: #fff;
         --color: #222;
-        --table-background: #e0e0e0;
+        --component-background: #e0e0e0;
         --highlight-color: #ff3d00;
     }
 
@@ -21,8 +90,12 @@
         :root {
             --background: #272727;
             --color: #aaa;
-            --table-background: #3b3b3b;
+            --component-background: #3b3b3b;
             --highlight-color: #ff3d00;
+        }
+
+        nav {
+            background-color: var(--component-background);
         }
 
         /* pure-table overrides */
@@ -30,7 +103,7 @@
             border: 2px solid #424242;
         }
         :global(.pure-table thead) {
-            background-color: var(--table-background);
+            background-color: var(--component-background);
             color: var(--color);
         }
 
@@ -77,4 +150,15 @@
     :global(.l-box) {
         padding: 1em;
     }
+
+    /* pure-menu tweaks */
+    :global(.pure-menu-link) {
+      border-bottom: 2px solid var(--component-background);
+    }
+
+    :global(.pure-menu-link:hover) {
+        border-bottom: 2px solid var(--highlight-color);
+        background: inherit !important;
+    }
+    /* end pure-menu tweaks */
 </style>

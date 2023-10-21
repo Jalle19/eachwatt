@@ -1,5 +1,5 @@
 <script>
-  export let sensorData = []
+  import { characteristicsStore } from '../lib/stores'
 </script>
 
 <h2>Characteristics</h2>
@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each sensorData as data}
+    {#each $characteristicsStore as data}
       <tr>
         <td>{data.characteristics.name}</td>
         <td>{data.characteristics.phase}</td>

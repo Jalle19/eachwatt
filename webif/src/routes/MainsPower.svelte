@@ -1,9 +1,9 @@
 <script>
-  export let sensorData = []
+  import { mainSensorDataStore} from '../lib/stores'
 </script>
 
 <div class="mains-power-cards">
-  {#each sensorData as data}
+  {#each $mainSensorDataStore as data}
     <div class="mains-power-card">
       <h4>{data.circuit.name}</h4>
       <span>{data.power}W</span>
@@ -22,7 +22,7 @@
   .mains-power-cards {
     padding: 0.8em;
     box-sizing: border-box;
-    background-color: var(--table-background);
+    background-color: var(--component-background);
     margin-bottom: 1em;
   }
 

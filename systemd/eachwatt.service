@@ -5,7 +5,8 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/eachwatt
-ExecStartPre=/usr/bin/npm run build
+ExecStartPre=/usr/bin/npm install
+ExecStartPre=/usr/bin/npm run build-all
 ExecStart=/usr/bin/node /opt/eachwatt/dist/eachwatt.js -c /etc/eachwatt/config.yml
 Restart=always
 RestartSec=5
