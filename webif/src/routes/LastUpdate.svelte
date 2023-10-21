@@ -1,5 +1,5 @@
 <script>
-  export let lastUpdateTimestamp, webSocketUrl
+  import { lastUpdateTimestampStore, webSocketUrlStore } from '../lib/stores'
 </script>
 
 <style>
@@ -9,5 +9,5 @@
 </style>
 
 <p>
-  Last update: {lastUpdateTimestamp?.toISOString()}, connected to {webSocketUrl}
+  Last update: {$lastUpdateTimestampStore?.toISOString()}, connected to {$webSocketUrlStore}
 </p>

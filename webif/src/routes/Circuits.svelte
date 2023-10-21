@@ -1,7 +1,6 @@
 <script>
+  import { circuitSensorDataStore } from '../lib/stores'
   import { formatPf } from '../lib/format'
-
-  export let sensorData = []
 </script>
 
 <h2>All circuits</h2>
@@ -19,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each sensorData as data}
+    {#each $circuitSensorDataStore as data}
       <tr>
         <td>{data.circuit.name}</td>
         <td>{data.circuit.group ?? ''}</td>

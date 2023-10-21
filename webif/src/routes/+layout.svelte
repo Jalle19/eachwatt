@@ -1,5 +1,61 @@
 <script>
     import 'purecss/build/pure.css'
+
+    import {
+      configurationStore,
+      characteristicsStore,
+      mainSensorDataStore,
+      circuitSensorDataStore,
+      lastUpdateTimestampStore,
+      webSocketUrlStore
+    } from '../lib/stores'
+    import { onMount } from 'svelte'
+    import { determineWebSocketUrl } from '../lib/websocket'
+
+    const parseTimestamp = (sensorData) => {
+      return new Date(sensorData[0].timestamp)
+    }
+
+    onMount(() => {
+      // Determine WebSocket URL from URL parameters
+      $webSocketUrlStore = determineWebSocketUrl()
+      const ws = new WebSocket($webSocketUrlStore)
+
+      ws.addEventListener('open', () => {
+        console.log(`Connected to WebSocket at ${$webSocketUrlStore}`)
+      })
+
+      ws.addEventListener('message', (event) => {
+        const data = event.data
+        const message = JSON.parse(data)
+
+        // Parse last update timestamp from sensor data messages
+        switch (message.type) {
+          case 'characteristicsSensorData':
+          case 'powerSensorData':
+            $lastUpdateTimestampStore = parseTimestamp(message.data)
+            break
+        }
+
+        // Handle each message type
+        switch (message.type) {
+          case 'characteristicsSensorData':
+            $characteristicsStore = message.data
+            break
+          case 'powerSensorData':
+            $mainSensorDataStore = message.data.filter((d) => {
+              // Filter out unmetered
+              return d.circuit.type === 'main' && d.circuit.sensor.type !== 'unmetered'
+            })
+
+            $circuitSensorDataStore = message.data
+            break
+          case 'configuration':
+            $configurationStore = message.data
+            break
+        }
+      })
+    })
 </script>
 <svelte:head>
   <title>EachWatt</title>
