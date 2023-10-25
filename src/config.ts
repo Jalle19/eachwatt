@@ -32,6 +32,7 @@ type MilliSeconds = number
 
 type MainSettings = {
   pollingInterval?: MilliSeconds
+  httpPort?: number
 }
 
 export type Config = {
@@ -44,6 +45,7 @@ export type Config = {
 const defaultSettings = (): MainSettings => {
   return {
     pollingInterval: 5000,
+    httpPort: 8080,
   }
 }
 

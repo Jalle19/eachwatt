@@ -84,8 +84,8 @@ const mainPollerFunc = async (config: Config) => {
 
   // Create and start HTTP server
   const httpServer = http.createServer(httpRequestHandler)
-  httpServer.listen(8080, '0.0.0.0', () => {
-    logger.info('Started HTTP server')
+  httpServer.listen(config.settings.httpPort, '0.0.0.0', () => {
+    logger.info(`Started HTTP server on port ${config.settings.httpPort}`)
   })
 
   // Create a WebSocket server and register it as a publisher too
