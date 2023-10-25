@@ -28,11 +28,26 @@ import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
 import { MqttPublisher, MqttPublisherImpl } from './publisher/mqtt'
 
-export interface Config {
+type MilliSeconds = number
+
+type MainSettings = {
+  pollingInterval?: MilliSeconds
+}
+
+export type Config = {
+  settings: MainSettings
   characteristics: Characteristics[]
   circuits: Circuit[]
   publishers: Publisher[]
 }
+
+const defaultSettings = (): MainSettings => {
+  return {
+    pollingInterval: 5000,
+  }
+}
+
+const MINIMUM_POLLING_INTERVAL: MilliSeconds = 2000
 
 export const parseConfig = (configFileContents: string): Config => {
   return YAML.parse(configFileContents) as Config
@@ -40,12 +55,21 @@ export const parseConfig = (configFileContents: string): Config => {
 
 export const resolveAndValidateConfig = (config: Config): Config => {
   // Set various defaults
+  if (!config.settings) {
+    config.settings = defaultSettings()
+  }
+
   if (!config.characteristics) {
     config.characteristics = []
   }
 
   if (!config.publishers) {
     config.publishers = []
+  }
+
+  // Validate polling interval
+  if (!config.settings.pollingInterval || config.settings.pollingInterval < MINIMUM_POLLING_INTERVAL) {
+    throw new Error(`Polling interval is too low, minimum is ${MINIMUM_POLLING_INTERVAL} milliseconds`)
   }
 
   for (const circuit of config.circuits) {

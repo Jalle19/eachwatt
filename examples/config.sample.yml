@@ -1,3 +1,6 @@
+settings:
+  pollingInterval: 5000
+
 circuits:
   # mains
   - name: Main total

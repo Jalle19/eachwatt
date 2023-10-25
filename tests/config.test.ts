@@ -5,6 +5,7 @@ import {
   createNestedUnmeteredConfig,
   createParentChildConfig,
   createUnmeteredParentChildrenConfig,
+  createVeryLowPollingIntervalConfig,
   createVirtualSensorConfig,
 } from './testConfigs'
 
@@ -26,10 +27,19 @@ test('defaults are applied', () => {
     ],
   } as unknown as Config)
 
+  expect(config.settings.pollingInterval).toEqual(5000)
+  expect(config.characteristics.length).toEqual(0)
+  expect(config.publishers.length).toEqual(0)
   expect(config.circuits[0].type).toEqual(CircuitType.Circuit)
   expect(config.circuits[0].hidden).toEqual(false)
   const sensor = config.circuits[0].sensor as ShellySensor
   expect(sensor.shelly.type).toEqual(ShellyType.Gen1)
+})
+
+test('polling interval cannot be set too low', () => {
+  const rawConfig = createVeryLowPollingIntervalConfig()
+
+  expect(() => resolveAndValidateConfig(rawConfig)).toThrow('Polling interval is too low')
 })
 
 test('parent and child circuit is resolved', () => {

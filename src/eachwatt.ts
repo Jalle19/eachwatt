@@ -93,6 +93,8 @@ const mainPollerFunc = async (config: Config) => {
   })
 
   // Start polling sensors
+  const pollingInterval = config.settings.pollingInterval
+  console.log(`Polling sensors with interval ${pollingInterval} milliseconds`)
   await mainPollerFunc(config)
-  setInterval(mainPollerFunc, 5000, config)
+  setInterval(mainPollerFunc, pollingInterval, config)
 })()

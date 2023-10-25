@@ -2,6 +2,17 @@ import { SensorType } from '../src/sensor'
 import { Config } from '../src/config'
 import { CircuitType } from '../src/circuit'
 
+export const createVeryLowPollingIntervalConfig = (): Config => {
+  return {
+    settings: {
+      pollingInterval: 50,
+    },
+    characteristics: [],
+    circuits: [],
+    publishers: [],
+  }
+}
+
 export const createParentChildConfig = (): Config => {
   return {
     circuits: [
