@@ -24,27 +24,27 @@ const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
   const circuits = config.circuits
 
-  // Poll all normal circuits first
+  // Poll all normal circuit power sensors first
   const nonVirtualCircuits = circuits.filter(
     (c) => c.sensor.type !== SensorType.Virtual && c.sensor.type !== SensorType.Unmetered,
   )
-  let sensorData = await pollPowerSensors(now, nonVirtualCircuits)
+  let powerSensorData = await pollPowerSensors(now, nonVirtualCircuits)
 
   // Poll virtual sensors, giving them the opportunity to act on the real sensor data we've gathered so far
   const virtualCircuits = circuits.filter((c) => c.sensor.type === SensorType.Virtual)
-  const virtualSensorData = await pollPowerSensors(now, virtualCircuits, sensorData)
-  sensorData = sensorData.concat(virtualSensorData)
+  const virtualSensorData = await pollPowerSensors(now, virtualCircuits, powerSensorData)
+  powerSensorData = powerSensorData.concat(virtualSensorData)
 
   // Poll unmetered sensors
   const unmeteredCircuits = circuits.filter((c) => c.sensor.type === SensorType.Unmetered)
-  const unmeteredSensorData = await pollPowerSensors(now, unmeteredCircuits, sensorData)
-  sensorData = sensorData.concat(unmeteredSensorData)
+  const unmeteredSensorData = await pollPowerSensors(now, unmeteredCircuits, powerSensorData)
+  powerSensorData = powerSensorData.concat(unmeteredSensorData)
 
   // Poll characteristics sensors
   const characteristicsSensorData = await pollCharacteristicsSensors(now, config.characteristics)
 
   // Round all numbers to one decimal point
-  for (const data of sensorData) {
+  for (const data of powerSensorData) {
     if (data.power !== undefined) {
       data.power = Number(data.power.toFixed(1))
     }
@@ -55,8 +55,11 @@ const mainPollerFunc = async (config: Config) => {
     try {
       const publisherImpl = publisher.publisherImpl
 
+      // Filter out hidden sensors from the sensor data
+      const filteredSensorData = powerSensorData.filter((psd) => !psd.circuit.hidden)
+
       await Promise.all([
-        publisherImpl.publishSensorData(sensorData),
+        publisherImpl.publishSensorData(filteredSensorData),
         publisherImpl.publishCharacteristicsSensorData(characteristicsSensorData),
       ])
     } catch (e) {
