@@ -1,7 +1,12 @@
 import { Config, resolveAndValidateConfig } from '../src/config'
 import { SensorType, ShellySensor, ShellyType, UnmeteredSensor, VirtualSensor } from '../src/sensor'
 import { CircuitType } from '../src/circuit'
-import { createParentChildConfig, createUnmeteredParentChildrenConfig, createVirtualSensorConfig } from './testConfigs'
+import {
+  createNestedUnmeteredConfig,
+  createParentChildConfig,
+  createUnmeteredParentChildrenConfig,
+  createVirtualSensorConfig,
+} from './testConfigs'
 
 test('defaults are applied', () => {
   const config = resolveAndValidateConfig({
@@ -76,4 +81,10 @@ test('throws when unmetered sensor parent or children cannot be resolved', () =>
   unknownChildConfig.circuits[2].name = 'Unknown child'
 
   expect(() => resolveAndValidateConfig(unknownChildConfig)).toThrow('Failed to resolve')
+})
+
+test('throws when unmetered sensor has unmetered children', () => {
+  const nestedConfig = createNestedUnmeteredConfig()
+
+  expect(() => resolveAndValidateConfig(nestedConfig)).toThrow('Unmetered circuits cannot have other')
 })

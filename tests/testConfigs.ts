@@ -80,3 +80,42 @@ export const createUnmeteredParentChildrenConfig = (): Config => {
     ],
   } as unknown as Config
 }
+
+export const createNestedUnmeteredConfig = (): Config => {
+  return {
+    circuits: [
+      {
+        name: 'Total',
+        sensor: {
+          type: SensorType.Dummy,
+        },
+      },
+      {
+        name: 'Some sub-circuit',
+        sensor: {
+          type: SensorType.Dummy,
+        },
+      },
+      {
+        name: 'Some other unmetered circuit',
+        sensor: {
+          type: SensorType.Unmetered,
+          unmetered: {
+            parent: 'Total',
+            children: [],
+          },
+        },
+      },
+      {
+        name: 'Unmetered',
+        sensor: {
+          type: SensorType.Unmetered,
+          unmetered: {
+            parent: 'Total',
+            children: ['Some sub-circuit', 'Some other unmetered circuit'],
+          },
+        },
+      },
+    ],
+  } as unknown as Config
+}

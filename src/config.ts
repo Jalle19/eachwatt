@@ -109,6 +109,12 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         unmeteredSensor.unmetered.children as string[],
         config.circuits,
       )
+
+      // Make sure we don't have other unmetered circuits as children
+      const children = unmeteredSensor.unmetered.children as Circuit[]
+      if (children.filter((c) => c.sensor.type === SensorType.Unmetered).length > 0) {
+        throw new Error('Unmetered circuits cannot have other unmetered circuits as children')
+      }
     }
   }
 
