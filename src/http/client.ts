@@ -4,6 +4,7 @@ import http from 'http'
 const httpClient = axios.create({
   // We keep polling the same hosts over and over so keep-alive is essential
   httpAgent: new http.Agent({ keepAlive: true }),
+  timeout: 1000,
 })
 
 let lastTimestamp = 0
