@@ -7,10 +7,10 @@ import {
   IotawattSensor,
   PowerSensorData,
   PowerSensorPollFunction,
-} from './sensor'
-import { Circuit } from './circuit'
-import { getDedupedResponse } from './http/client'
-import { Characteristics } from './characteristics'
+} from '../sensor'
+import { Circuit } from '../circuit'
+import { getDedupedResponse } from '../http/client'
+import { Characteristics } from '../characteristics'
 
 type IotawattConfigurationInput = {
   channel: number

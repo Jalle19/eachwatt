@@ -2,17 +2,17 @@ import YAML from 'yaml'
 import {
   getCharacteristicsSensorData as getShellyCharacteristicsSensorData,
   getSensorData as getShellySensorData,
-} from './shelly'
+} from './sensor/shelly'
 import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
-} from './iotawatt'
-import { getSensorData as getVirtualSensorData } from './virtual'
-import { getSensorData as getUnmeteredSensorData } from './unmetered'
+} from './sensor/iotawatt'
+import { getSensorData as getVirtualSensorData } from './sensor/virtual'
+import { getSensorData as getUnmeteredSensorData } from './sensor/unmetered'
 import {
   getCharacteristicsSensorData as getDummyCharacteristicsSensorData,
   getSensorData as getDummySensorData,
-} from './dummy'
+} from './sensor/dummy'
 import {
   CharacteristicsSensorType,
   SensorType,

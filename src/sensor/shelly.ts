@@ -8,11 +8,11 @@ import {
   ShellyCharacteristicsSensor,
   ShellySensor,
   ShellyType,
-} from './sensor'
-import { Circuit } from './circuit'
-import { getDedupedResponse } from './http/client'
+} from '../sensor'
+import { Circuit } from '../circuit'
+import { getDedupedResponse } from '../http/client'
 import { AxiosResponse } from 'axios'
-import { Characteristics } from './characteristics'
+import { Characteristics } from '../characteristics'
 
 type Gen1MeterResult = {
   power: number
