@@ -11,6 +11,7 @@ import {
 import { Circuit } from '../circuit'
 import { getDedupedResponse } from '../http/client'
 import { Characteristics } from '../characteristics'
+import { createLogger } from '../logger'
 
 type IotawattConfigurationInput = {
   channel: number
@@ -43,6 +44,8 @@ type IotawattStatus = {
 }
 
 type IotawattCharacteristicsQuery = number[][]
+
+const logger = createLogger('sensor.iotawatt')
 
 const getConfigurationUrl = (sensor: IotawattSensor): string => {
   return `http://${sensor.iotawatt.address}/config.txt`
@@ -123,7 +126,7 @@ export const getSensorData: PowerSensorPollFunction = async (
       powerFactor: getSensorPowerFactorValue(sensor, configuration, status),
     }
   } catch (e) {
-    console.error((e as Error).message)
+    logger.error((e as Error).message)
     return emptySensorData(timestamp, circuit)
   }
 }
@@ -149,7 +152,7 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
       frequency: query[0][1],
     }
   } catch (e) {
-    console.error((e as Error).message)
+    logger.error((e as Error).message)
     return emptyCharacteristicsSensorData(timestamp, characteristics)
   }
 }

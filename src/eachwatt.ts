@@ -8,17 +8,20 @@ import { httpRequestHandler } from './http/server'
 import { WebSocketPublisherImpl } from './publisher/websocket'
 import { PublisherType } from './publisher'
 import { pollCharacteristicsSensors } from './characteristics'
+import { createLogger } from './logger'
 
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
   .options({
     'config': {
       description: 'The path to the configuration file',
-      demand: true,
+      demandOption: true,
       alias: 'c',
     },
   })
   .parseSync()
+
+const logger = createLogger('main')
 
 const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
@@ -63,7 +66,7 @@ const mainPollerFunc = async (config: Config) => {
         publisherImpl.publishCharacteristicsSensorData(characteristicsSensorData),
       ])
     } catch (e) {
-      console.error((e as Error).message)
+      logger.error((e as Error).message)
     }
   }
 }
@@ -71,7 +74,7 @@ const mainPollerFunc = async (config: Config) => {
 ;(async () => {
   const configFile = argv.config as string
   if (!fs.existsSync(configFile)) {
-    console.error(`Configuration ${configFile} file does not exist or is not readable`)
+    logger.error(`Configuration ${configFile} file does not exist or is not readable`)
     process.exit(-1)
   }
 
@@ -81,8 +84,8 @@ const mainPollerFunc = async (config: Config) => {
 
   // Create and start HTTP server
   const httpServer = http.createServer(httpRequestHandler)
-  await httpServer.listen(8080, '0.0.0.0', () => {
-    console.log('Started HTTP server')
+  httpServer.listen(8080, '0.0.0.0', () => {
+    logger.info('Started HTTP server')
   })
 
   // Create a WebSocket server and register it as a publisher too
@@ -94,7 +97,7 @@ const mainPollerFunc = async (config: Config) => {
 
   // Start polling sensors
   const pollingInterval = config.settings.pollingInterval
-  console.log(`Polling sensors with interval ${pollingInterval} milliseconds`)
+  logger.info(`Polling sensors with interval ${pollingInterval} milliseconds`)
   await mainPollerFunc(config)
   setInterval(mainPollerFunc, pollingInterval, config)
 })()
