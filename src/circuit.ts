@@ -11,6 +11,7 @@ export interface Circuit {
   parent?: string | Circuit // resolved to the circuit in question
   children: Circuit[] // resolved from parent
   phase?: string // resolved from parent
+  hidden?: boolean // defaults to false
   sensor: PowerSensor
   group?: string
 }

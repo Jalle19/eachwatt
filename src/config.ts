@@ -61,6 +61,11 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         shellySensor.shelly.type = ShellyType.Gen1
       }
     }
+
+    // Sensors are not hidden by default
+    if (circuit.hidden === undefined) {
+      circuit.hidden = false
+    }
   }
 
   // Resolve parent relationships

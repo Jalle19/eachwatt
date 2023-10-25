@@ -22,6 +22,7 @@ test('defaults are applied', () => {
   } as unknown as Config)
 
   expect(config.circuits[0].type).toEqual(CircuitType.Circuit)
+  expect(config.circuits[0].hidden).toEqual(false)
   const sensor = config.circuits[0].sensor as ShellySensor
   expect(sensor.shelly.type).toEqual(ShellyType.Gen1)
 })
