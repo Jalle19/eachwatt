@@ -41,3 +41,20 @@ To run the test suite, use:
 ```
 npm run test
 ```
+
+## Running with Docker
+
+Build the Docker image:
+
+```bash
+docker build -t eachwatt/latest .
+```
+
+Run the container:
+
+```bash
+docker run --rm -v $(pwd):/data:ro -p 8080:8080 eachwatt/latest
+```
+
+The application expects the configuration file to be available as `/data/config.yml`, so in the above example, 
+`config.yml` should be present in the current directory.

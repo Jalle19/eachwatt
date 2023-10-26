@@ -1,18 +1,29 @@
-FROM node:20-bookworm AS builder
+FROM node:20-bookworm-slim AS builder
 
 WORKDIR /app
-COPY . /app
 
+# Copy all files needed to build the app
+COPY package.json /app
+COPY package-lock.json /app
+COPY tsconfig.json /app
+COPY src/ /app/src
+COPY webif/ /app/webif
+
+# Install dependencies and build the app and web interface
 RUN npm install
+RUN npm run build-all
 
-RUN npm run build
-
-FROM node:20-bookworm AS runtime
+FROM node:20-bookworm-slim AS runtime
 
 WORKDIR /app
-COPY . /app
-COPY --from=builder /app/dist/* /app
 
-RUN npm install --omit=dev
+# Copy everything needed to install dependencies
+COPY package.json /app
+COPY package-lock.json /app
+RUN npm install --omit=dev --ignore-scripts
 
-ENTRYPOINT ["node", "dist/eachwatt.js"]
+# Copy the built apps
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/webif/build /app/webif/build
+
+ENTRYPOINT ["node", "dist/eachwatt.js", "-c", "/data/config.yml"]
