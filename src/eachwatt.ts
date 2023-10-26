@@ -10,6 +10,11 @@ import { PublisherType } from './publisher'
 import { pollCharacteristicsSensors } from './characteristics'
 import { createLogger } from './logger'
 
+// Set up a signal handler, so we can exit on Ctrl + C when run from Docker
+process.on('SIGINT', () => {
+  process.exit()
+})
+
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
   .options({
