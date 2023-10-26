@@ -8,11 +8,12 @@ import {
   ShellyCharacteristicsSensor,
   ShellySensor,
   ShellyType,
-} from './sensor'
-import { Circuit } from './circuit'
-import { getDedupedResponse } from './http/client'
+} from '../sensor'
+import { Circuit } from '../circuit'
+import { getDedupedResponse } from '../http/client'
 import { AxiosResponse } from 'axios'
-import { Characteristics } from './characteristics'
+import { Characteristics } from '../characteristics'
+import { createLogger } from '../logger'
 
 type Gen1MeterResult = {
   power: number
@@ -43,6 +44,8 @@ type Gen2EMGetStatusResult = {
   c_voltage: number
   c_freq: number
 }
+
+const logger = createLogger('sensor.shelly')
 
 const getSensorDataUrl = (sensor: ShellySensor | ShellyCharacteristicsSensor): string => {
   const address = sensor.shelly.address
@@ -134,7 +137,7 @@ export const getSensorData: PowerSensorPollFunction = async (
         return parseGen2EMResponse(timestamp, circuit, httpResponse)
     }
   } catch (e) {
-    console.error((e as Error).message)
+    logger.error((e as Error).message)
     return emptySensorData(timestamp, circuit)
   }
 }
@@ -179,7 +182,7 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
       frequency: frequency,
     }
   } catch (e) {
-    console.error((e as Error).message)
+    logger.error((e as Error).message)
     return emptyCharacteristicsSensorData(timestamp, characteristics)
   }
 }

@@ -5,9 +5,9 @@ import {
   emptySensorData,
   PowerSensorData,
   PowerSensorPollFunction,
-} from './sensor'
-import { Circuit } from './circuit'
-import { Characteristics } from './characteristics'
+} from '../sensor'
+import { Circuit } from '../circuit'
+import { Characteristics } from '../characteristics'
 
 export const getSensorData: PowerSensorPollFunction = async (
   timestamp: number,

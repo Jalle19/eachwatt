@@ -2,17 +2,17 @@ import YAML from 'yaml'
 import {
   getCharacteristicsSensorData as getShellyCharacteristicsSensorData,
   getSensorData as getShellySensorData,
-} from './shelly'
+} from './sensor/shelly'
 import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
-} from './iotawatt'
-import { getSensorData as getVirtualSensorData } from './virtual'
-import { getSensorData as getUnmeteredSensorData } from './unmetered'
+} from './sensor/iotawatt'
+import { getSensorData as getVirtualSensorData } from './sensor/virtual'
+import { getSensorData as getUnmeteredSensorData } from './sensor/unmetered'
 import {
   getCharacteristicsSensorData as getDummyCharacteristicsSensorData,
   getSensorData as getDummySensorData,
-} from './dummy'
+} from './sensor/dummy'
 import {
   CharacteristicsSensorType,
   SensorType,
@@ -28,11 +28,28 @@ import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
 import { MqttPublisher, MqttPublisherImpl } from './publisher/mqtt'
 
-export interface Config {
+type MilliSeconds = number
+
+type MainSettings = {
+  pollingInterval?: MilliSeconds
+  httpPort?: number
+}
+
+export type Config = {
+  settings: MainSettings
   characteristics: Characteristics[]
   circuits: Circuit[]
   publishers: Publisher[]
 }
+
+const defaultSettings = (): MainSettings => {
+  return {
+    pollingInterval: 5000,
+    httpPort: 8080,
+  }
+}
+
+const MINIMUM_POLLING_INTERVAL: MilliSeconds = 2000
 
 export const parseConfig = (configFileContents: string): Config => {
   return YAML.parse(configFileContents) as Config
@@ -40,12 +57,21 @@ export const parseConfig = (configFileContents: string): Config => {
 
 export const resolveAndValidateConfig = (config: Config): Config => {
   // Set various defaults
+  if (!config.settings) {
+    config.settings = defaultSettings()
+  }
+
   if (!config.characteristics) {
     config.characteristics = []
   }
 
   if (!config.publishers) {
     config.publishers = []
+  }
+
+  // Validate polling interval
+  if (!config.settings.pollingInterval || config.settings.pollingInterval < MINIMUM_POLLING_INTERVAL) {
+    throw new Error(`Polling interval is too low, minimum is ${MINIMUM_POLLING_INTERVAL} milliseconds`)
   }
 
   for (const circuit of config.circuits) {
@@ -60,6 +86,11 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       if (shellySensor.shelly.type === undefined) {
         shellySensor.shelly.type = ShellyType.Gen1
       }
+    }
+
+    // Sensors are not hidden by default
+    if (circuit.hidden === undefined) {
+      circuit.hidden = false
     }
   }
 
@@ -104,6 +135,12 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         unmeteredSensor.unmetered.children as string[],
         config.circuits,
       )
+
+      // Make sure we don't have other unmetered circuits as children
+      const children = unmeteredSensor.unmetered.children as Circuit[]
+      if (children.filter((c) => c.sensor.type === SensorType.Unmetered).length > 0) {
+        throw new Error('Unmetered circuits cannot have other unmetered circuits as children')
+      }
     }
   }
 

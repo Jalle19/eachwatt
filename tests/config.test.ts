@@ -1,7 +1,13 @@
 import { Config, resolveAndValidateConfig } from '../src/config'
 import { SensorType, ShellySensor, ShellyType, UnmeteredSensor, VirtualSensor } from '../src/sensor'
 import { CircuitType } from '../src/circuit'
-import { createParentChildConfig, createUnmeteredParentChildrenConfig, createVirtualSensorConfig } from './testConfigs'
+import {
+  createNestedUnmeteredConfig,
+  createParentChildConfig,
+  createUnmeteredParentChildrenConfig,
+  createVeryLowPollingIntervalConfig,
+  createVirtualSensorConfig,
+} from './testConfigs'
 
 test('defaults are applied', () => {
   const config = resolveAndValidateConfig({
@@ -21,9 +27,19 @@ test('defaults are applied', () => {
     ],
   } as unknown as Config)
 
+  expect(config.settings.pollingInterval).toEqual(5000)
+  expect(config.characteristics.length).toEqual(0)
+  expect(config.publishers.length).toEqual(0)
   expect(config.circuits[0].type).toEqual(CircuitType.Circuit)
+  expect(config.circuits[0].hidden).toEqual(false)
   const sensor = config.circuits[0].sensor as ShellySensor
   expect(sensor.shelly.type).toEqual(ShellyType.Gen1)
+})
+
+test('polling interval cannot be set too low', () => {
+  const rawConfig = createVeryLowPollingIntervalConfig()
+
+  expect(() => resolveAndValidateConfig(rawConfig)).toThrow('Polling interval is too low')
 })
 
 test('parent and child circuit is resolved', () => {
@@ -75,4 +91,10 @@ test('throws when unmetered sensor parent or children cannot be resolved', () =>
   unknownChildConfig.circuits[2].name = 'Unknown child'
 
   expect(() => resolveAndValidateConfig(unknownChildConfig)).toThrow('Failed to resolve')
+})
+
+test('throws when unmetered sensor has unmetered children', () => {
+  const nestedConfig = createNestedUnmeteredConfig()
+
+  expect(() => resolveAndValidateConfig(nestedConfig)).toThrow('Unmetered circuits cannot have other')
 })

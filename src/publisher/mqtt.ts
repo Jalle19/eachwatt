@@ -4,6 +4,8 @@ import { CharacteristicsSensorData, PowerSensorData } from '../sensor'
 import { Config } from '../config'
 import { createCharacteristicsSensorTopicName, createPowerSensorTopicName } from './mqtt/util'
 import { configureMqttDiscovery } from './mqtt/homeassistant'
+import { Logger } from 'winston'
+import { createLogger } from '../logger'
 
 export const TOPIC_PREFIX = 'eachwatt'
 export const TOPIC_NAME_STATUS = `${TOPIC_PREFIX}/status`
@@ -26,22 +28,24 @@ export class MqttPublisherImpl implements PublisherImpl {
   config: Config
   settings: MqttPublisherSettings
   mqttClient?: MqttClient
+  logger: Logger
 
   constructor(config: Config, settings: MqttPublisherSettings) {
     this.config = config
     this.settings = settings
+    this.logger = createLogger('publisher.mqtt')
 
     // Connect to the broker
     connectAsync(this.settings.brokerUrl)
       .then((client) => {
         this.mqttClient = client
-        console.log(`Connected to MQTT broker at ${this.settings.brokerUrl}`)
+        this.logger.info(`Connected to MQTT broker at ${this.settings.brokerUrl}`)
 
         // Publish Home Assistant MQTT discovery messages
         if (this.settings.homeAssistant?.autoDiscovery) {
           configureMqttDiscovery(this.config, this.mqttClient)
             .then(() => {
-              console.log(`Configured Home Assistant MQTT discovery`)
+              this.logger.info(`Configured Home Assistant MQTT discovery`)
             })
             .catch((e) => {
               throw new Error(`Failed to configure Home Assistant MQTT discovery: ${e}`)

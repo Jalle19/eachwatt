@@ -1,3 +1,7 @@
+settings:
+  pollingInterval: 5000
+  httpPort: 8080
+
 circuits:
   # mains
   - name: Main total
