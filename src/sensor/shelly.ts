@@ -103,8 +103,8 @@ const parseGen2EMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
       break
     case 'c':
       power = data.c_act_power
-      apparentPower = data.b_aprt_power
-      powerFactor = data.b_pf
+      apparentPower = data.c_aprt_power
+      powerFactor = data.c_pf
       break
   }
 
