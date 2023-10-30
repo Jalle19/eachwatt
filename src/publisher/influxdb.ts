@@ -39,8 +39,6 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
         .tag('circuit', data.circuit.name)
         .tag('circuitType', data.circuit.type as CircuitType)
         .tag('sensorType', data.circuit.sensor.type)
-        // TODO: Remove "watts", here for backward compatibility
-        .floatField('watts', data.power)
         .floatField('power', data.power)
         .timestamp(data.timestamp)
 
