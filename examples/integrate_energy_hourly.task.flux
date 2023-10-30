@@ -9,7 +9,7 @@ from(bucket: "eachwatt")
     |> range(start: date.truncate(t: -24h, unit: 1h))
     // Focus on watts
     |> filter(fn: (r) => r["_measurement"] == "power")
-    |> filter(fn: (r) => r["_field"] == "watts")
+    |> filter(fn: (r) => r["_field"] == "power")
     // Aggregate into one hour windows (since we're dealing with kilowatthours)
     |> aggregateWindow(
         every: 1h,
