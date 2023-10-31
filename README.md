@@ -21,7 +21,6 @@ to any number of different targets, such as databases or MQTT.
 
 * [Table of contents](#table-of-contents)
 * [Features](#features)
-  + [Data publishers](#data-publishers)
 * [Screenshots](#screenshots)
 * [Installation and usage](#installation-and-usage)
   + [Running with Docker](#running-with-docker)
@@ -47,20 +46,17 @@ to any number of different targets, such as databases or MQTT.
 * Can _**measure power characteristics**_
   * Characteristics mean voltage and frequency. Any number of characteristics sensors may be defined, and each phase 
     can theoretically be measured by a different device.
-* Can _**publish the gathered data**_ to various targets (see next section)
-
-### Data publishers
-
-* InfluxDB
-  * Data can be published to InfluxDB, enabling users to chart their data using e.g. Grafana.
-  * The `examples/` directory contains a ready-to-use [Flux task](examples/integrate_energy_hourly.task.flux) for regularly integrating power into energy
-* MQTT
-  * Data can be published to MQTT, enabling any MQTT-enabled piece of software to receive the data in real-time
-  * Optional Home Assistant auto-discovery support, meaning each configured sensor can be autoconfigured in Home 
-    Assistant as separate entities
-* WebSocket
-  * The built-in web interface communicates with the application using a WebSocket, which is also usable by other 
-    software. This can be used to build e.g. custom web interfaces for wall-mounted displays
+* Can _**publish the gathered data**_ to various targets
+  * InfluxDB
+    * Data can be published to InfluxDB, enabling users to chart their data using e.g. Grafana.
+    * The `examples/` directory contains a ready-to-use [Flux task](examples/integrate_energy_hourly.task.flux) for regularly integrating power into energy
+  * MQTT
+    * Data can be published to MQTT, enabling any MQTT-enabled piece of software to receive the data in real-time
+    * Optional Home Assistant auto-discovery support, meaning each configured sensor can be autoconfigured in Home 
+      Assistant as separate entities
+  * WebSocket
+    * The built-in web interface communicates with the application using a WebSocket, which is also usable by other 
+      software. This can be used to build e.g. custom web interfaces for wall-mounted displays
 
 ## Screenshots
 
@@ -75,6 +71,11 @@ Measuring just main circuits:
 Minimal example (measuring single circuit only):
 
 ![single-circuit](examples/webif.screenshot3.single-circuit.png)
+
+Examples of how the data published to InfluxDB can be visualized:
+
+![grafana1](examples/grafana1.png)
+![grafana2](examples/grafana2.png)
 
 ## Installation and usage
 
