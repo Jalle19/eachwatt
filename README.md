@@ -32,12 +32,16 @@ to any number of different targets, such as databases or MQTT.
   * You can have a current-transformer type sensor measuring a circuit, then a smart plug measuring some specific 
     device on that circuit, then an unmetered type sensor which calculates the difference between the two, yielding the 
     power that wasn't measured by either of the two sensors.
+* Can _**measure power characteristics**_
+  * Characteristics mean voltage and frequency. Any number of characteristics sensors may be defined, and each phase 
+    can theoretically be measured by a different device.
 * Can _**publish the gathered data**_ to various targets (see next section)
 
 ## Data publishers
 
 * InfluxDB
   * Data can be published to InfluxDB, enabling users to chart their data using e.g. Grafana.
+  * The `examples/` directory contains a ready-to-use Flux task for regularly integrating power into energy
 * MQTT
   * Data can be published to MQTT, enabling any MQTT-enabled piece of software to receive the data in real-time
   * Optional Home Assistant auto-discovery support, meaning each configured sensor can be autoconfigured in Home 
