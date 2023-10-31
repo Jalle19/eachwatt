@@ -47,7 +47,7 @@ export interface IotawattCharacteristicsSensor extends CharacteristicsSensor {
   iotawatt: IotawattSensorSettings
 }
 
-interface ShellySensorSettings {
+export type ShellySensorSettings = {
   address: string
   type?: ShellyType
   // For Gen1 devices and Gen2 devices implementing the "Switch" component
