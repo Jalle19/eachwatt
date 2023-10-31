@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Jalle19/eachwatt/actions/workflows/ci.yml/badge.svg)](https://github.com/Jalle19/eachwatt/actions/workflows/ci.yml)
 
-> NOTE: This software is still work-in-progress and the documentation is still pretty thin!
+> This software is still work-in-progress and the documentation is still pretty thin!
 
 EachWatt is a versatile energy monitoring solution that is able to combine multiple types of power sensors and 
 normalize the data. It enables users to get a comprehensive view of their home's energy usage without having to 
