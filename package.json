@@ -1,7 +1,7 @@
 {
   "name": "eachwatt",
   "version": "1.0.0",
-  "description": "",
+  "description": "Versatile energy monitoring solution for combining multiple types of power meters",
   "author": "Sam Stenvall <neggelandia@gmail.com>",
   "license": "GPL-3.0-or-later",
   "scripts": {
