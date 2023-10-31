@@ -41,7 +41,7 @@ to any number of different targets, such as databases or MQTT.
 
 * InfluxDB
   * Data can be published to InfluxDB, enabling users to chart their data using e.g. Grafana.
-  * The `examples/` directory contains a ready-to-use Flux task for regularly integrating power into energy
+  * The `examples/` directory contains a ready-to-use [Flux task](examples/integrate_energy_hourly.task.flux) for regularly integrating power into energy
 * MQTT
   * Data can be published to MQTT, enabling any MQTT-enabled piece of software to receive the data in real-time
   * Optional Home Assistant auto-discovery support, meaning each configured sensor can be autoconfigured in Home 
@@ -49,6 +49,20 @@ to any number of different targets, such as databases or MQTT.
 * WebSocket
   * The built-in web interface communicates with the application using a WebSocket, which is also usable by other 
     software. This can be used to build e.g. custom web interfaces for wall-mounted displays
+
+## Screenshots
+
+Fully-fledged example:
+
+![full](examples/webif.screenshot1.full.png)
+
+Measuring just main circuits:
+
+![mains](examples/webif.screenshot2.mains.png)
+
+Minimal example (measuring single circuit only):
+
+![single-circuit](examples/webif.screenshot3.single-circuit.png)
 
 ## Development
 
