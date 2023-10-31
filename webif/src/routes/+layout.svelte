@@ -33,7 +33,10 @@
         switch (message.type) {
           case 'characteristicsSensorData':
           case 'powerSensorData':
-            $lastUpdateTimestampStore = parseTimestamp(message.data)
+            if (message.data.length > 0) {
+              $lastUpdateTimestampStore = parseTimestamp(message.data)
+            }
+
             break
         }
 
