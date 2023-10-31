@@ -1,21 +1,29 @@
+#
+# This example configuration file illustrates every single thing that can be configured.
+#
 settings:
+  # Polling interval in milliseconds
   pollingInterval: 5000
+  # HTTP port to serve the web interface on
   httpPort: 8080
 
 circuits:
-  # mains
+  # A "virtual" type circuit with type = "main". The circuit type defaults to "circuit".
   - name: Main total
     type: main
     sensor:
+      # Virtual sensors combine the power readings from child sensors
       type: virtual
       virtual:
         children:
           - Main L1
           - Main L2
           - Main L3
+  # An "unmetered" type circuit
   - name: Main total unmetered
     type: main
     sensor:
+      # Unmetered sensors derive their readings by subtracting child sensor values from the parent sensor.
       type: unmetered
       unmetered:
         parent: Main total
@@ -23,33 +31,7 @@ circuits:
           - Vägg vardagsrum
           - Vägg kök
           - Vägg arbetsrum
-          - Luftvärmepump
-          - Spis L1
-          - Spis L2
-          - Ugn
-          - Luft-vattenvärmepump
-          - Värmepanna
-          - Bastu
-          - Rack
-          - Frys + kylskåp
-          - Ventilation
-          - Tvättmaskin
-          - Torkskåp
-          - Diskmaskin
-          - Belysning hjälpkök
-          - Belysning köksbänkar
-          - Belysning köksfönster
-          - Belysning bibliotek
-          - Belysning bibliotek fönster
-          - Belysning Ebbas rum
-          - Belysning Ebbas fönster
-          - Belysning kontor
-          - Belysning kontor fönster
-          - Belysning sovrum
-          - Belysning sovrum fönster
-          - Belysning vardagsrumsbord
-          - Belysning vardagsrum fönster
-          - Belysning vardagsrum takkrona
+  # A IotaWatt main circuit, phase A/L1
   - name: Main L1
     type: main
     phase: L1
@@ -59,6 +41,7 @@ circuits:
       iotawatt:
         address: 10.112.4.4
         name: Main_L1
+  # A IotaWatt main circuit, phase B/L2
   - name: Main L2
     type: main
     phase: L2
@@ -68,6 +51,7 @@ circuits:
       iotawatt:
         address: 10.112.4.4
         name: Main_L2
+  # A IotaWatt main circuit, phase C/L3
   - name: Main L3
     type: main
     phase: L3
@@ -77,7 +61,7 @@ circuits:
       iotawatt:
         address: 10.112.4.4
         name: Main_L3
-  # iotawatt circuits
+  # A IotaWatt circuit. "parent" indicates that this circuit's readings are part of the parent's readings too.
   - name: Vägg vardagsrum
     parent: Main L3
     sensor:
@@ -85,6 +69,7 @@ circuits:
       iotawatt:
         address: 10.112.4.4
         name: Vagg_Vardagsrum
+  # Another IotaWatt circuit.
   - name: Vägg kök
     parent: Main L3
     sensor:
@@ -93,6 +78,7 @@ circuits:
         address: 10.112.4.4
         name: Vagg_Kok
     group: Matlagning
+  # Yet another IotaWatt circuit. This one has a different "parent" than the others.
   - name: Vägg arbetsrum
     parent: Main L1
     sensor:
@@ -100,63 +86,8 @@ circuits:
       iotawatt:
         address: 10.112.4.4
         name: Vagg_Sovrum1
-  - name: Luftvärmepump
-    parent: Main L2
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Mitsu_Ilp
-    group: LVI
-  - name: Spis L1
-    parent: Main L1
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Spis_L1
-    group: Matlagning
-  - name: Spis L2
-    parent: Main L2
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Spis_L2
-    group: Matlagning
-  - name: Ugn
-    parent: Main L3
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Ugn
-    group: Matlagning
-  - name: Luft-vattenvärmepump
-    #parent: Main total
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Moon_Total
-    group: LVI
-  - name: Värmepanna
-    #parent: Main total
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Jaspi_Total
-    group: LVI
-  - name: Bastu
-    #parent: Main total
-    sensor:
-      type: iotawatt
-      iotawatt:
-        address: 10.112.4.4
-        name: Bastu_Total
-
-  # shelly
+  # A Shelly circuit. "meter" 0 means use the first energy meter. Some devices have two channels, this is used to
+  # differentiate between those.
   - name: Rack
     parent: Main L1
     sensor:
@@ -164,54 +95,7 @@ circuits:
       shelly:
         address: 10.112.4.61
         meter: 0
-  - name: Frys + kylskåp
-    parent: Main L3
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.58
-        meter: 0
-    group: Matlagning
-  - name: Ventilation
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.60
-        meter: 0
-    group: LVI
-  - name: Tvättmaskin
-    parent: Main L2
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.63
-        meter: 0
-    group: Tvätt
-  - name: Torkskåp
-    parent: Main L3
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.57
-        meter: 0
-    group: Tvätt
-  - name: Diskmaskin
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.62
-        meter: 0
-    group: Tvätt
-  - name: Belysning hjälpkök
-    parent: Main L3
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.59
-        meter: 0
-    group: Belysning
+  # Two Shelly circuits that are backed by the same Shelly 2.5 relay, using different values for "meter".
   - name: Belysning köksbänkar
     parent: Main L3
     sensor:
@@ -228,106 +112,80 @@ circuits:
         address: 10.112.4.44
         meter: 1
     group: Belysning
-  - name: Belysning bibliotek
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.47
-        meter: 0
-    group: Belysning
-  - name: Belysning bibliotek fönster
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.47
-        meter: 1
-    group: Belysning
-  - name: Belysning Ebbas rum
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.48
-        meter: 0
-    group: Belysning
-  - name: Belysning Ebbas fönster
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.48
-        meter: 1
-    group: Belysning
-  - name: Belysning kontor
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.46
-        meter: 0
-    group: Belysning
-  - name: Belysning kontor fönster
-    parent: Main L1
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.46
-        meter: 1
-    group: Belysning
-  - name: Belysning sovrum
+  # A Shelly "Gen2" "PM" circuit. "type" is by default "gen1". "gen2-pm" devices include e.g. Shelly Plus 1PM
+  - name: Kylskåp + frys källare
     parent: Main L2
     sensor:
       type: shelly
       shelly:
-        address: 10.112.4.45
+        address: 10.112.4.66
+        type: gen2-pm
         meter: 0
-    group: Belysning
-  - name: Belysning sovrum fönster
-    parent: Main L2
+  # A main circuit using a Shelly Pro 3EM. Here the "type" is set to "gen2-em". "meter" should normally be set to 0,
+  # in theory there can be multiple different meters in the same product.
+  - name: Main L1
+    type: main
+    phase: L1
     sensor:
       type: shelly
       shelly:
-        address: 10.112.4.45
-        meter: 1
-    group: Belysning
-  - name: Belysning vardagsrumsbord
-    parent: Main L2
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.50
+        address: 10.112.4.67
+        type: gen2-em
         meter: 0
-    group: Belysning
-  - name: Belysning vardagsrum fönster
-    parent: Main L2
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.50
-        meter: 1
-    group: Belysning
-  - name: Belysning vardagsrum takkrona
-    parent: Main L2
-    sensor:
-      type: shelly
-      shelly:
-        address: 10.112.4.52
-        meter: 0
-    group: Belysning
+        phase: a
 
+#
+# Characteristics. Characteristics mean voltage and frequency, and potentially other non-power related readings.
+#
+characteristics:
+  # Characteristics from each phase in a three-phase system using both a IotaWatt sensor and a Shelly Pro 3 EM.
+  - name: Main L1
+    phase: L1
+    sensor:
+      type: iotawatt
+      iotawatt:
+        address: 10.112.4.4
+        name: Input_0
+  - name: Main L2
+    phase: L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: b
+  - name: Main L3
+    phase: L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: c
+
+#
+# Publishers. Publishers send the gathered data to other systems. If you don't want to publish the data anywhere,
+# use an empty list:
+#
+# publishers:
+#
 publishers:
+  # InfluxDB publisher. Only InfluxDB v2 is supported.
   - type: influxdb
     settings:
       url: http://10.110.1.6:8086/
       organizationId: organisation id
       bucket: eachwatt
       apiToken: token
+  # Console publisher. Simply logs readings to stdout. Useful for debugging and to verify the application is running.
   - type: console
+  # MQTT publisher
   - type: mqtt
     settings:
       brokerUrl: mqtt://10.110.1.3:1883
+      # Optional Home Assistant auto-discovery support
       homeAssistant:
         autoDiscovery: true
-        deviceIdentifier: eachwatt-dev
+        deviceIdentifier: eachwatt
