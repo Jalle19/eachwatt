@@ -1,7 +1,9 @@
 <script>
   import {
     lastUpdateTimestampStore,
-    webSocketUrlStore
+    webSocketUrlStore,
+    characteristicsStore,
+    mainSensorDataStore,
   } from '../lib/stores'
 
   import LastUpdate from './LastUpdate.svelte'
@@ -28,12 +30,16 @@
   <div class="pure-u-1-1 l-box">
     <LastUpdate />
   </div>
+  {#if $characteristicsStore.length > 0}
   <div class="pure-u-1-1 l-box">
     <Characteristics />
   </div>
+  {/if}
+  {#if $mainSensorDataStore.length > 0}
   <div class="pure-u-1-1 l-box">
     <MainsPower />
   </div>
+  {/if}
   <div class="pure-u-1-1 l-box">
     <Circuits />
   </div>
