@@ -17,6 +17,18 @@ EachWatt is designed to be flexible and serve the needs of the user, rather than
 some specific way of measuring power. It's designed to integrate with other software by publishing the sensor readings 
 to any number of different targets, such as databases or MQTT.
 
+## Table of contents
+
+* [Table of contents](#table-of-contents)
+* [Features](#features)
+  + [Data publishers](#data-publishers)
+* [Screenshots](#screenshots)
+* [Installation and usage](#installation-and-usage)
+  + [Running with Docker](#running-with-docker)
+  + [Running as a systemd service](#running-as-a-systemd-service)
+* [Development](#development)
+* [License](#license)
+
 ## Features
 
 * Supports _**multiple different power sensors**_
@@ -37,7 +49,7 @@ to any number of different targets, such as databases or MQTT.
     can theoretically be measured by a different device.
 * Can _**publish the gathered data**_ to various targets (see next section)
 
-## Data publishers
+### Data publishers
 
 * InfluxDB
   * Data can be published to InfluxDB, enabling users to chart their data using e.g. Grafana.
@@ -63,6 +75,39 @@ Measuring just main circuits:
 Minimal example (measuring single circuit only):
 
 ![single-circuit](examples/webif.screenshot3.single-circuit.png)
+
+## Installation and usage
+
+There are three ways of running the application:
+* using Docker (recommended for end-users)
+* natively as a systemd service (recommended for advanced users or people who don't want to use Docker)
+* manually, mainly for developers
+
+Ultimately the application requires a configuration file in order to run. Example configurations file can be found in 
+the [examples/](examples/) directory.
+
+### Running with Docker
+
+Build the Docker image:
+
+```bash
+docker build -t eachwatt/latest .
+```
+
+Run the container:
+
+```bash
+docker run --rm -v $(pwd):/data:ro -p 8080:8080 eachwatt/latest
+```
+
+The application expects the configuration file to be available as `/data/config.yml`, so in the above example, 
+`config.yml` should be present in the current directory.
+
+### Running as a systemd service
+
+There is a skeleton systemd service available in [systemd/eachwatt.service](systemd/eachwatt.service). Clone the 
+project to `/opt/eachwatt`, copy the service file to `/etc/systemd/system/eachwatt.service`, modify it as necessary 
+and then start the service using `systemctl start eachwatt.service`.
 
 ## Development
 
@@ -104,19 +149,6 @@ To run the test suite, use:
 npm run test
 ```
 
-## Running with Docker
+## License
 
-Build the Docker image:
-
-```bash
-docker build -t eachwatt/latest .
-```
-
-Run the container:
-
-```bash
-docker run --rm -v $(pwd):/data:ro -p 8080:8080 eachwatt/latest
-```
-
-The application expects the configuration file to be available as `/data/config.yml`, so in the above example, 
-`config.yml` should be present in the current directory.
+This application is licensed under the GNU GENERAL PUBLIC LICENSE version 3 or later
