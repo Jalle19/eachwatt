@@ -1,0 +1,81 @@
+settings:
+  pollingInterval: 5000
+  httpPort: 8080
+
+circuits:
+  # Define three circuits, one for each main phase. All use the same Shelly Gen 2 EM device as sensor.
+  - name: Main L1
+    # Type = "main" indicates that this is a main circuit, meaning it can be shown separately in the web interface and
+    # differentiated in published data.
+    type: main
+    phase: L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: a
+  - name: Main L2
+    type: main
+    phase: L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: b
+  - name: Main L3
+    type: main
+    phase: L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: c
+  # A "virtual" type circuit that combines the readings from the physical mains sensors
+  - name: Main total
+    type: main
+    sensor:
+      type: virtual
+      virtual:
+        children:
+          - Main L1
+          - Main L2
+          - Main L3
+
+# Get characteristics from the same device as we get power readings from
+characteristics:
+  - name: Main L1
+    phase: L1
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: a
+  - name: Main L2
+    phase: L2
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: b
+  - name: Main L3
+    phase: L3
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.67
+        type: gen2-em
+        meter: 0
+        phase: c
+
+# No publishers configured
+publishers:

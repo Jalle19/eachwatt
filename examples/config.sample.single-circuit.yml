@@ -1,0 +1,19 @@
+settings:
+  pollingInterval: 5000
+  httpPort: 8080
+
+circuits:
+  # A single circuit named "Frys + kylskåp" belonging to the group "Matlagning"
+  - name: Frys + kylskåp
+    sensor:
+      type: shelly
+      shelly:
+        address: 10.112.4.58
+        meter: 0
+    group: Matlagning
+
+# No characteristics configured
+characteristics:
+
+# No publishers configured
+publishers:
