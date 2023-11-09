@@ -9,6 +9,7 @@ import { WebSocketPublisherImpl } from './publisher/websocket'
 import { PublisherType } from './publisher'
 import { pollCharacteristicsSensors } from './characteristics'
 import { createLogger } from './logger'
+import { setRequestTimeout } from './http/client'
 
 // Set up a signal handler, so we can exit on Ctrl + C when run from Docker
 process.on('SIGINT', () => {
@@ -100,9 +101,12 @@ const mainPollerFunc = async (config: Config) => {
     publisherImpl: webSocketServer,
   })
 
-  // Start polling sensors
+  // Adjust the HTTP timeout to be half that of the polling interval
   const pollingInterval = config.settings.pollingInterval
   logger.info(`Polling sensors with interval ${pollingInterval} milliseconds`)
+  setRequestTimeout((pollingInterval as number) / 2)
+
+  // Start polling sensors
   await mainPollerFunc(config)
   setInterval(mainPollerFunc, pollingInterval, config)
 })()
