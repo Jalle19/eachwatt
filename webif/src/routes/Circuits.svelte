@@ -21,7 +21,11 @@
     {#each sensorData as data}
       <tr>
         <td>{data.circuit.name}</td>
-        <td>{data.circuit.group ?? ''}</td>
+        <td>
+          {#if data.circuit.group}
+            <a href="/group/{data.circuit.group}">{data.circuit.group}</a>
+          {/if}
+        </td>
         <td>{data.circuit.phase ?? ''}</td>
         <td>{data.circuit.type}</td>
         <td>{data.circuit.sensor.type}</td>
