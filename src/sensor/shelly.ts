@@ -47,6 +47,10 @@ type Gen2EMGetStatusResult = {
 
 const logger = createLogger('sensor.shelly')
 
+const logError = (url: string, err: unknown): void => {
+  logger.error(`${url}: ${(err as Error).message}`)
+}
+
 const getSensorDataUrl = (sensor: ShellySensor | ShellyCharacteristicsSensor): string => {
   const address = sensor.shelly.address
   const meter = sensor.shelly.meter
@@ -137,7 +141,7 @@ export const getSensorData: PowerSensorPollFunction = async (
         return parseGen2EMResponse(timestamp, circuit, httpResponse)
     }
   } catch (e) {
-    logger.error((e as Error).message)
+    logError(url, e)
     return emptySensorData(timestamp, circuit)
   }
 }
@@ -182,7 +186,7 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
       frequency: frequency,
     }
   } catch (e) {
-    logger.error((e as Error).message)
+    logError(url, e)
     return emptyCharacteristicsSensorData(timestamp, characteristics)
   }
 }
