@@ -5,7 +5,7 @@
     --highlight-color: #ff3d00;
 }
 
-@media (prefers-color-scheme: dark){
+@media (prefers-color-scheme: dark) {
     :root {
         --background: #272727;
         --color: #aaa;
@@ -27,13 +27,15 @@
         color: var(--color);
     }
 
-    .pure-table th, .pure-table td {
+    .pure-table th,
+    .pure-table td {
         border: 0;
     }
 
     .pure-table-striped tr:nth-child(2n-1) td {
-        background-color: #2E2E2E;
+        background-color: #2e2e2e;
     }
+
     /* end pure-table overrides */
 }
 
@@ -42,10 +44,22 @@ body {
     color: var(--color);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     margin-top: 0;
     padding-bottom: 0.2em;
     display: inline-block;
+    border-bottom: 2px solid var(--highlight-color);
+}
+
+a {
+    color: var(--color);
+    text-decoration: none;
+    padding-bottom: 0.2em;
     border-bottom: 2px solid var(--highlight-color);
 }
 
@@ -73,11 +87,12 @@ table {
 
 /* pure-menu tweaks */
 .pure-menu-link {
-  border-bottom: 2px solid var(--component-background);
+    border-bottom: 2px solid var(--component-background);
 }
 
 .pure-menu-link:hover {
     border-bottom: 2px solid var(--highlight-color);
     background: inherit !important;
 }
+
 /* end pure-menu tweaks */
