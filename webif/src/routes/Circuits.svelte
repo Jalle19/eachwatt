@@ -1,7 +1,8 @@
 <script lang="ts">
   import { formatPf } from '$lib/format'
+  import type { PowerSensorData } from '$lib/types'
 
-  export let sensorData: any[]
+  export let sensorData: PowerSensorData[]
 </script>
 
 <table class="pure-table pure-table-striped">

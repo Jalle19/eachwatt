@@ -3,12 +3,13 @@
   import { circuitSensorDataStore } from '$lib/stores'
   import Circuits from '../../Circuits.svelte'
   import { derived } from 'svelte/store'
+  import type { PowerSensorData } from '$lib/types'
 
   // Create a derived store containing the sensor data for just the circuits belonging
   // to the current group
   const group = $page.params?.group
   let groupSensorData = derived(circuitSensorDataStore, (data) => {
-    return data.filter((data: any) => data.circuit.group === group)
+    return data.filter((data: PowerSensorData) => data.circuit.group === group)
   })
 </script>
 
