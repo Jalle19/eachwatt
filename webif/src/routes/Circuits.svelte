@@ -1,9 +1,9 @@
-<script>
-  import { circuitSensorDataStore } from '../lib/stores'
-  import { formatPf } from '../lib/format'
+<script lang="ts">
+  import { formatPf } from '$lib/format'
+
+  export let sensorData: any[]
 </script>
 
-<h2>All circuits</h2>
 <table class="pure-table pure-table-striped">
   <thead>
     <tr>
@@ -18,7 +18,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each $circuitSensorDataStore as data}
+    {#each sensorData as data}
       <tr>
         <td>{data.circuit.name}</td>
         <td>{data.circuit.group ?? ''}</td>

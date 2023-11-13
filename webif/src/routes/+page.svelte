@@ -2,9 +2,10 @@
   import {
     lastUpdateTimestampStore,
     webSocketUrlStore,
+    circuitSensorDataStore,
     characteristicsStore,
     mainSensorDataStore,
-  } from '../lib/stores'
+  } from '$lib/stores'
 
   import LastUpdate from './LastUpdate.svelte'
   import Characteristics from './Characteristics.svelte'
@@ -41,6 +42,7 @@
   </div>
   {/if}
   <div class="pure-u-1-1 l-box">
-    <Circuits />
+    <h2>All circuits</h2>
+    <Circuits sensorData="{$circuitSensorDataStore}" />
   </div>
 {/if}
