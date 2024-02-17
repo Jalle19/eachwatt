@@ -42,6 +42,15 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
         .floatField('power', data.power)
         .timestamp(data.timestamp)
 
+      // Optional data
+      if (data.apparentPower) {
+        power.floatField('apparentPower', data.apparentPower)
+      }
+
+      if (data.powerFactor) {
+        power.floatField('powerFactor', data.powerFactor)
+      }
+
       // Optional tags
       if (data.circuit.group) {
         power.tag('group', data.circuit.group)
