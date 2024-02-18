@@ -12,6 +12,9 @@
     "prettier": "prettier --write src/",
     "prettier-check": "prettier --check src/"
   },
+  "engines": {
+    "node": ">= 18"
+  },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.1",
     "@sveltejs/kit": "^2.5.0",
