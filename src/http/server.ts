@@ -4,7 +4,7 @@ import { IncomingMessage, RequestListener, ServerResponse } from 'http'
 import { promises as fsPromisified } from 'fs'
 
 const basePath = __dirname + '/../../webif/build'
-const webRoutes = ['/', '/configuration']
+const webRoutes = ['/configuration', '/group']
 
 const mimeTypes = new Map<string, string>([
   ['.html', 'text/html'],
@@ -39,13 +39,23 @@ const resolveFilePath = (reqUrl: string | undefined): string => {
 
   // "Convert" routes to file path
   let filePath
-  if (!reqUrl || webRoutes.includes(reqUrl)) {
+  if (!reqUrl || reqUrl === '/' || isWebRoute(reqUrl)) {
     filePath = '/index.html'
   } else {
     filePath = reqUrl
   }
 
   return basePath + filePath
+}
+
+const isWebRoute = (reqUrl: string): boolean => {
+  for (const route of webRoutes) {
+    if (reqUrl.startsWith(route)) {
+      return true
+    }
+  }
+
+  return false
 }
 
 const serveStaticFile = async (
