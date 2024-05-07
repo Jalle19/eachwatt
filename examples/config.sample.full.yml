@@ -133,6 +133,17 @@ circuits:
         type: gen2-em
         meter: 0
         phase: a
+  # A circuit with a Modbus sensor
+  - name: Inverter/chargers
+    type: circuit
+    sensor:
+      type: modbus
+      modbus:
+        address: 10.112.4.250
+        port: 502
+        unit: 100
+        register: 866
+        type: int16
 
 #
 # Characteristics. Characteristics mean voltage and frequency, and potentially other non-power related readings.

@@ -4,6 +4,7 @@ import { Characteristics } from './characteristics'
 export enum SensorType {
   Iotawatt = 'iotawatt',
   Shelly = 'shelly',
+  Modbus = 'modbus',
   Virtual = 'virtual',
   Unmetered = 'unmetered',
   Dummy = 'dummy',
@@ -74,6 +75,19 @@ interface IotawattSensorSettings {
 export interface IotawattSensor extends PowerSensor {
   type: SensorType.Iotawatt
   iotawatt: IotawattSensorSettings
+}
+
+export interface ModbusSensorSettings {
+  address: string
+  port: number
+  unit: number
+  register: number
+  type: 'int16'
+}
+
+export interface ModbusSensor extends PowerSensor {
+  type: SensorType.Modbus
+  modbus: ModbusSensorSettings
 }
 
 interface VirtualSensorSettings {

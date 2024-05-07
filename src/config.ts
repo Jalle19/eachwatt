@@ -7,6 +7,7 @@ import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
 } from './sensor/iotawatt'
+import { getSensorData as getModbusSensorData } from './sensor/modbus'
 import { getSensorData as getVirtualSensorData } from './sensor/virtual'
 import { getSensorData as getUnmeteredSensorData } from './sensor/unmetered'
 import {
@@ -152,6 +153,9 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         break
       case SensorType.Iotawatt:
         circuit.sensor.pollFunc = getIotawattSensorData
+        break
+      case SensorType.Modbus:
+        circuit.sensor.pollFunc = getModbusSensorData
         break
       case SensorType.Virtual:
         circuit.sensor.pollFunc = getVirtualSensorData
