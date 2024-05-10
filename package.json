@@ -33,6 +33,7 @@
   "dependencies": {
     "@influxdata/influxdb-client": "^1.33.2",
     "axios": "^1.6.0",
+    "modbus-serial": "^8.0.16",
     "mqtt": "^5.1.2",
     "slugify": "^1.6.6",
     "winston": "^3.11.0",

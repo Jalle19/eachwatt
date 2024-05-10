@@ -33,6 +33,7 @@ to any number of different targets, such as databases or MQTT.
 * Supports _**multiple different power sensors**_
   * [IotaWatt](http://iotawatt.com/)
   * [Shelly](https://www.shelly.com/) (both Gen 1 and Gen 2)
+  * Generic Modbus sensors (limited support)
 * Supports _**virtual power sensors**_
   * A virtual power sensor gets its values from other configured sensors, enabling the user to calculate the total 
     power usage of three-phase devices or three-phase mains power

@@ -9,7 +9,8 @@ import { WebSocketPublisherImpl } from './publisher/websocket'
 import { PublisherType } from './publisher'
 import { pollCharacteristicsSensors } from './characteristics'
 import { createLogger } from './logger'
-import { setRequestTimeout } from './http/client'
+import { setRequestTimeout as setHttpRequestTimeout } from './http/client'
+import { setRequestTimeout as setModbusRequestTimeout } from './modbus/client'
 
 // Set up a signal handler, so we can exit on Ctrl + C when run from Docker
 process.on('SIGINT', () => {
@@ -52,10 +53,16 @@ const mainPollerFunc = async (config: Config) => {
   // Poll characteristics sensors
   const characteristicsSensorData = await pollCharacteristicsSensors(now, config.characteristics)
 
-  // Round all numbers to one decimal point
+  // Post-process power sensor data
   for (const data of powerSensorData) {
     if (data.power !== undefined) {
+      // Round all numbers to one decimal point
       data.power = Number(data.power.toFixed(1))
+
+      // Optionally clamp values
+      if (data.circuit.sensor.clamp === 'positive') {
+        data.power = Math.max(0, data.power)
+      }
     }
   }
 
@@ -101,10 +108,12 @@ const mainPollerFunc = async (config: Config) => {
     publisherImpl: webSocketServer,
   })
 
-  // Adjust the HTTP timeout to be half that of the polling interval
+  // Adjust request timeouts to be half that of the polling interval
   const pollingInterval = config.settings.pollingInterval
   logger.info(`Polling sensors with interval ${pollingInterval} milliseconds`)
-  setRequestTimeout((pollingInterval as number) / 2)
+  const timeoutMs = (pollingInterval as number) / 2
+  setHttpRequestTimeout(timeoutMs)
+  setModbusRequestTimeout(timeoutMs)
 
   // Start polling sensors
   await mainPollerFunc(config)

@@ -31,6 +31,7 @@ circuits:
           - Vägg vardagsrum
           - Vägg kök
           - Vägg arbetsrum
+      clamp: positive # Don't allow negative values
   # A IotaWatt main circuit, phase A/L1
   - name: Main L1
     type: main
@@ -133,6 +134,18 @@ circuits:
         type: gen2-em
         meter: 0
         phase: a
+  # A circuit with a Modbus sensor
+  - name: Inverter/chargers
+    type: circuit
+    sensor:
+      type: modbus
+      modbus:
+        address: 10.112.4.250
+        port: 502
+        unit: 100
+        register: 866
+        type: int16
+      clamp: positive
 
 #
 # Characteristics. Characteristics mean voltage and frequency, and potentially other non-power related readings.
