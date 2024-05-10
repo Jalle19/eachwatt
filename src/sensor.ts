@@ -36,6 +36,7 @@ export type CharacteristicsSensorPollFunction = (
 export interface PowerSensor {
   type: SensorType
   pollFunc: PowerSensorPollFunction
+  clamp?: 'positive'
 }
 
 export interface CharacteristicsSensor {

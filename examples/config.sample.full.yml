@@ -31,6 +31,7 @@ circuits:
           - Vägg vardagsrum
           - Vägg kök
           - Vägg arbetsrum
+      clamp: positive # Don't allow negative values
   # A IotaWatt main circuit, phase A/L1
   - name: Main L1
     type: main
@@ -144,6 +145,7 @@ circuits:
         unit: 100
         register: 866
         type: int16
+      clamp: positive
 
 #
 # Characteristics. Characteristics mean voltage and frequency, and potentially other non-power related readings.

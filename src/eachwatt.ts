@@ -53,10 +53,16 @@ const mainPollerFunc = async (config: Config) => {
   // Poll characteristics sensors
   const characteristicsSensorData = await pollCharacteristicsSensors(now, config.characteristics)
 
-  // Round all numbers to one decimal point
+  // Post-process power sensor data
   for (const data of powerSensorData) {
     if (data.power !== undefined) {
+      // Round all numbers to one decimal point
       data.power = Number(data.power.toFixed(1))
+
+      // Optionally clamp values
+      if (data.circuit.sensor.clamp === 'positive') {
+        data.power = Math.max(0, data.power)
+      }
     }
   }
 
