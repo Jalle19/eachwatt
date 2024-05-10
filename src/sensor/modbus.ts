@@ -27,9 +27,12 @@ export const getSensorData: PowerSensorPollFunction = async (
       logger.info(`Connecting to ${sensorSettings.address}:${sensorSettings.port}...`)
       await client.connectTCP(sensorSettings.address, {
         port: sensorSettings.port,
+        // Connect timeout (probably)
         timeout: requestTimeout,
       })
       client.setID(sensorSettings.unit)
+      // Request timeout
+      client.setTimeout(requestTimeout)
     }
 
     // Read the register and parse it accordingly
