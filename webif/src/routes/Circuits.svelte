@@ -1,6 +1,7 @@
 <script lang="ts">
   import { formatPf } from '$lib/format'
   import type { PowerSensorData } from '$lib/types'
+  import warning from '$lib/assets/warning.svg'
 
   export let sensorData: PowerSensorData[]
 </script>
@@ -30,7 +31,13 @@
         <td>{data.circuit.phase ?? ''}</td>
         <td>{data.circuit.type}</td>
         <td>{data.circuit.sensor.type}</td>
-        <td class="cell-right-align">{data.power}W</td>
+        <td class="cell-right-align">
+          {#if data.power !== undefined}
+            {data.power}W
+          {:else}
+            <img src={warning} alt="Warning" /> N/A
+          {/if}
+        </td>
         <td class="cell-right-align">
           {#if data.apparentPower }
             {data.apparentPower}VA
