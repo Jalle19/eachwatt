@@ -11,6 +11,7 @@
         --color: #aaa;
         --component-background: #3b3b3b;
         --highlight-color: #ff3d00;
+        --warning-color: #bb962f;
     }
 
     nav {
@@ -30,6 +31,10 @@
     .pure-table th,
     .pure-table td {
         border: 0;
+    }
+
+    .pure-table td img {
+        vertical-align: bottom;
     }
 
     .pure-table-striped tr:nth-child(2n-1) td {
