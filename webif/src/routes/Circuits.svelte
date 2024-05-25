@@ -33,14 +33,14 @@
         <td>{data.circuit.sensor.type}</td>
         <td class="cell-right-align">
           {#if data.power !== undefined}
-            {data.power}W
+            {data.power} W
           {:else}
             <img src={warning} alt="Warning" /> N/A
           {/if}
         </td>
         <td class="cell-right-align">
           {#if data.apparentPower }
-            {data.apparentPower}VA
+            {data.apparentPower} VA
           {/if}
         </td>
         <td class="cell-right-align">
