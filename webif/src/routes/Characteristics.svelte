@@ -17,8 +17,8 @@
       <tr>
         <td>{data.characteristics.name}</td>
         <td>{data.characteristics.phase}</td>
-        <td class="cell-right-align">{data.voltage}V</td>
-        <td class="cell-right-align">{data.frequency}Hz</td>
+        <td class="cell-right-align">{data.voltage} V</td>
+        <td class="cell-right-align">{data.frequency} Hz</td>
       </tr>
     {/each}
   </tbody>
