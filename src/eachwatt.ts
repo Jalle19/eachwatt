@@ -55,7 +55,7 @@ const mainPollerFunc = async (config: Config) => {
   const characteristicsSensorData = await pollCharacteristicsSensors(now, config.characteristics)
 
   // Post-process power sensor data
-  for (let data of powerSensorData) {
+  powerSensorData = powerSensorData.map((data) => {
     if (data.power !== undefined) {
       // Round all numbers to one decimal point
       data.power = Number(data.power.toFixed(1))
@@ -65,7 +65,9 @@ const mainPollerFunc = async (config: Config) => {
         data = applyFilters(data.circuit.sensor.filters, data)
       }
     }
-  }
+
+    return data
+  })
 
   // Publish data
   for (const publisher of config.publishers) {
