@@ -1,5 +1,6 @@
 import { Circuit } from './circuit'
 import { Characteristics } from './characteristics'
+import { PowerSensorFilters } from './filter/filter'
 
 export enum SensorType {
   Iotawatt = 'iotawatt',
@@ -36,7 +37,7 @@ export type CharacteristicsSensorPollFunction = (
 export interface PowerSensor {
   type: SensorType
   pollFunc: PowerSensorPollFunction
-  clamp?: 'positive'
+  filters?: PowerSensorFilters
 }
 
 export interface CharacteristicsSensor {
