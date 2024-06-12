@@ -31,7 +31,8 @@ circuits:
           - Vägg vardagsrum
           - Vägg kök
           - Vägg arbetsrum
-      clamp: positive # Don't allow negative values
+      filters:
+        clamp: positive # Don't allow negative values
   # A IotaWatt main circuit, phase A/L1
   - name: Main L1
     type: main
@@ -78,6 +79,8 @@ circuits:
       iotawatt:
         address: 10.112.4.4
         name: Vagg_Kok
+      filters:
+        highPass: 2 # Ignore loads less than 2 watts (show as 0)
     group: Matlagning
   # Yet another IotaWatt circuit. This one has a different "parent" than the others.
   - name: Vägg arbetsrum
@@ -145,7 +148,8 @@ circuits:
         unit: 100
         register: 866
         type: int16
-      clamp: positive
+      filters:
+        clamp: positive
 
 #
 # Characteristics. Characteristics mean voltage and frequency, and potentially other non-power related readings.

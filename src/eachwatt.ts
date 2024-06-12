@@ -11,6 +11,7 @@ import { pollCharacteristicsSensors } from './characteristics'
 import { createLogger } from './logger'
 import { setRequestTimeout as setHttpRequestTimeout } from './http/client'
 import { setRequestTimeout as setModbusRequestTimeout } from './modbus/client'
+import { applyFilters } from './filter/filter'
 
 // Set up a signal handler, so we can exit on Ctrl + C when run from Docker
 process.on('SIGINT', () => {
@@ -54,14 +55,14 @@ const mainPollerFunc = async (config: Config) => {
   const characteristicsSensorData = await pollCharacteristicsSensors(now, config.characteristics)
 
   // Post-process power sensor data
-  for (const data of powerSensorData) {
+  for (let data of powerSensorData) {
     if (data.power !== undefined) {
       // Round all numbers to one decimal point
       data.power = Number(data.power.toFixed(1))
 
-      // Optionally clamp values
-      if (data.circuit.sensor.clamp === 'positive') {
-        data.power = Math.max(0, data.power)
+      // Apply optional data filters
+      if (data.circuit.sensor.filters) {
+        data = applyFilters(data.circuit.sensor.filters, data)
       }
     }
   }
