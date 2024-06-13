@@ -25,6 +25,7 @@ to any number of different targets, such as databases or MQTT.
 * [Installation and usage](#installation-and-usage)
   + [Running with Docker](#running-with-docker)
   + [Running as a systemd service](#running-as-a-systemd-service)
+* [Caveats](#caveats)
 * [Development](#development)
 * [License](#license)
 
@@ -111,6 +112,10 @@ The application expects the configuration file to be available as `/data/config.
 There is a skeleton systemd service available in [systemd/eachwatt.service](systemd/eachwatt.service). Clone the 
 project to `/opt/eachwatt`, copy the service file to `/etc/systemd/system/eachwatt.service`, modify it as necessary 
 and then start the service using `systemctl start eachwatt.service`.
+
+## Caveats
+
+* IotaWatt input sensors are always whole numbers, i.e. 2 watts. Output sensors don't have this limitation.
 
 ## Development
 
