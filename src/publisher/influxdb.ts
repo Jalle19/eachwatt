@@ -76,9 +76,15 @@ export class InfluxDBPublisherImpl implements PublisherImpl {
         .tag('name', data.characteristics.name)
         .tag('sensorType', data.characteristics.sensor.type)
         .tag('phase', data.characteristics.phase)
-        .floatField('voltage', data.voltage)
-        .floatField('frequency', data.frequency)
         .timestamp(data.timestamp)
+
+      if (data.voltage !== undefined) {
+        characteristics.floatField('voltage', data.voltage)
+      }
+
+      if (data.frequency !== undefined) {
+        characteristics.floatField('frequency', data.frequency)
+      }
 
       this.writeApi.writePoint(characteristics)
     }
