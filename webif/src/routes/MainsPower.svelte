@@ -7,9 +7,9 @@
   {#each $mainSensorDataStore as data}
     <div class="mains-power-card">
       <h4>{data.circuit.name}</h4>
-      <span>{data.power} W</span>
+      <span>{data.power}W</span>
       {#if data.apparentPower }
-        <span>{data.apparentPower} VA</span>
+        <span>{data.apparentPower}VA</span>
       {/if}
       {#if data.powerFactor }
         <span>pf {formatPf(data.powerFactor)}</span>
