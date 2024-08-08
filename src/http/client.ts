@@ -34,6 +34,7 @@ export const getDedupedResponse = async (timestamp: number, url: string): Promis
   }
 
   const request = new Request(url, createRequestParams())
+  logger.debug(`GET ${url}`)
   const promise = fetch(request)
   promiseCache.set(key, promise)
 
