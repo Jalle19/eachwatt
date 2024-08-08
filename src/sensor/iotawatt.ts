@@ -114,10 +114,10 @@ export const getSensorData: PowerSensorPollFunction = async (
   const sensor = circuit.sensor as IotawattSensor
 
   try {
-    const configurationResult = await getDedupedResponse(timestamp, getConfigurationUrl(sensor))
-    const configuration = configurationResult.data as IotawattConfiguration
-    const statusResult = await getDedupedResponse(timestamp, getStatusUrl(sensor))
-    const status = statusResult.data as IotawattStatus
+    const configurationResult = (await getDedupedResponse(timestamp, getConfigurationUrl(sensor))).clone()
+    const configuration = (await configurationResult.json()) as IotawattConfiguration
+    const statusResult = (await getDedupedResponse(timestamp, getStatusUrl(sensor))).clone()
+    const status = (await statusResult.json()) as IotawattStatus
 
     return {
       timestamp: timestamp,
@@ -142,8 +142,8 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
   const sensor = characteristics.sensor as IotawattCharacteristicsSensor
 
   try {
-    const queryResult = await getDedupedResponse(timestamp, getQueryUrl(sensor))
-    const query = queryResult.data as IotawattCharacteristicsQuery
+    const queryResult = (await getDedupedResponse(timestamp, getQueryUrl(sensor))).clone()
+    const query = (await queryResult.json()) as IotawattCharacteristicsQuery
 
     return {
       timestamp: timestamp,

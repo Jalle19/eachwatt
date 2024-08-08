@@ -1,23 +1,26 @@
-import axios, { AxiosResponse } from 'axios'
-import http from 'http'
 import { createLogger } from '../logger'
 
 const logger = createLogger('http')
 
-const httpClient = axios.create({
-  // We keep polling the same hosts over and over so keep-alive is essential
-  httpAgent: new http.Agent({ keepAlive: true }),
-})
-
+let requestTimeout = 0
 let lastTimestamp = 0
 const promiseCache = new Map()
 
+const createRequestParams = (): RequestInit => {
+  return {
+    // We keep polling the same hosts over and over so keep-alive is essential
+    keepalive: true,
+    // Use the configured timeout
+    signal: AbortSignal.timeout(requestTimeout),
+  }
+}
+
 export const setRequestTimeout = (timeoutMs: number) => {
-  httpClient.defaults.timeout = timeoutMs
+  requestTimeout = timeoutMs
   logger.info(`Using ${timeoutMs} millisecond timeout for HTTP requests`)
 }
 
-export const getDedupedResponse = async (timestamp: number, url: string): Promise<AxiosResponse> => {
+export const getDedupedResponse = async (timestamp: number, url: string): Promise<Response> => {
   // Clear the cache whenever the timestamp changes
   if (timestamp !== lastTimestamp) {
     lastTimestamp = timestamp
@@ -30,7 +33,8 @@ export const getDedupedResponse = async (timestamp: number, url: string): Promis
     return promiseCache.get(key)
   }
 
-  const promise = httpClient.get(url)
+  const request = new Request(url, createRequestParams())
+  const promise = fetch(request)
   promiseCache.set(key, promise)
 
   return promise
