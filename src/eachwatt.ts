@@ -8,7 +8,7 @@ import { httpRequestHandler } from './http/server'
 import { WebSocketPublisherImpl } from './publisher/websocket'
 import { PublisherType } from './publisher'
 import { pollCharacteristicsSensors } from './characteristics'
-import { createLogger } from './logger'
+import { createLogger, LogLevel, setLogLevel } from './logger'
 import { setRequestTimeout as setHttpRequestTimeout } from './http/client'
 import { setRequestTimeout as setModbusRequestTimeout } from './modbus/client'
 import { applyFilters } from './filter/filter'
@@ -26,10 +26,18 @@ const argv = yargs(process.argv.slice(2))
       demandOption: true,
       alias: 'c',
     },
+    'verbose': {
+      description: 'Enable verbose logging',
+      alias: 'v',
+    },
   })
   .parseSync()
 
 const logger = createLogger('main')
+if (argv.verbose) {
+  logger.info('Setting log level to DEBUG')
+  setLogLevel(LogLevel.DEBUG)
+}
 
 const mainPollerFunc = async (config: Config) => {
   const now = Date.now()
