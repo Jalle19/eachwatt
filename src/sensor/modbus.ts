@@ -36,6 +36,7 @@ export const getSensorData: PowerSensorPollFunction = async (
     }
 
     // Read the register and parse it accordingly
+    logger.debug(`Reading holding register ${sensorSettings.register}`)
     const readRegisterResult = await client.readHoldingRegisters(sensorSettings.register, 1)
 
     return {

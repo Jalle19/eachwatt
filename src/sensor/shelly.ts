@@ -11,7 +11,6 @@ import {
 } from '../sensor'
 import { Circuit } from '../circuit'
 import { getDedupedResponse } from '../http/client'
-import { AxiosResponse } from 'axios'
 import { Characteristics } from '../characteristics'
 import { createLogger } from '../logger'
 
@@ -66,9 +65,13 @@ const getSensorDataUrl = (sensor: ShellySensor | ShellyCharacteristicsSensor): s
   }
 }
 
-const parseGen1Response = (timestamp: number, circuit: Circuit, httpResponse: AxiosResponse): PowerSensorData => {
+const parseGen1Response = async (
+  timestamp: number,
+  circuit: Circuit,
+  httpResponse: Response,
+): Promise<PowerSensorData> => {
   const sensor = circuit.sensor as ShellySensor
-  const data = httpResponse.data as Gen1StatusResult
+  const data = (await httpResponse.json()) as Gen1StatusResult
 
   return {
     timestamp: timestamp,
@@ -77,8 +80,12 @@ const parseGen1Response = (timestamp: number, circuit: Circuit, httpResponse: Ax
   }
 }
 
-const parseGen2PMResponse = (timestamp: number, circuit: Circuit, httpResponse: AxiosResponse): PowerSensorData => {
-  const data = httpResponse.data as Gen2SwitchGetStatusResult
+const parseGen2PMResponse = async (
+  timestamp: number,
+  circuit: Circuit,
+  httpResponse: Response,
+): Promise<PowerSensorData> => {
+  const data = (await httpResponse.json()) as Gen2SwitchGetStatusResult
 
   return {
     timestamp: timestamp,
@@ -87,9 +94,13 @@ const parseGen2PMResponse = (timestamp: number, circuit: Circuit, httpResponse: 
   }
 }
 
-const parseGen2EMResponse = (timestamp: number, circuit: Circuit, httpResponse: AxiosResponse): PowerSensorData => {
+const parseGen2EMResponse = async (
+  timestamp: number,
+  circuit: Circuit,
+  httpResponse: Response,
+): Promise<PowerSensorData> => {
   const sensor = circuit.sensor as ShellySensor
-  const data = httpResponse.data as Gen2EMGetStatusResult
+  const data = (await httpResponse.json()) as Gen2EMGetStatusResult
 
   let power = 0
   let apparentPower = 0
@@ -129,7 +140,7 @@ export const getSensorData: PowerSensorPollFunction = async (
   const url = getSensorDataUrl(sensor)
 
   try {
-    const httpResponse = await getDedupedResponse(timestamp, url)
+    const httpResponse = (await getDedupedResponse(timestamp, url)).clone()
 
     // Parse the response differently depending on what type of Shelly we're dealing with
     switch (sensor.shelly.type as ShellyType) {
@@ -159,8 +170,8 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
   }
 
   try {
-    const httpResponse = await getDedupedResponse(timestamp, url)
-    const data = httpResponse.data as Gen2EMGetStatusResult
+    const httpResponse = (await getDedupedResponse(timestamp, url)).clone()
+    const data = (await httpResponse.json()) as Gen2EMGetStatusResult
 
     let voltage = 0
     let frequency = 0
