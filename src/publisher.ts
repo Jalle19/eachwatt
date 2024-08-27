@@ -5,6 +5,7 @@ export enum PublisherType {
   Console = 'console',
   WebSocket = 'websocket',
   MQTT = 'mqtt',
+  Modbus = 'modbus',
 }
 
 export interface PublisherImpl {

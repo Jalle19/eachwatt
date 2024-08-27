@@ -30,6 +30,7 @@ import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
 import { MqttPublisher, MqttPublisherImpl } from './publisher/mqtt'
 import { parseRegisterDefinition } from './modbus/register'
+import { ModbusPublisher, ModbusPublisherImpl } from './publisher/modbus'
 
 type MilliSeconds = number
 
@@ -216,6 +217,10 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         mqttPublisher.publisherImpl = new MqttPublisherImpl(config, mqttPublisher.settings)
         break
       }
+      case PublisherType.Modbus:
+        const modbusPublisher = publisher as ModbusPublisher
+        modbusPublisher.publisherImpl = new ModbusPublisherImpl(modbusPublisher.settings)
+        break
     }
   }
 

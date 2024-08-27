@@ -14,6 +14,11 @@ export interface Circuit {
   hidden?: boolean // defaults to false
   sensor: PowerSensor
   group?: string
+  modbusRegistry?: {
+    power?: string
+    apparentPower?: string
+    powerFactor?: string
+  }
 }
 
 export interface Main extends Circuit {
