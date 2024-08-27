@@ -1,6 +1,7 @@
 import { Circuit } from './circuit'
 import { Characteristics } from './characteristics'
 import { PowerSensorFilters } from './filter/filter'
+import { ModbusRegister } from './modbus/register'
 
 export enum SensorType {
   Iotawatt = 'iotawatt',
@@ -83,8 +84,7 @@ export interface ModbusSensorSettings {
   address: string
   port: number
   unit: number
-  register: number
-  type: 'int16'
+  register: string | ModbusRegister
 }
 
 export interface ModbusSensor extends PowerSensor {
