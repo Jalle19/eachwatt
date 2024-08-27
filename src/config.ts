@@ -16,6 +16,7 @@ import {
 } from './sensor/dummy'
 import {
   CharacteristicsSensorType,
+  ModbusSensor,
   SensorType,
   ShellySensor,
   ShellyType,
@@ -28,6 +29,7 @@ import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
 import { MqttPublisher, MqttPublisherImpl } from './publisher/mqtt'
+import { parseRegisterDefinition } from './modbus/register'
 
 type MilliSeconds = number
 
@@ -142,6 +144,15 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       if (children.filter((c) => c.sensor.type === SensorType.Unmetered).length > 0) {
         throw new Error('Unmetered circuits cannot have other unmetered circuits as children')
       }
+    }
+  }
+
+  // Parse Modbus register definitions
+  for (const circuit of config.circuits) {
+    if (circuit.sensor.type === SensorType.Modbus) {
+      const modbusSensor = circuit.sensor as ModbusSensor
+
+      modbusSensor.modbus.register = parseRegisterDefinition(modbusSensor.modbus.register as string)
     }
   }
 
