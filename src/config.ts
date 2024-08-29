@@ -7,7 +7,7 @@ import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
 } from './sensor/iotawatt'
-import { getSensorData as getModbusSensorData } from './sensor/modbus'
+import { DEFAULT_PORT, DEFAULT_UNIT, getSensorData as getModbusSensorData } from './sensor/modbus'
 import { getSensorData as getVirtualSensorData } from './sensor/virtual'
 import { getSensorData as getUnmeteredSensorData } from './sensor/unmetered'
 import {
@@ -16,6 +16,7 @@ import {
 } from './sensor/dummy'
 import {
   CharacteristicsSensorType,
+  ModbusSensor,
   SensorType,
   ShellySensor,
   ShellyType,
@@ -28,6 +29,7 @@ import { InfluxDBPublisher, InfluxDBPublisherImpl } from './publisher/influxdb'
 import { ConsolePublisher, ConsolePublisherImpl } from './publisher/console'
 import { Characteristics } from './characteristics'
 import { MqttPublisher, MqttPublisherImpl } from './publisher/mqtt'
+import { parseRegisterDefinition } from './modbus/register'
 
 type MilliSeconds = number
 
@@ -89,6 +91,17 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       }
     }
 
+    if (circuit.sensor.type === SensorType.Modbus) {
+      // Set sane defaults for Modbus sensors
+      const modbusSensor = circuit.sensor as ModbusSensor
+      if (modbusSensor.modbus.port === undefined) {
+        modbusSensor.modbus.port = DEFAULT_PORT
+      }
+      if (modbusSensor.modbus.unit === undefined) {
+        modbusSensor.modbus.unit = DEFAULT_UNIT
+      }
+    }
+
     // Sensors are not hidden by default
     if (circuit.hidden === undefined) {
       circuit.hidden = false
@@ -142,6 +155,15 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       if (children.filter((c) => c.sensor.type === SensorType.Unmetered).length > 0) {
         throw new Error('Unmetered circuits cannot have other unmetered circuits as children')
       }
+    }
+  }
+
+  // Parse Modbus register definitions
+  for (const circuit of config.circuits) {
+    if (circuit.sensor.type === SensorType.Modbus) {
+      const modbusSensor = circuit.sensor as ModbusSensor
+
+      modbusSensor.modbus.register = parseRegisterDefinition(modbusSensor.modbus.register as string)
     }
   }
 

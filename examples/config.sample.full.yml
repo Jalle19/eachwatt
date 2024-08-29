@@ -146,8 +146,7 @@ circuits:
         address: 10.112.4.250
         port: 502
         unit: 100
-        register: 866
-        type: int16
+        register: h@866/int16 # same as just 866
       filters:
         clamp: positive
 
