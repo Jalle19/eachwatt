@@ -14,12 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.x'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/prepare-workspace
       - name: Check formatting
         run: npm run prettier-check
   eslint:
@@ -27,12 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.x'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/prepare-workspace
       - name: Run eslint
         run: npm run lint
   jest:
@@ -40,12 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.x'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/prepare-workspace
       - name: Run tests
         run: npm run test
   webif-prettier:
@@ -56,12 +41,7 @@ jobs:
         working-directory: ./webif
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.x'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/prepare-workspace
       - name: Check formatting
         run: npm run prettier-check
   webif-eslint:
@@ -72,14 +52,20 @@ jobs:
         working-directory: ./webif
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.x'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/prepare-workspace
       - name: Run eslint
         run: npm run lint
+  webif-svelte-check:
+    name: svelte-check web interface
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./webif
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/prepare-workspace
+      - name: Run svelte-check
+        run: npm run check
   build-docker:
     name: Build Docker image
     runs-on: ubuntu-latest

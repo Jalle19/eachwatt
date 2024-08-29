@@ -1,6 +1,6 @@
-<script>
-  import { mainSensorDataStore} from '../lib/stores'
-  import { formatPf } from '../lib/format'
+<script lang="ts">
+  import { mainSensorDataStore} from '$lib/stores'
+  import { formatPf } from '$lib/format'
 </script>
 
 <div class="mains-power-cards">

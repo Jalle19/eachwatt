@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import logo from '$lib/assets/eachwatt_logo.png'
 </script>
 

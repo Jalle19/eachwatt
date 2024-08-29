@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import 'purecss/build/pure.css'
     import './styles.css'
 
@@ -9,11 +9,12 @@
       circuitSensorDataStore,
       lastUpdateTimestampStore,
       webSocketUrlStore
-    } from '../lib/stores'
+    } from '$lib/stores'
     import { onMount } from 'svelte'
-    import { determineWebSocketUrl } from '../lib/websocket'
+    import { determineWebSocketUrl } from '$lib/websocket'
+    import type { PowerSensorData, SensorData } from '$lib/types'
 
-    const parseTimestamp = (sensorData) => {
+    const parseTimestamp = (sensorData: SensorData[]) => {
       return new Date(sensorData[0].timestamp)
     }
 
@@ -47,7 +48,7 @@
             $characteristicsStore = message.data
             break
           case 'powerSensorData':
-            $mainSensorDataStore = message.data.filter((d) => {
+            $mainSensorDataStore = message.data.filter((d: PowerSensorData) => {
               // Filter out unmetered
               return d.circuit.type === 'main' && d.circuit.sensor.type !== 'unmetered'
             })

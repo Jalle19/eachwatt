@@ -1,4 +1,4 @@
-FROM node:20-bookworm-slim AS builder
+FROM node:22-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package.json /app
 COPY package-lock.json /app
 COPY tsconfig.json /app
+COPY .npmrc /app
 COPY src/ /app/src
 COPY webif/ /app/webif
 
@@ -13,13 +14,14 @@ COPY webif/ /app/webif
 RUN npm install
 RUN npm run build-all
 
-FROM node:20-bookworm-slim AS runtime
+FROM node:22-bookworm-slim AS runtime
 
 WORKDIR /app
 
 # Copy everything needed to install dependencies
 COPY package.json /app
 COPY package-lock.json /app
+COPY .npmrc /app
 RUN npm install --omit=dev --ignore-scripts
 
 # Copy the built apps

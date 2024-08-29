@@ -1,5 +1,5 @@
-<script>
-  import { lastUpdateTimestampStore, webSocketUrlStore } from '../lib/stores'
+<script lang="ts">
+  import { lastUpdateTimestampStore, webSocketUrlStore } from '$lib/stores'
 </script>
 
 <style>

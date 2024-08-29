@@ -111,8 +111,11 @@ export interface UnmeteredSensor extends PowerSensor {
   unmetered: UnmeteredSensorSettings
 }
 
-export interface PowerSensorData {
+interface SensorData {
   timestamp: number
+}
+
+export interface PowerSensorData extends SensorData {
   circuit: Circuit
   // Mandatory data. Undefined means the data was not available.
   power?: number
@@ -121,8 +124,7 @@ export interface PowerSensorData {
   powerFactor?: number
 }
 
-export type CharacteristicsSensorData = {
-  timestamp: number
+export interface CharacteristicsSensorData extends SensorData {
   characteristics: Characteristics
   // Mandatory data. Undefined means the data was not available.
   voltage?: number
