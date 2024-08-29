@@ -1,9 +1,10 @@
 import { emptySensorData, ModbusSensor, PowerSensorData, PowerSensorPollFunction } from '../sensor'
 import { Circuit } from '../circuit'
-import { ReadRegisterResult } from 'modbus-serial/ModbusRTU'
+import { ReadCoilResult, ReadRegisterResult } from 'modbus-serial/ModbusRTU'
 import { createLogger } from '../logger'
 import { getClient, requestTimeout } from '../modbus/client'
-import { getRegisterLength, ModbusRegister, stringify } from '../modbus/register'
+import { getRegisterLength, ModbusRegister, RegisterType, stringify } from '../modbus/register'
+import ModbusRTU from 'modbus-serial'
 
 const logger = createLogger('sensor.modbus')
 
@@ -32,10 +33,7 @@ export const getSensorData: PowerSensorPollFunction = async (
 
     // Read the register and parse it accordingly
     const register = sensorSettings.register as ModbusRegister
-    logger.debug(`Reading holding register ${stringify(register)}`)
-    const address = register.address
-    const length = getRegisterLength(register)
-    const readRegisterResult = await client.readHoldingRegisters(address, length)
+    const readRegisterResult = await readRegisters(client, register)
 
     return {
       timestamp,
@@ -49,20 +47,42 @@ export const getSensorData: PowerSensorPollFunction = async (
   }
 }
 
-const parseReadRegisterResult = (result: ReadRegisterResult, register: ModbusRegister): number => {
+const readRegisters = async (
+  client: ModbusRTU,
+  register: ModbusRegister,
+): Promise<ReadRegisterResult | ReadCoilResult> => {
+  logger.debug(`Reading register/coil ${stringify(register)}`)
+  const address = register.address
+  const length = getRegisterLength(register)
+
+  switch (register.registerType) {
+    case RegisterType.HOLDING_REGISTER:
+      return await client.readHoldingRegisters(address, length)
+    case RegisterType.INPUT_REGISTER:
+      return await client.readInputRegisters(address, length)
+    case RegisterType.COIL:
+      return await client.readCoils(address, length)
+    case RegisterType.DISCRETE_INPUT:
+      return await client.readDiscreteInputs(address, length)
+  }
+}
+
+const parseReadRegisterResult = (result: ReadRegisterResult | ReadCoilResult, register: ModbusRegister): number => {
   switch (register.dataType) {
     case 'float':
-      return result.buffer.readFloatBE()
+      // Assume mixed-endian encoding is used
+      return result.buffer.swap16().readFloatLE()
     case 'uint32':
       return result.buffer.readUint32BE()
     case 'int32':
       return result.buffer.readInt32BE()
     case 'uint16':
       return result.buffer.readUint16BE()
-    case 'int16':
     case 'boolean':
-    default:
       // Convert to number
       return (result as ReadCoilResult).data[0] ? 1 : 0
+    case 'int16':
+    default:
+      return result.buffer.readInt16BE()
   }
 }
