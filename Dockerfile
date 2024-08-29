@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package.json /app
 COPY package-lock.json /app
 COPY tsconfig.json /app
+COPY .npmrc /app
 COPY src/ /app/src
 COPY webif/ /app/webif
 
@@ -20,6 +21,7 @@ WORKDIR /app
 # Copy everything needed to install dependencies
 COPY package.json /app
 COPY package-lock.json /app
+COPY .npmrc /app
 RUN npm install --omit=dev --ignore-scripts
 
 # Copy the built apps
