@@ -1,0 +1,15 @@
+name: Prepare workspace
+description: Prepares the workspace by configuring the runtime, installing dependencies etc.
+runs:
+  using: composite
+  steps:
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '22.x'
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+    - name: Install web interface dependencies
+      run: cd webif/ && npm ci
+      shell: bash
