@@ -6,6 +6,9 @@ import { getClient, requestTimeout } from '../modbus/client'
 import { getRegisterLength, ModbusRegister, RegisterType, stringify } from '../modbus/register'
 import ModbusRTU from 'modbus-serial'
 
+export const DEFAULT_PORT = 502
+export const DEFAULT_UNIT = 1
+
 const logger = createLogger('sensor.modbus')
 
 export const getSensorData: PowerSensorPollFunction = async (

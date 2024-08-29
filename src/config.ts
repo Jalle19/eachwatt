@@ -7,7 +7,7 @@ import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
   getSensorData as getIotawattSensorData,
 } from './sensor/iotawatt'
-import { getSensorData as getModbusSensorData } from './sensor/modbus'
+import { DEFAULT_PORT, DEFAULT_UNIT, getSensorData as getModbusSensorData } from './sensor/modbus'
 import { getSensorData as getVirtualSensorData } from './sensor/virtual'
 import { getSensorData as getUnmeteredSensorData } from './sensor/unmetered'
 import {
@@ -88,6 +88,17 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       const shellySensor = circuit.sensor as ShellySensor
       if (shellySensor.shelly.type === undefined) {
         shellySensor.shelly.type = ShellyType.Gen1
+      }
+    }
+
+    if (circuit.sensor.type === SensorType.Modbus) {
+      // Set sane defaults for Modbus sensors
+      const modbusSensor = circuit.sensor as ModbusSensor
+      if (modbusSensor.modbus.port === undefined) {
+        modbusSensor.modbus.port = DEFAULT_PORT
+      }
+      if (modbusSensor.modbus.unit === undefined) {
+        modbusSensor.modbus.unit = DEFAULT_UNIT
       }
     }
 
