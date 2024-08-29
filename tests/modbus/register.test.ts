@@ -2,6 +2,15 @@ import { ModbusRegister, parseRegisterDefinition, RegisterType } from '../../src
 
 test('parse valid register definitions works', () => {
   const definitions: { raw: string; parsed: ModbusRegister }[] = [
+    // Backward compatibility and sane default
+    {
+      'raw': '866',
+      'parsed': {
+        registerType: RegisterType.HOLDING_REGISTER,
+        address: 866,
+        dataType: 'int16',
+      },
+    },
     {
       'raw': 'i@32000/float',
       'parsed': {
