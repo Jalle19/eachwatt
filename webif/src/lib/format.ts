@@ -1,3 +1,3 @@
-export const formatPf = (pf) => {
+export const formatPf = (pf: number) => {
   return Number(pf).toFixed(2)
 }

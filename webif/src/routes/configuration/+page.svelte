@@ -1,5 +1,5 @@
-<script>
-  import { configurationStore } from '../../lib/stores'
+<script lang="ts">
+  import { configurationStore } from '$lib/stores'
 </script>
 
 <div class="pure-u-1-1 l-box">

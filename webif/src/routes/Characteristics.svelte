@@ -1,5 +1,5 @@
-<script>
-  import { characteristicsStore } from '../lib/stores'
+<script lang="ts">
+  import { characteristicsStore } from '$lib/stores'
 </script>
 
 <h2>Characteristics</h2>
