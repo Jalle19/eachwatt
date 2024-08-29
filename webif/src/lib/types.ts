@@ -26,12 +26,25 @@ export type Circuit = {
   group?: string
 }
 
-export type PowerSensorData = {
+export interface SensorData {
   timestamp: number
+}
+
+export interface PowerSensorData extends SensorData {
   circuit: Circuit
   // Mandatory data. Undefined means the data was not available.
   power?: number
   // Optional data, not all sensor types support them
   apparentPower?: number
   powerFactor?: number
+}
+
+export interface CharacteristicsSensorData extends SensorData {
+  characteristics: {
+    name: string
+    phase: string
+  }
+  // Mandatory data. Undefined means the data was not available.
+  voltage?: number
+  frequency?: number
 }
