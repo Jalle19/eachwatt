@@ -145,11 +145,11 @@ export const getSensorData: PowerSensorPollFunction = async (
     // Parse the response differently depending on what type of Shelly we're dealing with
     switch (sensor.shelly.type as ShellyType) {
       case ShellyType.Gen1:
-        return parseGen1Response(timestamp, circuit, httpResponse)
+        return await parseGen1Response(timestamp, circuit, httpResponse)
       case ShellyType.Gen2PM:
-        return parseGen2PMResponse(timestamp, circuit, httpResponse)
+        return await parseGen2PMResponse(timestamp, circuit, httpResponse)
       case ShellyType.Gen2EM:
-        return parseGen2EMResponse(timestamp, circuit, httpResponse)
+        return await parseGen2EMResponse(timestamp, circuit, httpResponse)
     }
   } catch (e) {
     logError(url, e)
