@@ -12,6 +12,7 @@ import { createLogger, LogLevel, setLogLevel } from './logger'
 import { setRequestTimeout as setHttpRequestTimeout } from './http/client'
 import { setRequestTimeout as setModbusRequestTimeout } from './modbus/client'
 import { applyFilters } from './filter/filter'
+import { setIntervalAsync } from 'set-interval-async'
 
 // Set up a signal handler, so we can exit on Ctrl + C when run from Docker
 process.on('SIGINT', () => {
@@ -120,13 +121,13 @@ const mainPollerFunc = async (config: Config) => {
   })
 
   // Adjust request timeouts to be half that of the polling interval
-  const pollingInterval = config.settings.pollingInterval
+  const pollingInterval = config.settings.pollingInterval as number
   logger.info(`Polling sensors with interval ${pollingInterval} milliseconds`)
-  const timeoutMs = (pollingInterval as number) / 2
+  const timeoutMs = pollingInterval / 2
   setHttpRequestTimeout(timeoutMs)
   setModbusRequestTimeout(timeoutMs)
 
   // Start polling sensors
   await mainPollerFunc(config)
-  setInterval(mainPollerFunc, pollingInterval, config)
+  setIntervalAsync(mainPollerFunc, pollingInterval, config)
 })()
