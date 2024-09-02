@@ -35,6 +35,8 @@ export default [
 
     rules: {
       "no-console": "error",
+      // We have type-hinted functions that in their dummy implementations return static data
+      "@typescript-eslint/require-await": "off",
     },
   },
 ];
