@@ -15,7 +15,7 @@ const compat = new FlatCompat({
 });
 
 export default [
-  ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended"),
+  ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended-type-checked"),
   {
     plugins: {
       "@typescript-eslint": typescriptEslint,
@@ -25,8 +25,10 @@ export default [
       globals: {
         ...globals.node,
       },
-
       parser: tsParser,
+      parserOptions: {
+        project: "./tsconfig.json"
+      },
       ecmaVersion: 2021,
       sourceType: "module",
     },
