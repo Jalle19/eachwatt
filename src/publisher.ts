@@ -8,8 +8,8 @@ export enum PublisherType {
 }
 
 export interface PublisherImpl {
-  publishSensorData: (sensorData: PowerSensorData[]) => void
-  publishCharacteristicsSensorData: (sensorData: CharacteristicsSensorData[]) => void
+  publishSensorData: (sensorData: PowerSensorData[]) => Promise<void>
+  publishCharacteristicsSensorData: (sensorData: CharacteristicsSensorData[]) => Promise<void>
 }
 
 export interface Publisher {

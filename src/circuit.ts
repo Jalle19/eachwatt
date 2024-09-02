@@ -33,5 +33,5 @@ export const pollPowerSensors = async (
     promises.push(sensor.pollFunc(timestamp, circuit, existingSensorData))
   }
 
-  return await Promise.all(promises)
+  return Promise.all(promises)
 }

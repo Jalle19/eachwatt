@@ -60,13 +60,13 @@ const readRegisters = async (
 
   switch (register.registerType) {
     case RegisterType.HOLDING_REGISTER:
-      return await client.readHoldingRegisters(address, length)
+      return client.readHoldingRegisters(address, length)
     case RegisterType.INPUT_REGISTER:
-      return await client.readInputRegisters(address, length)
+      return client.readInputRegisters(address, length)
     case RegisterType.COIL:
-      return await client.readCoils(address, length)
+      return client.readCoils(address, length)
     case RegisterType.DISCRETE_INPUT:
-      return await client.readDiscreteInputs(address, length)
+      return client.readDiscreteInputs(address, length)
   }
 }
 

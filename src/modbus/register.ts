@@ -67,11 +67,11 @@ export const parseRegisterDefinition = (definition: string): ModbusRegister => {
   }
 
   if (!isValidDataType(dataType)) {
-    throw new Error(`Invalid data type specified: ${dataType}`)
+    throw new Error(`Invalid data type specified: ${dataType as string}`)
   }
 
   return {
-    registerType: registerType as RegisterType,
+    registerType,
     address: parsedAddress,
     dataType,
   }

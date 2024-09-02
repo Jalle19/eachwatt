@@ -9,13 +9,13 @@ export interface ConsolePublisher extends Publisher {
 const logger = createLogger('publisher.console')
 
 export class ConsolePublisherImpl implements PublisherImpl {
-  publishSensorData(sensorData: PowerSensorData[]): void {
+  async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
     for (const data of sensorData) {
       logger.info(`${data.circuit.name}: ${data.power}W`)
     }
   }
 
-  publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): void {
+  async publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): Promise<void> {
     for (const data of sensorData) {
       logger.info(`${data.characteristics.name}: ${data.voltage}V, ${data.frequency}Hz`)
     }

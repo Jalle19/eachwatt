@@ -30,7 +30,7 @@ export class WebSocketPublisherImpl implements PublisherImpl {
     // Reuse the HTTP server given to us
     this.wss = new WebSocketServer({ server: httpServer })
 
-    // Keep track of the last published sensor data so we can deliver it immediately (if available) to newly connected
+    // Keep track of the last published sensor data, so we can deliver it immediately (if available) to newly connected
     // clients
     this.lastPublishedSensorData = {
       characteristicsSensorData: null,
@@ -62,7 +62,7 @@ export class WebSocketPublisherImpl implements PublisherImpl {
     })
   }
 
-  publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): void {
+  async publishCharacteristicsSensorData(sensorData: CharacteristicsSensorData[]): Promise<void> {
     this.broadcastMessage({
       type: 'characteristicsSensorData',
       data: sensorData,
@@ -71,7 +71,7 @@ export class WebSocketPublisherImpl implements PublisherImpl {
     this.lastPublishedSensorData.characteristicsSensorData = sensorData
   }
 
-  publishSensorData(sensorData: PowerSensorData[]): void {
+  async publishSensorData(sensorData: PowerSensorData[]): Promise<void> {
     // Remove circular references so we can encode as JSON
     sensorData = untangleCircularDeps(sensorData)
 
