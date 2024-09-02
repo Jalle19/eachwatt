@@ -189,7 +189,7 @@ export const resolveAndValidateConfig = (config: Config): Config => {
         circuit.sensor.pollFunc = getDummySensorData
         break
       default:
-        throw new Error(`Unrecognized sensor type ${circuit.sensor.type}`)
+        throw new Error(`Unrecognized sensor type ${circuit.sensor.type as string}`)
     }
   }
 

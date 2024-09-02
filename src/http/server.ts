@@ -14,7 +14,7 @@ const mimeTypes = new Map<string, string>([
   ['.png', 'image/png'],
 ])
 
-export const httpRequestHandler: RequestListener = async (req: IncomingMessage, res: ServerResponse) => {
+export const httpRequestHandler: RequestListener = (req: IncomingMessage, res: ServerResponse) => {
   const filePath = resolveFilePath(req.url)
 
   // Serve 404 if file doesn't exist
@@ -28,7 +28,10 @@ export const httpRequestHandler: RequestListener = async (req: IncomingMessage, 
   const extension = path.extname(filePath).toLowerCase()
   const mimeType = mimeTypes.get(extension)
 
-  await serveStaticFile(filePath, mimeType, res)
+  // RequestListener returns void so we must wrap awaits
+  void (async () => {
+    await serveStaticFile(filePath, mimeType, res)
+  })()
 }
 
 const resolveFilePath = (reqUrl: string | undefined): string => {

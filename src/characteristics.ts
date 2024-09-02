@@ -18,5 +18,5 @@ export const pollCharacteristicsSensors = async (
     promises.push(sensor.pollFunc(timestamp, c))
   }
 
-  return await Promise.all(promises)
+  return Promise.all(promises)
 }

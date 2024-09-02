@@ -96,7 +96,7 @@ const mainPollerFunc = async (config: Config) => {
   }
 }
 
-;(async () => {
+void (async () => {
   const configFile = argv.config as string
   if (!fs.existsSync(configFile)) {
     logger.error(`Configuration ${configFile} file does not exist or is not readable`)
