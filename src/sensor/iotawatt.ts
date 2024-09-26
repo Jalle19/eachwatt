@@ -126,7 +126,7 @@ export const getSensorData: PowerSensorPollFunction = async (
       powerFactor: getSensorPowerFactorValue(sensor, configuration, status),
     }
   } catch (e) {
-    logger.error((e as Error).message)
+    logger.error(e)
     return emptySensorData(timestamp, circuit)
   }
 }
@@ -152,7 +152,7 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
       frequency: query[0][1],
     }
   } catch (e) {
-    logger.error((e as Error).message)
+    logger.error(e)
     return emptyCharacteristicsSensorData(timestamp, characteristics)
   }
 }
