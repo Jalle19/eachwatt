@@ -8,8 +8,19 @@ export enum LogLevel {
 // Define log transports here, so we can change the log level later
 const transports = [new winston.transports.Console()]
 
-const logFormat = winston.format.printf(({ level, message, label, timestamp }) => {
-  return `${timestamp} [${label}] ${level}: ${message}`
+const logFormat = winston.format.printf(({ level, message, label, timestamp, stack }) => {
+  // Stack should be either an empty string (for non-errors) or
+  // the original value minus the first line (which is not part of the
+  // trace itself)
+
+  if (stack !== undefined) {
+    const st = stack as string
+    stack = st.substring(st.indexOf('\n'))
+  } else {
+    stack = ''
+  }
+
+  return `${timestamp} [${label}] ${level}: ${message} ${stack}`
 })
 
 export const setLogLevel = (level: LogLevel) => {

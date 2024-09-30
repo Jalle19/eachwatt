@@ -91,7 +91,7 @@ const mainPollerFunc = async (config: Config) => {
         publisherImpl.publishCharacteristicsSensorData(characteristicsSensorData),
       ])
     } catch (e) {
-      logger.error((e as Error).message)
+      logger.error(e)
     }
   }
 }
