@@ -23,7 +23,7 @@ export const getSensorData: PowerSensorPollFunction = async (
   const client = getClient(sensorSettings.address, sensorSettings.port, sensorSettings.unit)
 
   try {
-    // Connect if not connected yet
+    // Connect if not connected yet, skip
     if (!client.isOpen) {
       logger.info(`Connecting to ${sensorSettings.address}:${sensorSettings.port}...`)
       await client.connectTCP(sensorSettings.address, {
@@ -34,6 +34,14 @@ export const getSensorData: PowerSensorPollFunction = async (
       client.setID(sensorSettings.unit)
       // Request timeout
       client.setTimeout(requestTimeout)
+
+      // Wait 100 ms for the port to open, if it's not open, give up and return empty data
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      if (!client.isOpen) {
+        logger.warn(`Modbus TCP channel not open after 100ms, will not attempt to read values this tick`)
+        return emptySensorData(timestamp, circuit)
+      }
     }
 
     // Read the register and parse it accordingly
