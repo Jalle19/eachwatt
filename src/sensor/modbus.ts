@@ -18,7 +18,7 @@ export const getSensorData: PowerSensorPollFunction = async (
   const sensor = circuit.sensor as ModbusSensor
   const sensorSettings = sensor.modbus
 
-  const client = getClient(sensorSettings.address)
+  const client = getClient(sensorSettings.address, sensorSettings.port, sensorSettings.unit)
 
   try {
     // Connect if not connected yet
