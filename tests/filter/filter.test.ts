@@ -2,7 +2,6 @@ import { emptySensorData, PowerSensorData, SensorType } from '../../src/sensor'
 import { applyFilters, PowerSensorFilters } from '../../src/filter/filter'
 import { Circuit } from '../../src/circuit'
 import { getSensorData as getDummySensorData } from '../../src/sensor/dummy'
-import exp = require('node:constants')
 
 test('clamping works', () => {
   const filters: PowerSensorFilters = {}
@@ -21,7 +20,7 @@ test('clamping works', () => {
   expect(data.power).toEqual(0)
 })
 
-test('high-pas works', () => {
+test('high-pass works', () => {
   const filters: PowerSensorFilters = {}
   let data: PowerSensorData = dummySensorData()
 
@@ -36,6 +35,20 @@ test('high-pas works', () => {
   data.power = 3
   data = applyFilters(filters, data)
   expect(data.power).toEqual(3)
+})
+
+test('scale works', () => {
+  const filters: PowerSensorFilters = {}
+  let data: PowerSensorData = dummySensorData()
+
+  data.power = 155
+  data = applyFilters(filters, data)
+  expect(data.power).toEqual(155)
+
+  data.power = 155
+  filters.scale = 0.1
+  data = applyFilters(filters, data)
+  expect(data.power).toEqual(1550)
 })
 
 const dummySensorData = (): PowerSensorData => {

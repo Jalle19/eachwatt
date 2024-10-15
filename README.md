@@ -41,7 +41,10 @@ to any number of different targets, such as databases or MQTT.
 * Supports arbitrary _**grouping of devices**_
   * A group can be for example "Heating" or "Lights". This allows users to get a better overview of their energy 
     consumption when many circuits and devices are involved.
-* Can apply various _**filters**_ to the power sensor data (clamping, high-pass etc.)
+* Can apply various _**filters**_ to the power sensor data, such as:
+  * Clamp values, useful for ignoring negative readings from bi-directional sensors
+  * High-pass filtering, useful for ignoring tiny power readings
+  * Scaling, often essential when dealing with Modbus sensors
 * Can _**measure unmetered power**_ too
   * You can have a current-transformer type sensor measuring a circuit, then a smart plug measuring some specific 
     device on that circuit, then an unmetered type sensor which calculates the difference between the two, yielding the 

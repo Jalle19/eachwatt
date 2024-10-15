@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.33.2",
+    "async-mutex": "^0.5.0",
     "modbus-serial": "^8.0.16",
     "mqtt": "^5.1.2",
     "set-interval-async": "^3.0.3",

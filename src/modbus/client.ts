@@ -11,14 +11,16 @@ export const setRequestTimeout = (timeoutMs: number) => {
   logger.info(`Using ${timeoutMs} millisecond timeout for Modbus operations`)
 }
 
-// Keep track of clients, use one per address
+// Keep track of clients, use one per address/port/unit combination
 const clients = new Map<string, ModbusRTU>()
 
-export const getClient = (address: string): ModbusRTU => {
-  if (!clients.has(address)) {
+export const getClient = (address: string, port: number, unit: number): ModbusRTU => {
+  const key = `${address}_${port}_${unit}`
+
+  if (!clients.has(key)) {
     const client = new ModbusRTU()
-    clients.set(address, client)
+    clients.set(key, client)
   }
 
-  return clients.get(address) as ModbusRTU
+  return clients.get(key) as ModbusRTU
 }

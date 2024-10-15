@@ -11,7 +11,6 @@ import { pollCharacteristicsSensors } from './characteristics'
 import { createLogger, LogLevel, setLogLevel } from './logger'
 import { setRequestTimeout as setHttpRequestTimeout } from './http/client'
 import { setRequestTimeout as setModbusRequestTimeout } from './modbus/client'
-import { applyFilters } from './filter/filter'
 import { setIntervalAsync } from 'set-interval-async'
 
 // Set up a signal handler, so we can exit on Ctrl + C when run from Docker
@@ -65,11 +64,6 @@ const mainPollerFunc = async (config: Config) => {
 
   // Post-process power sensor data
   powerSensorData = powerSensorData.map((data) => {
-    // Apply optional data filters
-    if (data.circuit.sensor.filters) {
-      data = applyFilters(data.circuit.sensor.filters, data)
-    }
-
     if (data.power !== undefined) {
       // Round all numbers to one decimal point
       data.power = Number(data.power.toFixed(1))
