@@ -5,11 +5,13 @@ import { createLogger } from '../logger'
 import { getClient, requestTimeout } from '../modbus/client'
 import { getRegisterLength, ModbusRegister, RegisterType, stringify } from '../modbus/register'
 import ModbusRTU from 'modbus-serial'
+import { Mutex } from 'async-mutex'
 
 export const DEFAULT_PORT = 502
 export const DEFAULT_UNIT = 1
 
 const logger = createLogger('sensor.modbus')
+const mutex = new Mutex()
 
 export const getSensorData: PowerSensorPollFunction = async (
   timestamp: number,
@@ -18,10 +20,10 @@ export const getSensorData: PowerSensorPollFunction = async (
   const sensor = circuit.sensor as ModbusSensor
   const sensorSettings = sensor.modbus
 
-  const client = getClient(sensorSettings.address)
+  const client = getClient(sensorSettings.address, sensorSettings.port, sensorSettings.unit)
 
   try {
-    // Connect if not connected yet
+    // Connect if not connected yet, skip
     if (!client.isOpen) {
       logger.info(`Connecting to ${sensorSettings.address}:${sensorSettings.port}...`)
       await client.connectTCP(sensorSettings.address, {
@@ -32,6 +34,14 @@ export const getSensorData: PowerSensorPollFunction = async (
       client.setID(sensorSettings.unit)
       // Request timeout
       client.setTimeout(requestTimeout)
+
+      // Wait 100 ms for the port to open, if it's not open, give up and return empty data
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      if (!client.isOpen) {
+        logger.warn(`Modbus TCP channel not open after 100ms, will not attempt to read values this tick`)
+        return emptySensorData(timestamp, circuit)
+      }
     }
 
     // Read the register and parse it accordingly
@@ -58,16 +68,19 @@ const readRegisters = async (
   const address = register.address
   const length = getRegisterLength(register)
 
-  switch (register.registerType) {
-    case RegisterType.HOLDING_REGISTER:
-      return client.readHoldingRegisters(address, length)
-    case RegisterType.INPUT_REGISTER:
-      return client.readInputRegisters(address, length)
-    case RegisterType.COIL:
-      return client.readCoils(address, length)
-    case RegisterType.DISCRETE_INPUT:
-      return client.readDiscreteInputs(address, length)
-  }
+  // Serialize access to the underlying Modbus client
+  return mutex.runExclusive(async () => {
+    switch (register.registerType) {
+      case RegisterType.HOLDING_REGISTER:
+        return client.readHoldingRegisters(address, length)
+      case RegisterType.INPUT_REGISTER:
+        return client.readInputRegisters(address, length)
+      case RegisterType.COIL:
+        return client.readCoils(address, length)
+      case RegisterType.DISCRETE_INPUT:
+        return client.readDiscreteInputs(address, length)
+    }
+  })
 }
 
 const parseReadRegisterResult = (result: ReadRegisterResult | ReadCoilResult, register: ModbusRegister): number => {

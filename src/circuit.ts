@@ -1,4 +1,5 @@
 import { PowerSensor, PowerSensorData } from './sensor'
+import { applyFilters } from './filter/filter'
 
 export enum CircuitType {
   Main = 'main',
@@ -28,10 +29,24 @@ export const pollPowerSensors = async (
   const promises = []
 
   for (const circuit of circuits) {
-    const sensor = circuit.sensor
-
-    promises.push(sensor.pollFunc(timestamp, circuit, existingSensorData))
+    promises.push(pollPowerSensor(timestamp, circuit, existingSensorData))
   }
 
   return Promise.all(promises)
+}
+
+const pollPowerSensor = async (
+  timestamp: number,
+  circuit: Circuit,
+  existingSensorData?: PowerSensorData[],
+): Promise<PowerSensorData> => {
+  const sensor = circuit.sensor
+
+  let data = await sensor.pollFunc(timestamp, circuit, existingSensorData)
+
+  if (sensor.filters) {
+    data = applyFilters(sensor.filters, data)
+  }
+
+  return data
 }
