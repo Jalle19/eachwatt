@@ -10,8 +10,8 @@ const gen2pmResponse = fs.readFileSync('./tests/sensor/shelly-plus-1pm.Switch.Ge
 
 // Mock getDedupedResponse calls to return real-world data
 jest.mock('../../src/http/client', () => ({
-  getDedupedResponse: async (timestamp: number, url: string) => {
-    let contents: string | null = null
+  getDedupedResponseBody: async (timestamp: number, url: string): Promise<string> => {
+    let contents = ''
 
     switch (url) {
       case 'http://127.0.0.1/status':
@@ -25,7 +25,7 @@ jest.mock('../../src/http/client', () => ({
         break
     }
 
-    return Promise.resolve(new Response(contents))
+    return Promise.resolve(contents)
   },
 }))
 

@@ -1,10 +1,11 @@
 import { createLogger } from '../logger'
 
-const logger = createLogger('http')
+type BodyPromise = Promise<string>
 
+const logger = createLogger('http')
 let requestTimeout = 0
 let lastTimestamp = 0
-const promiseCache = new Map<string, Promise<Response>>()
+const promiseCache = new Map<string, BodyPromise>()
 
 const createRequestParams = (): RequestInit => {
   return {
@@ -20,7 +21,11 @@ export const setRequestTimeout = (timeoutMs: number) => {
   logger.info(`Using ${timeoutMs} millisecond timeout for HTTP requests`)
 }
 
-export const getDedupedResponse = async (timestamp: number, url: string): Promise<Response> => {
+const resolveBody = async (request: Request): BodyPromise => {
+  return (await fetch(request)).text()
+}
+
+export const getDedupedResponseBody = async (timestamp: number, url: string): BodyPromise => {
   // Clear the cache whenever the timestamp changes
   if (timestamp !== lastTimestamp) {
     lastTimestamp = timestamp
@@ -35,7 +40,7 @@ export const getDedupedResponse = async (timestamp: number, url: string): Promis
 
   const request = new Request(url, createRequestParams())
   logger.debug(`GET ${url}`)
-  const promise = fetch(request)
+  const promise = resolveBody(request)
   promiseCache.set(key, promise)
 
   return promise
