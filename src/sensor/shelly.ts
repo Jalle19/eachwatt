@@ -24,6 +24,10 @@ type Gen1StatusResult = {
 
 type Gen2SwitchGetStatusResult = {
   apower: number
+  voltage: number
+  // Not all Gen2 PM devices expose current and power factor
+  current?: number
+  pf?: number
 }
 
 type Gen2EMGetStatusResult = {
@@ -83,10 +87,21 @@ const parseGen2PMResponse = async (
 ): Promise<PowerSensorData> => {
   const data = JSON.parse(responseBody) as unknown as Gen2SwitchGetStatusResult
 
+  // Not all Gen2 PM devices expose current and power factor
+  let apparentPower = undefined
+  let powerFactor = undefined
+
+  if (data.pf !== undefined && data.current !== undefined) {
+    powerFactor = data.pf
+    apparentPower = data.voltage * data.current
+  }
+
   return {
     timestamp: timestamp,
     circuit: circuit,
     power: data.apower,
+    apparentPower,
+    powerFactor,
   }
 }
 

@@ -64,9 +64,13 @@ const mainPollerFunc = async (config: Config) => {
 
   // Post-process power sensor data
   powerSensorData = powerSensorData.map((data) => {
+    // Round all numbers to one decimal point
     if (data.power !== undefined) {
-      // Round all numbers to one decimal point
       data.power = Number(data.power.toFixed(1))
+    }
+
+    if (data.apparentPower !== undefined) {
+      data.apparentPower = Number(data.apparentPower.toFixed(1))
     }
 
     return data

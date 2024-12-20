@@ -39,12 +39,12 @@
           {/if}
         </td>
         <td class="cell-right-align">
-          {#if data.apparentPower }
+          {#if data.apparentPower !== undefined}
             {data.apparentPower}VA
           {/if}
         </td>
         <td class="cell-right-align">
-          {#if data.powerFactor }
+          {#if data.powerFactor !== undefined}
             {formatPf(data.powerFactor)}
           {/if}
         </td>
