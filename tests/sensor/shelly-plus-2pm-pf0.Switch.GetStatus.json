@@ -1,0 +1,32 @@
+{
+  "id": 0,
+  "source": "init",
+  "output": false,
+  "apower": 0.0,
+  "voltage": 237.3,
+  "freq": 50.0,
+  "current": 0.000,
+  "pf": 0.00,
+  "aenergy": {
+    "total": 3331.000,
+    "by_minute": [
+      0.000,
+      0.000,
+      0.000
+    ],
+    "minute_ts": 1734695160
+  },
+  "ret_aenergy": {
+    "total": 0.000,
+    "by_minute": [
+      0.000,
+      0.000,
+      0.000
+    ],
+    "minute_ts": 1734695160
+  },
+  "temperature": {
+    "tC": 34.7,
+    "tF": 94.5
+  }
+}
