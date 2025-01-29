@@ -7,12 +7,17 @@ import {
   PowerSensorPollFunction,
   ShellyCharacteristicsSensor,
   ShellySensor,
-  ShellyType,
 } from '../sensor'
 import { Circuit } from '../circuit'
 import { getDedupedResponseBody } from '../http/client'
 import { Characteristics } from '../characteristics'
 import { createLogger } from '../logger'
+
+export enum ShellySensorType {
+  Gen1 = 'gen1',
+  Gen2PM = 'gen2-pm',
+  Gen2EM = 'gen2-em',
+}
 
 type Gen1MeterResult = {
   power: number
@@ -55,12 +60,12 @@ const getSensorDataUrl = (sensor: ShellySensor | ShellyCharacteristicsSensor): s
   const meter = sensor.shelly.meter
 
   // Request a different endpoint depending on what type of Shelly we're dealing with
-  switch (sensor.shelly.type as ShellyType) {
-    case ShellyType.Gen1:
+  switch (sensor.shelly.type as ShellySensorType) {
+    case ShellySensorType.Gen1:
       return `http://${address}/status`
-    case ShellyType.Gen2PM:
+    case ShellySensorType.Gen2PM:
       return `http://${address}/rpc/Switch.GetStatus?id=${meter}`
-    case ShellyType.Gen2EM:
+    case ShellySensorType.Gen2EM:
       return `http://${address}/rpc/EM.GetStatus?id=${meter}`
   }
 }
@@ -154,12 +159,12 @@ export const getSensorData: PowerSensorPollFunction = async (
     const responseBody = await getDedupedResponseBody(timestamp, url)
 
     // Parse the response differently depending on what type of Shelly we're dealing with
-    switch (sensor.shelly.type as ShellyType) {
-      case ShellyType.Gen1:
+    switch (sensor.shelly.type as ShellySensorType) {
+      case ShellySensorType.Gen1:
         return await parseGen1Response(timestamp, circuit, responseBody)
-      case ShellyType.Gen2PM:
+      case ShellySensorType.Gen2PM:
         return await parseGen2PMResponse(timestamp, circuit, responseBody)
-      case ShellyType.Gen2EM:
+      case ShellySensorType.Gen2EM:
         return await parseGen2EMResponse(timestamp, circuit, responseBody)
     }
   } catch (e) {
@@ -176,7 +181,7 @@ export const getCharacteristicsSensorData: CharacteristicsSensorPollFunction = a
   const url = getSensorDataUrl(sensor)
 
   // Only support gen2-em sensors
-  if (sensor.shelly.type !== ShellyType.Gen2EM) {
+  if (sensor.shelly.type !== ShellySensorType.Gen2EM) {
     throw new Error(`Shelly sensor type ${sensor.shelly.type} not supported as characteristics sensor`)
   }
 

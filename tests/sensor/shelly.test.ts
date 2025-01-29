@@ -1,6 +1,6 @@
-import { getSensorData } from '../../src/sensor/shelly'
+import { getSensorData, ShellySensorType } from '../../src/sensor/shelly'
 import { Circuit } from '../../src/circuit'
-import { SensorType, ShellySensor, ShellySensorSettings, ShellyType } from '../../src/sensor'
+import { SensorType, ShellySensor, ShellySensorSettings } from '../../src/sensor'
 import fs from 'fs'
 
 // Paths must be relative to project root where jest is run from
@@ -52,7 +52,7 @@ const createShellyCircuit = (sensorSettings: ShellySensorSettings): Circuit => {
 test('parse gen1 response', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen1,
+    type: ShellySensorType.Gen1,
     address: '127.0.0.1',
     meter: 0,
   })
@@ -68,7 +68,7 @@ test('parse gen1 response', async () => {
 test('parse gen1 response, second meter', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen1,
+    type: ShellySensorType.Gen1,
     address: '127.0.0.1',
     meter: 1,
   })
@@ -84,7 +84,7 @@ test('parse gen1 response, second meter', async () => {
 test('parse gen2-em response', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2EM,
+    type: ShellySensorType.Gen2EM,
     address: '127.0.0.1',
     phase: 'a',
     meter: 0,
@@ -103,7 +103,7 @@ test('parse gen2-em response', async () => {
 test('parse gen2-pm response', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2PM,
+    type: ShellySensorType.Gen2PM,
     address: '127.0.0.1',
     meter: 0,
   })
@@ -119,7 +119,7 @@ test('parse gen2-pm response', async () => {
 test('parse gen2-pm response with non-zero pf', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2PM,
+    type: ShellySensorType.Gen2PM,
     address: '127.0.0.2',
     meter: 1,
   })
@@ -137,7 +137,7 @@ test('parse gen2-pm response with non-zero pf', async () => {
 test('parse gen2-pm response with zero pf', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2PM,
+    type: ShellySensorType.Gen2PM,
     address: '127.0.0.2',
     meter: 0,
   })
