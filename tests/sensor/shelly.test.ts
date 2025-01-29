@@ -1,6 +1,6 @@
-import { getSensorData } from '../../src/sensor/shelly'
+import { getSensorData, ShellySensorType } from '../../src/sensor/shelly'
 import { Circuit } from '../../src/circuit'
-import { SensorType, ShellySensor, ShellySensorSettings, ShellyType } from '../../src/sensor'
+import { SensorType, ShellySensor, ShellySensorSettings } from '../../src/sensor'
 import fs from 'fs'
 
 // Paths must be relative to project root where jest is run from
@@ -9,6 +9,7 @@ const gen2emResponse = fs.readFileSync('./tests/sensor/shelly-pro-3m.EM.GetStatu
 const gen2pmResponse = fs.readFileSync('./tests/sensor/shelly-plus-1pm.Switch.GetStatus.json')
 const gen2pmPfResponse = fs.readFileSync('./tests/sensor/shelly-plus-2pm.Switch.GetStatus.json')
 const gen2pmZeroPfResponse = fs.readFileSync('./tests/sensor/shelly-plus-2pm-pf0.Switch.GetStatus.json')
+const gen2lightResponse = fs.readFileSync('./tests/sensor/shelly-0110v-dimmer.Light.GetStatus.json')
 
 // Mock getDedupedResponse calls to return real-world data
 jest.mock('../../src/http/client', () => ({
@@ -31,6 +32,9 @@ jest.mock('../../src/http/client', () => ({
       case 'http://127.0.0.2/rpc/Switch.GetStatus?id=1':
         contents = String(gen2pmPfResponse)
         break
+      case 'http://127.0.0.1/rpc/Light.GetStatus?id=0':
+        contents = String(gen2lightResponse)
+        break
     }
 
     return Promise.resolve(contents)
@@ -52,7 +56,7 @@ const createShellyCircuit = (sensorSettings: ShellySensorSettings): Circuit => {
 test('parse gen1 response', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen1,
+    type: ShellySensorType.Gen1,
     address: '127.0.0.1',
     meter: 0,
   })
@@ -68,7 +72,7 @@ test('parse gen1 response', async () => {
 test('parse gen1 response, second meter', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen1,
+    type: ShellySensorType.Gen1,
     address: '127.0.0.1',
     meter: 1,
   })
@@ -84,7 +88,7 @@ test('parse gen1 response, second meter', async () => {
 test('parse gen2-em response', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2EM,
+    type: ShellySensorType.Gen2EM,
     address: '127.0.0.1',
     phase: 'a',
     meter: 0,
@@ -103,7 +107,7 @@ test('parse gen2-em response', async () => {
 test('parse gen2-pm response', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2PM,
+    type: ShellySensorType.Gen2PM,
     address: '127.0.0.1',
     meter: 0,
   })
@@ -119,7 +123,7 @@ test('parse gen2-pm response', async () => {
 test('parse gen2-pm response with non-zero pf', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2PM,
+    type: ShellySensorType.Gen2PM,
     address: '127.0.0.2',
     meter: 1,
   })
@@ -137,7 +141,7 @@ test('parse gen2-pm response with non-zero pf', async () => {
 test('parse gen2-pm response with zero pf', async () => {
   const now = Date.now()
   const circuit = createShellyCircuit({
-    type: ShellyType.Gen2PM,
+    type: ShellySensorType.Gen2PM,
     address: '127.0.0.2',
     meter: 0,
   })
@@ -149,5 +153,21 @@ test('parse gen2-pm response with zero pf', async () => {
     power: 0,
     apparentPower: 0,
     powerFactor: 0,
+  })
+})
+
+test('parse gen2-light response', async () => {
+  const now = Date.now()
+  const circuit = createShellyCircuit({
+    type: ShellySensorType.Gen2Light,
+    address: '127.0.0.1',
+    meter: 0,
+  })
+
+  const sensorData = await getSensorData(now, circuit)
+  expect(sensorData).toEqual({
+    timestamp: now,
+    circuit: circuit,
+    power: 1.6,
   })
 })

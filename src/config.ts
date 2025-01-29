@@ -2,6 +2,7 @@ import YAML from 'yaml'
 import {
   getCharacteristicsSensorData as getShellyCharacteristicsSensorData,
   getSensorData as getShellySensorData,
+  ShellySensorType,
 } from './sensor/shelly'
 import {
   getCharacteristicsSensorData as getIotawattCharacteristicsSensorData,
@@ -19,7 +20,6 @@ import {
   ModbusSensor,
   SensorType,
   ShellySensor,
-  ShellyType,
   UnmeteredSensor,
   VirtualSensor,
 } from './sensor'
@@ -87,7 +87,7 @@ export const resolveAndValidateConfig = (config: Config): Config => {
       // Use Gen1 as default Shelly type
       const shellySensor = circuit.sensor as ShellySensor
       if (shellySensor.shelly.type === undefined) {
-        shellySensor.shelly.type = ShellyType.Gen1
+        shellySensor.shelly.type = ShellySensorType.Gen1
       }
     }
 

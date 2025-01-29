@@ -1,5 +1,5 @@
 import { Config, resolveAndValidateConfig } from '../src/config'
-import { ModbusSensor, SensorType, ShellySensor, ShellyType, UnmeteredSensor, VirtualSensor } from '../src/sensor'
+import { ModbusSensor, SensorType, ShellySensor, UnmeteredSensor, VirtualSensor } from '../src/sensor'
 import { CircuitType } from '../src/circuit'
 import {
   createNestedUnmeteredConfig,
@@ -8,6 +8,7 @@ import {
   createVeryLowPollingIntervalConfig,
   createVirtualSensorConfig,
 } from './testConfigs'
+import { ShellySensorType } from '../src/sensor/shelly'
 
 test('defaults are applied', () => {
   const config = resolveAndValidateConfig({
@@ -45,7 +46,7 @@ test('defaults are applied', () => {
   expect(config.circuits[0].type).toEqual(CircuitType.Circuit)
   expect(config.circuits[0].hidden).toEqual(false)
   const shellySensor = config.circuits[0].sensor as ShellySensor
-  expect(shellySensor.shelly.type).toEqual(ShellyType.Gen1)
+  expect(shellySensor.shelly.type).toEqual(ShellySensorType.Gen1)
 
   const modbusSensor = config.circuits[1].sensor as ModbusSensor
   expect(modbusSensor.modbus.port).toEqual(502)

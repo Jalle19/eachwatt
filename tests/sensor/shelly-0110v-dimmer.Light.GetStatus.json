@@ -1,0 +1,22 @@
+{
+  "id": 0,
+  "source": "WS_in",
+  "output": true,
+  "brightness": 70,
+  "temperature": {
+    "tC": 48.2,
+    "tF": 118.8
+  },
+  "aenergy": {
+    "total": 122.669,
+    "by_minute": [
+      0.000,
+      0.000,
+      0.000
+    ],
+    "minute_ts": 1738175160
+  },
+  "apower": 1.6,
+  "current": 0.024,
+  "voltage": 232.7
+}

@@ -2,6 +2,7 @@ import { Circuit } from './circuit'
 import { Characteristics } from './characteristics'
 import { PowerSensorFilters } from './filter/filter'
 import { ModbusRegister } from './modbus/register'
+import { ShellySensorType } from './sensor/shelly'
 
 export enum SensorType {
   Iotawatt = 'iotawatt',
@@ -10,12 +11,6 @@ export enum SensorType {
   Virtual = 'virtual',
   Unmetered = 'unmetered',
   Dummy = 'dummy',
-}
-
-export enum ShellyType {
-  Gen1 = 'gen1',
-  Gen2PM = 'gen2-pm',
-  Gen2EM = 'gen2-em',
 }
 
 export enum CharacteristicsSensorType {
@@ -53,7 +48,7 @@ export interface IotawattCharacteristicsSensor extends CharacteristicsSensor {
 
 export type ShellySensorSettings = {
   address: string
-  type?: ShellyType
+  type?: ShellySensorType
   // Mandatory for all devices
   meter: number
   // For devices implementing the "EM" component
@@ -160,7 +155,7 @@ export const untangleCircularDeps = (sensorData: PowerSensorData[]): PowerSensor
 }
 
 const isShellyGen2EMSensor = (sensor: PowerSensor): boolean => {
-  return sensor.type === SensorType.Shelly && (sensor as ShellySensor).shelly.type === ShellyType.Gen2EM
+  return sensor.type === SensorType.Shelly && (sensor as ShellySensor).shelly.type === ShellySensorType.Gen2EM
 }
 
 export const supportsApparentPower = (sensor: PowerSensor): boolean => {
