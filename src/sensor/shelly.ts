@@ -17,6 +17,7 @@ export enum ShellySensorType {
   Gen1 = 'gen1',
   Gen2PM = 'gen2-pm',
   Gen2EM = 'gen2-em',
+  Gen2Light = 'gen2-light',
 }
 
 type Gen1MeterResult = {
@@ -65,6 +66,8 @@ const getSensorDataUrl = (sensor: ShellySensor | ShellyCharacteristicsSensor): s
       return `http://${address}/status`
     case ShellySensorType.Gen2PM:
       return `http://${address}/rpc/Switch.GetStatus?id=${meter}`
+    case ShellySensorType.Gen2Light:
+      return `http://${address}/rpc/Light.GetStatus?id=${meter}`
     case ShellySensorType.Gen2EM:
       return `http://${address}/rpc/EM.GetStatus?id=${meter}`
   }
@@ -163,6 +166,7 @@ export const getSensorData: PowerSensorPollFunction = async (
       case ShellySensorType.Gen1:
         return await parseGen1Response(timestamp, circuit, responseBody)
       case ShellySensorType.Gen2PM:
+      case ShellySensorType.Gen2Light:
         return await parseGen2PMResponse(timestamp, circuit, responseBody)
       case ShellySensorType.Gen2EM:
         return await parseGen2EMResponse(timestamp, circuit, responseBody)

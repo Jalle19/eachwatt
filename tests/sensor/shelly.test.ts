@@ -9,6 +9,7 @@ const gen2emResponse = fs.readFileSync('./tests/sensor/shelly-pro-3m.EM.GetStatu
 const gen2pmResponse = fs.readFileSync('./tests/sensor/shelly-plus-1pm.Switch.GetStatus.json')
 const gen2pmPfResponse = fs.readFileSync('./tests/sensor/shelly-plus-2pm.Switch.GetStatus.json')
 const gen2pmZeroPfResponse = fs.readFileSync('./tests/sensor/shelly-plus-2pm-pf0.Switch.GetStatus.json')
+const gen2lightResponse = fs.readFileSync('./tests/sensor/shelly-0110v-dimmer.Light.GetStatus.json')
 
 // Mock getDedupedResponse calls to return real-world data
 jest.mock('../../src/http/client', () => ({
@@ -30,6 +31,9 @@ jest.mock('../../src/http/client', () => ({
         break
       case 'http://127.0.0.2/rpc/Switch.GetStatus?id=1':
         contents = String(gen2pmPfResponse)
+        break
+      case 'http://127.0.0.1/rpc/Light.GetStatus?id=0':
+        contents = String(gen2lightResponse)
         break
     }
 
@@ -149,5 +153,21 @@ test('parse gen2-pm response with zero pf', async () => {
     power: 0,
     apparentPower: 0,
     powerFactor: 0,
+  })
+})
+
+test('parse gen2-light response', async () => {
+  const now = Date.now()
+  const circuit = createShellyCircuit({
+    type: ShellySensorType.Gen2Light,
+    address: '127.0.0.1',
+    meter: 0,
+  })
+
+  const sensorData = await getSensorData(now, circuit)
+  expect(sensorData).toEqual({
+    timestamp: now,
+    circuit: circuit,
+    power: 1.6,
   })
 })
