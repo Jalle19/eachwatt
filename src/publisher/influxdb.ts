@@ -2,6 +2,8 @@ import { Publisher, PublisherImpl, PublisherType } from '../publisher'
 import { CharacteristicsSensorData, PowerSensorData } from '../sensor'
 import { InfluxDB, Point, WriteApi } from '@influxdata/influxdb-client'
 import { Circuit, CircuitType } from '../circuit'
+import { Logger } from 'winston'
+import { createLogger } from '../logger'
 
 export interface InfluxDBPublisherSettings {
   url: string
@@ -17,9 +19,14 @@ export interface InfluxDBPublisher extends Publisher {
 }
 
 export class InfluxDBPublisherImpl implements PublisherImpl {
+  logger: Logger
   writeApi: WriteApi
 
   constructor(settings: InfluxDBPublisherSettings) {
+    this.logger = createLogger('publisher.influxdb')
+
+    this.logger.info(`Connecting to InfluxDB at ${settings.url}`)
+
     // Use millisecond precision since JavaScript timestamps use that
     this.writeApi = new InfluxDB({ url: settings.url, token: settings.apiToken }).getWriteApi(
       settings.organizationId,
