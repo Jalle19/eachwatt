@@ -16,7 +16,7 @@
       {/if}
     </div>
   {/each}
-  <div style="clear: both;" />
+  <div style="clear: both;"></div>
 </div>
 
 <style>
