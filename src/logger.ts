@@ -20,7 +20,7 @@ const logFormat = winston.format.printf(({ level, message, label, timestamp, sta
     stack = ''
   }
 
-  return `${timestamp} [${label}] ${level}: ${message} ${stack}`
+  return `${timestamp as string} [${label as string}] ${level}: ${message as string} ${stack as string}`
 })
 
 export const setLogLevel = (level: LogLevel) => {
