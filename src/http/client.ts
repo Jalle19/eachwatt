@@ -34,14 +34,14 @@ export const getDedupedResponseBody = async (timestamp: number, url: string): Bo
 
   const key = `${timestamp}_${url}`
 
-  if (promiseCache.has(key)) {
-    return promiseCache.get(key)!
-  }
+  let promise = promiseCache.get(key)
 
-  const request = new Request(url, createRequestParams())
-  logger.debug(`GET ${url}`)
-  const promise = resolveBody(request)
-  promiseCache.set(key, promise)
+  if (!promise) {
+    const request = new Request(url, createRequestParams())
+    logger.debug(`GET ${url}`)
+    promise = resolveBody(request)
+    promiseCache.set(key, promise)
+  }
 
   return promise
 }
