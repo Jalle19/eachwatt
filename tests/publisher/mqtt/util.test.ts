@@ -11,19 +11,29 @@ test('creates correct topic names', () => {
   let topic = createCharacteristicsSensorTopicName(characteristics, 'voltage')
   expect(topic).toEqual('eachwatt/characteristic/some-characteristic/voltage')
 
-  // Strips plus signs
-  let circuit = {
-    name: 'Some circuit + with plus sign',
-  } as unknown as Circuit
+  let circuit: Partial<Circuit>
 
-  topic = createPowerSensorTopicName(circuit, 'power')
+  // Strips plus signs
+  circuit = {
+    name: 'Some circuit + with plus sign',
+  }
+
+  topic = createPowerSensorTopicName(circuit as Circuit, 'power')
   expect(topic).toEqual('eachwatt/circuit/some-circuit-with-plus-sign/power')
 
   // Strips forward slashes
   circuit = {
     name: 'Some circuit / with a slash',
-  } as unknown as Circuit
+  }
 
-  topic = createPowerSensorTopicName(circuit, 'power')
+  topic = createPowerSensorTopicName(circuit as Circuit, 'power')
   expect(topic).toEqual('eachwatt/circuit/some-circuit-with-a-slash/power')
+
+  // Strips dots
+  circuit = {
+    name: 'VE.Bus AC-In L3',
+  }
+
+  topic = createPowerSensorTopicName(circuit as Circuit, 'power')
+  expect(topic).toEqual('eachwatt/circuit/vebus-ac-in-l3/power')
 })
