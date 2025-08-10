@@ -72,4 +72,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the image
-        run: docker build -t Jalle19/eachwatt:latest .
+        run: docker build -t jalle19/eachwatt:latest .
