@@ -95,16 +95,16 @@ the [examples/](examples/) directory.
 
 ### Running with Docker
 
-Build the Docker image:
+Pull the latest image:
 
 ```bash
-docker build -t eachwatt/latest .
+docker pull ghcr.io/jalle19/eachwatt:latest
 ```
 
 Run the container:
 
 ```bash
-docker run --rm -v $(pwd):/data:ro -p 8080:8080 eachwatt/latest
+docker run --rm -v $(pwd):/data:ro -p 8080:8080 ghcr.io/jalle19/eachwatt:latest
 ```
 
 The application expects the configuration file to be available as `/data/config.yml`, so in the above example, 
