@@ -1,0 +1,18 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  publish-docker:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t Jalle19/eachwatt:latest .
+      - name: Publish the image
+        run: docker push ghcr.io/Jalle19/eachwatt:latest
