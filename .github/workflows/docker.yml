@@ -13,6 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build the image
-        run: docker build -t jalle19/eachwatt:latest .
+        run: docker build -t ghcr.io/jalle19/eachwatt:latest .
       - name: Publish the image
         run: docker push ghcr.io/jalle19/eachwatt:latest
