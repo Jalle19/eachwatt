@@ -5,7 +5,7 @@ export const determineWebSocketUrl = () => {
   // to the current host of nothing is specified. This allows us to
   // manually define the WebSocket host when running the Svelte
   // development server.
-  const protocol = window.location.protocol === 'https' ? 'wss' : 'ws'
+  const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
 
   return urlParams.get('ws') || `${protocol}://${window.location.host}`
 }
