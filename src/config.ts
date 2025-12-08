@@ -55,13 +55,24 @@ const defaultSettings = (): MainSettings => {
 const MINIMUM_POLLING_INTERVAL: MilliSeconds = 2000
 
 export const parseConfig = (configFileContents: string): Config => {
-  return YAML.parse(configFileContents) as Config
+  let parsed = YAML.parse(configFileContents)
+
+  // Empty files get parsed as null
+  if (parsed === null) {
+    parsed = {}
+  }
+
+  return parsed as Config
 }
 
 export const resolveAndValidateConfig = (config: Config): Config => {
   // Set various defaults
   if (!config.settings) {
     config.settings = defaultSettings()
+  }
+
+  if (!config.circuits) {
+    config.circuits = []
   }
 
   if (!config.characteristics) {

@@ -1,4 +1,4 @@
-import { Config, resolveAndValidateConfig } from '../src/config'
+import { Config, parseConfig, resolveAndValidateConfig } from '../src/config'
 import { ModbusSensor, SensorType, ShellySensor, UnmeteredSensor, VirtualSensor } from '../src/sensor'
 import { CircuitType } from '../src/circuit'
 import {
@@ -9,6 +9,24 @@ import {
   createVirtualSensorConfig,
 } from './testConfigs'
 import { ShellySensorType } from '../src/sensor/shelly'
+import fs from 'fs'
+import path from 'path'
+
+test('empty config file works', () => {
+  const emptyConfig = parseConfig(fs.readFileSync(path.resolve(__dirname, './config.empty.yml')).toString())
+
+  const config = resolveAndValidateConfig(emptyConfig)
+
+  expect(config).toEqual({
+    settings: {
+      pollingInterval: 5000,
+      httpPort: 8080,
+    },
+    circuits: [],
+    characteristics: [],
+    publishers: [],
+  })
+})
 
 test('defaults are applied', () => {
   const config = resolveAndValidateConfig({
