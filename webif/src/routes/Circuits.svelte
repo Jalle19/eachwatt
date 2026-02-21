@@ -2,6 +2,7 @@
   import { formatPf } from '$lib/format'
   import type { PowerSensorData } from '$lib/types'
   import warning from '$lib/assets/warning.svg'
+  import { resolve } from '$app/paths'
 
   export let sensorData: PowerSensorData[]
 </script>
@@ -25,7 +26,7 @@
         <td>{data.circuit.name}</td>
         <td>
           {#if data.circuit.group}
-            <a href="/group/{data.circuit.group}">{data.circuit.group}</a>
+            <a href={resolve(`/group/{data.circuit.group}`)}>{data.circuit.group}</a>
           {/if}
         </td>
         <td>{data.circuit.phase ?? ''}</td>
