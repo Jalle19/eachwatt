@@ -13,6 +13,7 @@
     import { onMount } from 'svelte'
     import { determineWebSocketUrl } from '$lib/websocket'
     import type { PowerSensorData, SensorData } from '$lib/types'
+    import { resolve } from '$app/paths'
 
     const parseTimestamp = (sensorData: SensorData[]) => {
       return new Date(sensorData[0].timestamp)
@@ -71,10 +72,10 @@
     <nav class="pure-menu pure-menu-horizontal">
       <ul class="pure-menu-list">
         <li class="pure-menu-item">
-          <a href="/" class="pure-menu-link">Dashboard</a>
+          <a href={resolve('/')} class="pure-menu-link">Dashboard</a>
         </li>
         <li class="pure-menu-item">
-          <a href="/configuration" class="pure-menu-link">Configuration</a>
+          <a href={resolve('/configuration')} class="pure-menu-link">Configuration</a>
         </li>
       </ul>
     </nav>
