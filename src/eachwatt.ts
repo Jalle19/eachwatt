@@ -13,10 +13,13 @@ import { setRequestTimeout as setHttpRequestTimeout } from './http/client'
 import { setRequestTimeout as setModbusRequestTimeout } from './modbus/client'
 import { setIntervalAsync } from 'set-interval-async'
 
-// Set up a signal handler, so we can exit on Ctrl + C when run from Docker
-process.on('SIGINT', () => {
+// Set up a signal handlers
+const handleSignal = () => {
   process.exit()
-})
+}
+
+process.on('SIGINT', handleSignal)
+process.on('SIGTERM', handleSignal)
 
 const argv = yargs(process.argv.slice(2))
   .usage('node $0 [options]')
