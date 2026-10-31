@@ -14,5 +14,6 @@ export interface PublisherImpl {
 
 export interface Publisher {
   type: PublisherType
+  includeHidden?: boolean
   publisherImpl: PublisherImpl
 }

@@ -84,8 +84,8 @@ const mainPollerFunc = async (config: Config) => {
     try {
       const publisherImpl = publisher.publisherImpl
 
-      // Filter out hidden sensors from the sensor data
-      const filteredSensorData = powerSensorData.filter((psd) => !psd.circuit.hidden)
+      // Optionally filter out hidden sensors from the sensor data
+      const filteredSensorData = powerSensorData.filter((psd) => publisher.includeHidden || !psd.circuit.hidden)
 
       await Promise.all([
         publisherImpl.publishSensorData(filteredSensorData),
@@ -118,6 +118,8 @@ void (async () => {
   const webSocketServer = new WebSocketPublisherImpl(configFileContents, httpServer)
   config.publishers.push({
     type: PublisherType.WebSocket,
+    // The web interface needs to be able to show hidden circuits too
+    includeHidden: true,
     publisherImpl: webSocketServer,
   })
 
