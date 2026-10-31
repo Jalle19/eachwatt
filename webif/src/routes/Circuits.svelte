@@ -5,6 +5,9 @@
   import { resolve } from '$app/paths'
 
   export let sensorData: PowerSensorData[]
+  export let includeHidden: boolean
+
+  $: filtered = sensorData.filter(data => includeHidden || !data.circuit.hidden)
 </script>
 
 <table class="pure-table pure-table-striped">
@@ -21,9 +24,15 @@
     </tr>
   </thead>
   <tbody>
-    {#each sensorData as data}
+    {#each filtered as data}
       <tr>
-        <td>{data.circuit.name}</td>
+        <td>
+          {#if data.circuit.hidden === true}
+            <i>{data.circuit.name} *</i>
+          {:else}
+            {data.circuit.name}
+          {/if}
+        </td>
         <td>
           {#if data.circuit.group}
             <a href={resolve(`/group/{data.circuit.group}`)}>{data.circuit.group}</a>

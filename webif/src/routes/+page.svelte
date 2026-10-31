@@ -12,11 +12,17 @@
   import MainsPower from './MainsPower.svelte'
   import Circuits from './Circuits.svelte'
   import Loader from './Loader.svelte'
+
+  let includeHidden: boolean = $state(false)
 </script>
 
 <style>
   p.connecting {
       font-style: italic;
+  }
+
+  div#list-options {
+      float: right;
   }
 </style>
 
@@ -43,6 +49,12 @@
   {/if}
   <div class="pure-u-1-1 l-box">
     <h2>All circuits</h2>
-    <Circuits sensorData="{$circuitSensorDataStore}" />
+    <div id="list-options">
+      <label>
+        Include hidden
+        <input type="checkbox" bind:checked={includeHidden}>
+      </label>
+    </div>
+    <Circuits sensorData={$circuitSensorDataStore} includeHidden={includeHidden} />
   </div>
 {/if}

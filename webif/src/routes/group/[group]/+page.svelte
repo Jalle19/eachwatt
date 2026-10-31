@@ -15,5 +15,5 @@
 
 <div class="pure-u-1-1 l-box">
   <h2>Group <i>{group}</i></h2>
-  <Circuits sensorData="{$groupSensorData}" />
+  <Circuits sensorData="{$groupSensorData}" includeHidden={false} />
 </div>

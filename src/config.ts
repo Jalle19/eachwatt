@@ -222,6 +222,10 @@ export const resolveAndValidateConfig = (config: Config): Config => {
   // Create publishers. Ignore any manually defined WebSocket publishers, we only support
   // one right now, and it's added separately during application startup.
   for (const publisher of config.publishers) {
+    if (publisher.includeHidden === undefined) {
+      publisher.includeHidden = false
+    }
+
     switch (publisher.type) {
       case PublisherType.InfluxDB: {
         const influxDbPublisher = publisher as InfluxDBPublisher
